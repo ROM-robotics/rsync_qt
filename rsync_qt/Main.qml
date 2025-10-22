@@ -298,7 +298,20 @@ Window {
                             GradientStop { position: 1.0; color: rebootBtn.hovered ? "#e9f502" : "#a2ab00" }
                         }
                         border.width: 0
-                        MouseArea { anchors.fill: parent; hoverEnabled: true; onEntered: parent.hovered = true; onExited: parent.hovered = false; onClicked: { /* placeholder for reboot action */ } }
+                        MouseArea {
+                            anchors.fill: parent
+                            hoverEnabled: true
+                            onEntered: parent.hovered = true
+                            onExited: parent.hovered = false
+                            onClicked: {
+                                // Open confirmation dialog for reboot
+                                confirmActionDialog.confirmHost = ipEdit.text
+                                confirmActionDialog.confirmPassword = passEdit.text
+                                confirmActionDialog.confirmCommand = "sudo systemctl reboot"
+                                confirmActionDialog.confirmMessage = "Reboot remote robot at " + ipEdit.text + "?"
+                                confirmActionDialog.open()
+                            }
+                        }
                         Text { anchors.centerIn: parent; text: "R E B O O T   R O B O T"; color: rebootBtn.hovered ? "#ffffff" : "#000000"; font.pixelSize: 13 }
                     }
 
@@ -313,7 +326,20 @@ Window {
                             GradientStop { position: 1.0; color: shutdownBtn.hovered ? "#fa050d" : "#8a0106" }
                         }
                         border.width: 0
-                        MouseArea { anchors.fill: parent; hoverEnabled: true; onEntered: parent.hovered = true; onExited: parent.hovered = false; onClicked: { /* placeholder for shutdown action */ } }
+                        MouseArea {
+                            anchors.fill: parent
+                            hoverEnabled: true
+                            onEntered: parent.hovered = true
+                            onExited: parent.hovered = false
+                            onClicked: {
+                                // Open confirmation dialog for shutdown
+                                confirmActionDialog.confirmHost = ipEdit.text
+                                confirmActionDialog.confirmPassword = passEdit.text
+                                confirmActionDialog.confirmCommand = "sudo systemctl poweroff"
+                                confirmActionDialog.confirmMessage = "Shutdown remote robot at " + ipEdit.text + "?"
+                                confirmActionDialog.open()
+                            }
+                        }
                         Text { anchors.centerIn: parent; text: "S H U T D O W N   R O B O T"; color: shutdownBtn.hovered ? "#ffffff" : "#000000"; font.pixelSize: 13 }
                     }
 
@@ -340,7 +366,44 @@ Window {
         }
     }
 
-    // (confirmation dialog removed per user request)
+    // Confirmation dialog for reboot/shutdown actions
+    Dialog {
+        id: confirmActionDialog
+        modal: true
+        standardButtons: Dialog.Ok | Dialog.Cancel
+        property string confirmHost: ""
+        property string confirmPassword: ""
+        property string confirmCommand: ""
+        property string confirmMessage: "Are you sure?"
+
+        title: qsTr("Confirm remote action")
+
+        contentItem: Column {
+            width: 520
+            spacing: 8
+            Text { text: confirmMessage; wrapMode: Text.Wrap; color: textColor }
+            RowLayout { spacing: 6
+                Text { text: "Host:"; color: textColor; font.bold: true }
+                Text { text: confirmHost; color: textColor }
+            }
+            RowLayout { spacing: 6
+                Text { text: "Command:"; color: textColor; font.bold: true }
+                Text { text: confirmCommand; color: textColor; elide: Text.ElideLeft }
+            }
+        }
+
+        onAccepted: {
+            rsyncRunner.clearLogs()
+            rsyncRunner.runRemoteCommand(confirmHost, confirmPassword, "", confirmCommand)
+            close()
+        }
+
+        onRejected: {
+            close()
+        }
+    }
+
+    
 
     // Theme colors
     property color cardBg: "#1e1e2f"
@@ -490,7 +553,7 @@ Window {
 
                     // Heading label
                     Label {
-                        text: "ကူးယူမည့် files / directories များကို အမှန်ခြစ်ပါ။"
+                        text: "Development PC မှ Robot PC သို့ အောက်ပါ ဖိုင်များကို ကူးယူမည်။ ကူးယူမည့် files / directories များကို အမှန်ခြစ်ပါ။"
                         color: textColor
                         font.bold: true
                     }
