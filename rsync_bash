@@ -1,0 +1,74 @@
+#!/usr/bin/env bash
+# rsync_to_remote (rcync_bash)
+# Copy selected directories from the current working directory to a remote host
+# Behavior:
+#  - Runs an rsync --dry-run first and shows results
+#  - If dry-run exits successfully it asks the user to confirm before doing the real transfer
+#  - Only includes directories that end with `_ws`, plus `mytmux` and `data`.
+
+set -euo pipefail
+IFS=$'\n\t'
+
+REMOTE="localhost:/home/mr_robot/Desktop/fakeGit/rom_robotics"
+
+# rsync options (archive, verbose, human-readable, show progress, delete extraneous files on remote)
+RSYNC_OPTS=( -a -h -v -P --delete )
+
+# Include rules: allow traversing directories, then include desired dirs and exclude everything else
+INCLUDE_FILTERS=(
+  --exclude='non_ros'
+  --exclude='plotjuggler'
+  --exclude='rsync_bash'
+  --exclude='README.md'
+  --exclude='README'
+  --exclude='research'
+  --exclude='rsync_bash'
+  --exclude='.git'
+  --exclude='.gitignore'
+  --exclude='.gitmodules'
+  --exclude='.vscode'
+)
+
+print_header() {
+  printf '\n==== %s ====%s\n' "$1" "$2"
+}
+
+echo "Remote destination: $REMOTE"
+
+# Ensure remote directory exists (attempt via ssh). Extract host and path from REMOTE (host:path)
+REMOTE_HOST="${REMOTE%%:*}"
+REMOTE_DIR="${REMOTE#*:}"
+
+if [[ -z "$REMOTE_HOST" || -z "$REMOTE_DIR" ]]; then
+  echo "Failed to parse remote host or directory from REMOTE='$REMOTE'"
+  exit 1
+fi
+
+echo "Ensuring remote directory exists on $REMOTE_HOST: $REMOTE_DIR"
+if ! ssh "$REMOTE_HOST" "mkdir -p -- '$REMOTE_DIR'"; then
+  echo "Warning: could not create remote directory. Will attempt rsync anyway."
+fi
+
+print_header "Dry-run" " (no changes will be made)"
+echo "Running rsync --dry-run to show what would be copied..."
+
+# Run dry-run
+if ! rsync "${RSYNC_OPTS[@]}" --dry-run "${INCLUDE_FILTERS[@]}" . "$REMOTE"; then
+  echo "Dry-run failed (rsync returned non-zero). Aborting."
+  exit 1
+fi
+
+print_header "Dry-run complete" ""
+
+read -r -p "Proceed with actual rsync to $REMOTE? [y/N]: " answer
+case "$answer" in
+  [yY]|[yY][eE][sS])
+    print_header "Running" "(this will transfer files)"
+    rsync "${RSYNC_OPTS[@]}" "${INCLUDE_FILTERS[@]}" . "$REMOTE"
+    print_header "Done" ""
+    ;;
+  *)
+    echo "Aborted by user. No changes were made."
+    exit 0
+    ;;
+esac
