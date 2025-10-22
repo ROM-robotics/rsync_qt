@@ -553,7 +553,7 @@ Window {
 
                     // Heading label
                     Label {
-                        text: "Development PC မှ Robot PC သို့ အောက်ပါ ဖိုင်များကို ကူးယူမည်။ ကူးယူမည့် files / directories များကို အမှန်ခြစ်ပါ။"
+                        text: "Development  PC  မှ  Robot  PC   သို့  အောက်ပါ ဖိုင်များကို ကူးယူမည် ။  ကူးယူမည့်  files  /  directories  များကို  အမှန်ခြစ်ပါ ။"
                         color: textColor
                         font.bold: true
                     }
