@@ -15,7 +15,31 @@ Window {
     maximumHeight: 900
     visible: true
     title: qsTr("Rsync Helper")
+    // Note: font.family at the root Window may not be supported in this import set.
+    // If you want to use Roboto globally, either switch to an ApplicationWindow
+    // from QtQuick.Controls 2 or use a FontLoader and assign font.family on controls.
     flags: Qt.FramelessWindowHint | Qt.Window
+
+    // Load SF Pro Text (if provided in resources or installed on the system)
+    // Note: SF Pro Text is an Apple font and may require proper licensing to embed.
+    // If you do not want to embed the TTF, ensure the target system has "SF Pro Text" installed
+    // and set the fallback accordingly.
+    FontLoader {
+        id: sfProLoader
+        // Use the .otf file present in the project's resources
+        source: "qrc:/fonts/SF-Pro-Text-Regular.otf"
+        onStatusChanged: {
+            if (status === FontLoader.Ready) {
+                console.log("SF Pro Text font loaded: " + sfProLoader.name)
+            } else {
+                console.log("SF Pro Text not available via qrc; falling back to system fonts")
+            }
+        }
+    }
+
+    // Expose a property that controls can bind to for font.family
+    // Fallback to the system font name "SF Pro Text" when the embedded file is not found.
+    property string uiFontFamily: sfProLoader.status === FontLoader.Ready ? sfProLoader.name : "SF Pro Text"
 
     color: "transparent"
 
@@ -378,17 +402,23 @@ Window {
 
         title: qsTr("Confirm remote action")
 
-        contentItem: Column {
+        // Wrap the Column in a fixed-size Item to prevent Dialog from trying to
+        // use contentItem.implicitWidth (which can create binding loops).
+        contentItem: Item {
             width: 520
-            spacing: 8
-            Text { text: confirmMessage; wrapMode: Text.Wrap; color: textColor }
-            RowLayout { spacing: 6
-                Text { text: "Host:"; color: textColor; font.bold: true }
-                Text { text: confirmHost; color: textColor }
-            }
-            RowLayout { spacing: 6
-                Text { text: "Command:"; color: textColor; font.bold: true }
-                Text { text: confirmCommand; color: textColor; elide: Text.ElideLeft }
+            Column {
+                anchors.fill: parent
+                anchors.margins: 8
+                spacing: 8
+                Text { text: confirmMessage; wrapMode: Text.Wrap; color: textColor }
+                RowLayout { spacing: 6
+                    Text { text: "Host:"; color: textColor; font.bold: true }
+                    Text { text: confirmHost; color: textColor }
+                }
+                RowLayout { spacing: 6
+                    Text { text: "Command:"; color: textColor; font.bold: true }
+                    Text { text: confirmCommand; color: textColor; elide: Text.ElideLeft }
+                }
             }
         }
 

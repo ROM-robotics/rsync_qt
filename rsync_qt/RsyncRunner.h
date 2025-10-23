@@ -55,9 +55,9 @@ private:
     void appendLog(const QString& line);
 
     QString m_logs;
-    QString m_remoteDestPath = "/home/mr_robot/Desktop/fakeGit"; // default
+    QString m_remoteDestPath = "/home/mr_robot/Desktop/Git"; // default
     QString m_defaultUser = "mr_robot"; // default
-    QString m_sourceRoot = "/home/mr_robot/Desktop/fromfakeGit/rom_robotics"; // default source
+    QString m_sourceRoot = "/home/mr_robot/Desktop/Git/rom_robotics"; // default source
     QString m_status;
     QString m_statusColor;
 };

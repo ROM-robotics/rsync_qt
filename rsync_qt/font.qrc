@@ -1,0 +1,22 @@
+<RCC>
+    <qresource prefix="/fonts">
+        <file>fonts/SF-Pro-Text-Black.otf</file>
+        <file>fonts/SF-Pro-Text-BlackItalic.otf</file>
+        <file>fonts/SF-Pro-Text-Bold.otf</file>
+        <file>fonts/SF-Pro-Text-BoldItalic.otf</file>
+        <file>fonts/SF-Pro-Text-Heavy.otf</file>
+        <file>fonts/SF-Pro-Text-HeavyItalic.otf</file>
+        <file>fonts/SF-Pro-Text-Light.otf</file>
+        <file>fonts/SF-Pro-Text-LightItalic.otf</file>
+        <file>fonts/SF-Pro-Text-Medium.otf</file>
+        <file>fonts/SF-Pro-Text-MediumItalic.otf</file>
+        <file>fonts/SF-Pro-Text-Regular.otf</file>
+        <file>fonts/SF-Pro-Text-RegularItalic.otf</file>
+        <file>fonts/SF-Pro-Text-Semibold.otf</file>
+        <file>fonts/SF-Pro-Text-SemiboldItalic.otf</file>
+        <file>fonts/SF-Pro-Text-Thin.otf</file>
+        <file>fonts/SF-Pro-Text-ThinItalic.otf</file>
+        <file>fonts/SF-Pro-Text-Ultralight.otf</file>
+        <file>fonts/SF-Pro-Text-UltralightItalic.otf</file>
+    </qresource>
+</RCC>
