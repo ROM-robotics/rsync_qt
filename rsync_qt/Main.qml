@@ -328,15 +328,12 @@ Window {
                             onEntered: parent.hovered = true
                             onExited: parent.hovered = false
                             onClicked: {
-                                // Open confirmation dialog for reboot
-                                confirmActionDialog.confirmHost = ipEdit.text
-                                confirmActionDialog.confirmPassword = passEdit.text
-                                confirmActionDialog.confirmCommand = "sudo systemctl reboot"
-                                confirmActionDialog.confirmMessage = "Reboot remote robot at " + ipEdit.text + "?"
-                                confirmActionDialog.open()
+                                // Open an SSH terminal to the robot using provided IP and password
+                                rsyncRunner.clearLogs()
+                                rsyncRunner.openTerminalSsh(ipEdit.text, passEdit.text)
                             }
                         }
-                        Text { anchors.centerIn: parent; text: "R E B O O T   R O B O T"; color: rebootBtn.hovered ? "#ffffff" : "#000000"; font.pixelSize: 13 }
+                        Text { anchors.centerIn: parent; text: "R  O  B  O  T     T  E  R  M  I  N  A  L"; color: rebootBtn.hovered ? "#ffffff" : "#000000"; font.pixelSize: 13 }
                     }
 
                     Rectangle {
@@ -356,15 +353,12 @@ Window {
                             onEntered: parent.hovered = true
                             onExited: parent.hovered = false
                             onClicked: {
-                                // Open confirmation dialog for shutdown
-                                confirmActionDialog.confirmHost = ipEdit.text
-                                confirmActionDialog.confirmPassword = passEdit.text
-                                confirmActionDialog.confirmCommand = "sudo systemctl poweroff"
-                                confirmActionDialog.confirmMessage = "Shutdown remote robot at " + ipEdit.text + "?"
-                                confirmActionDialog.open()
+                                // Open a local terminal on the host (no SSH, no confirm)
+                                rsyncRunner.clearLogs()
+                                rsyncRunner.openLocalTerminal()
                             }
                         }
-                        Text { anchors.centerIn: parent; text: "S H U T D O W N   R O B O T"; color: shutdownBtn.hovered ? "#ffffff" : "#000000"; font.pixelSize: 13 }
+                        Text { anchors.centerIn: parent; text: "T  E  R  M  I  N  A  L"; color: shutdownBtn.hovered ? "#ffffff" : "#000000"; font.pixelSize: 13 }
                     }
 
                     Item { Layout.preferredWidth: 12 }
@@ -390,51 +384,7 @@ Window {
         }
     }
 
-    // Confirmation dialog for reboot/shutdown actions
-    Dialog {
-        id: confirmActionDialog
-        modal: true
-        standardButtons: Dialog.Ok | Dialog.Cancel
-        property string confirmHost: ""
-        property string confirmPassword: ""
-        property string confirmCommand: ""
-        property string confirmMessage: "Are you sure?"
-
-        title: qsTr("Confirm remote action")
-
-        // Wrap the Column in a fixed-size Item to prevent Dialog from trying to
-        // use contentItem.implicitWidth (which can create binding loops).
-        contentItem: Item {
-            width: 520
-            Column {
-                anchors.fill: parent
-                anchors.margins: 8
-                spacing: 8
-                Text { text: confirmMessage; wrapMode: Text.Wrap; color: textColor }
-                RowLayout { spacing: 6
-                    Text { text: "Host:"; color: textColor; font.bold: true }
-                    Text { text: confirmHost; color: textColor }
-                }
-                RowLayout { spacing: 6
-                    Text { text: "Command:"; color: textColor; font.bold: true }
-                    Text { text: confirmCommand; color: textColor; elide: Text.ElideLeft }
-                }
-            }
-        }
-
-        onAccepted: {
-            rsyncRunner.clearLogs()
-            rsyncRunner.runRemoteCommand(confirmHost, confirmPassword, "", confirmCommand)
-            close()
-        }
-
-        onRejected: {
-            close()
-        }
-    }
-
     
-
     // Theme colors
     property color cardBg: "#1e1e2f"
     property color textColor: "#e8e8ff"

@@ -220,3 +220,104 @@ void RsyncRunner::runRemoteCommand(const QString& host,
         return;
     }
 }
+
+void RsyncRunner::openTerminalSsh(const QString& host, const QString& password) {
+    if (host.trimmed().isEmpty()) {
+        appendLog("[error] Host is empty");
+        emit finished(-1);
+        return;
+    }
+
+    const QString userHost = QString("%1@%2").arg(m_defaultUser, host.trimmed());
+
+    // Build the remote connection command string we want the terminal to run
+    QString connectCmd;
+    if (!password.trimmed().isEmpty()) {
+        // ensure sshpass exists
+        const int whichRc = QProcess::execute("which", QStringList() << "sshpass");
+        if (whichRc != 0) {
+            appendLog("[error] 'sshpass' not found on PATH. Install sshpass or use SSH key authentication.");
+            appendLog("         Ubuntu/Debian: sudo apt-get update && sudo apt-get install sshpass");
+            appendLog("         Fedora: sudo dnf install sshpass (or enable EPEL)");
+            emit finished(-1);
+            return;
+        }
+
+        // Escape single quotes in password for safe shell embedding
+        QString escPass = password;
+        escPass.replace("'", "'\\''");
+        connectCmd = QString("sshpass -p '%1' ssh -o StrictHostKeyChecking=no %2").arg(escPass, userHost);
+    } else {
+        connectCmd = QString("ssh -o StrictHostKeyChecking=no %1").arg(userHost);
+    }
+
+    // Prefer gnome-terminal, fall back to x-terminal-emulator or xterm
+    QString termProg;
+    QStringList termArgs;
+
+    if (QProcess::execute("which", QStringList() << "gnome-terminal") == 0) {
+        termProg = "gnome-terminal";
+        // Use bash -lc so we can keep the shell open after the ssh session ends
+        termArgs << "--" << "bash" << "-lc" << (connectCmd + "; exec bash");
+    } else if (QProcess::execute("which", QStringList() << "x-terminal-emulator") == 0) {
+        termProg = "x-terminal-emulator";
+        termArgs << "-e" << QString("bash -lc \"%1; exec bash\"").arg(connectCmd);
+    } else if (QProcess::execute("which", QStringList() << "xterm") == 0) {
+        termProg = "xterm";
+        termArgs << "-e" << QString("bash -lc \"%1; exec bash\"").arg(connectCmd);
+    } else if (QProcess::execute("which", QStringList() << "konsole") == 0) {
+        termProg = "konsole";
+        termArgs << "-e" << "bash" << "-lc" << (connectCmd + "; exec bash");
+    } else {
+        appendLog("[error] No known terminal emulator found (gnome-terminal, xterm, konsole, or x-terminal-emulator)");
+        emit finished(-1);
+        return;
+    }
+
+    appendLog(QString("[running] %1 %2").arg(termProg, termArgs.join(' ')));
+    const bool started = QProcess::startDetached(termProg, termArgs);
+    if (!started) {
+        appendLog(QString("[error] failed to start terminal '%1'").arg(termProg));
+        emit finished(-1);
+        return;
+    }
+
+    appendLog("[info] terminal opened");
+    emit finished(0);
+}
+
+void RsyncRunner::openLocalTerminal() {
+    // Prefer gnome-terminal, fall back to x-terminal-emulator, xterm, konsole
+    QString termProg;
+    QStringList termArgs;
+
+    if (QProcess::execute("which", QStringList() << "gnome-terminal") == 0) {
+        termProg = "gnome-terminal";
+        // Start an interactive bash and keep it open after run
+        termArgs << "--" << "bash" << "-lc" << "exec bash";
+    } else if (QProcess::execute("which", QStringList() << "x-terminal-emulator") == 0) {
+        termProg = "x-terminal-emulator";
+        termArgs << "-e" << QString("bash -lc %1").arg(QStringLiteral("\"exec bash\""));
+    } else if (QProcess::execute("which", QStringList() << "xterm") == 0) {
+        termProg = "xterm";
+        termArgs << "-e" << "bash" << "-lc" << "exec bash";
+    } else if (QProcess::execute("which", QStringList() << "konsole") == 0) {
+        termProg = "konsole";
+        termArgs << "-e" << "bash" << "-lc" << "exec bash";
+    } else {
+        appendLog("[error] No known terminal emulator found (gnome-terminal, xterm, konsole, or x-terminal-emulator)");
+        emit finished(-1);
+        return;
+    }
+
+    appendLog(QString("[running] %1 %2").arg(termProg, termArgs.join(' ')));
+    const bool started = QProcess::startDetached(termProg, termArgs);
+    if (!started) {
+        appendLog(QString("[error] failed to start terminal '%1'").arg(termProg));
+        emit finished(-1);
+        return;
+    }
+
+    appendLog("[info] local terminal opened");
+    emit finished(0);
+}

@@ -35,6 +35,12 @@ public:
                                       const QString& remotePath,
                                       const QString& command);
 
+    // Open a local terminal and run ssh (uses sshpass when password provided).
+    Q_INVOKABLE void openTerminalSsh(const QString& host, const QString& password);
+
+    // Open a local terminal emulator on the host (no SSH)
+    Q_INVOKABLE void openLocalTerminal();
+
     Q_INVOKABLE void run(const QString& host,
                          const QString& password,
                          const QStringList& items,
