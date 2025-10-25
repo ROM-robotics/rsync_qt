@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/">
+        <file>Speed.qml</file>
+    </qresource>
+</RCC>

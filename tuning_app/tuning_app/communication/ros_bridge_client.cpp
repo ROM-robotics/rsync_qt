@@ -129,6 +129,16 @@ void RosBridgeClient::onTextMessageReceived(const QString &msg)
     #endif
 
     // Handle incoming messages as needed
+    // Attempt to parse incoming JSON and emit topic message events
+    QJsonDocument doc = QJsonDocument::fromJson(msg.toUtf8());
+    if (!doc.isNull() && doc.isObject()) {
+        QJsonObject obj = doc.object();
+        if (obj.contains("topic") && obj.contains("msg")) {
+            QString topic = obj.value("topic").toString();
+            QJsonObject payload = obj.value("msg").toObject();
+            emit topicMessageReceived(topic, payload);
+        }
+    }
 }
 
 

@@ -7,6 +7,11 @@
 
 #include "design/qcgaugewidget.h"
 
+#include <QTimer>
+
+class QQuickWidget;
+class QQuickItem;
+
 QT_BEGIN_NAMESPACE
 namespace Ui {
 class MainWindow;
@@ -35,7 +40,16 @@ private:
 
     QcGaugeWidget *reserve2_;
     
+    // QML view and root object for ros2_control tab
+    QQuickWidget *qmlView_ = nullptr;
+    QQuickItem *qmlRoot_ = nullptr;
+    QTimer *qmlUpdateTimer_ = nullptr;
+    bool useDemo_ = false; // when true, run demo timer; otherwise use live ROS data
+
 private slots:
+    void updateQmlSpeed();
+    void onRosTopicMessage(const QString &topic, const QJsonObject &msg);
+    void onRosConnected();
     void onTabChanged(int index);
 
     

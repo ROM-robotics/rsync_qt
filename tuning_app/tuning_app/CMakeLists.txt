@@ -1,9 +1,10 @@
 cmake_minimum_required(VERSION 3.19)
 project(tuning_app LANGUAGES CXX)
 
-find_package(Qt6 6.5 REQUIRED COMPONENTS Core Widgets Gui Charts Network WebSockets)
+find_package(Qt6 6.5 REQUIRED COMPONENTS Core Widgets Gui Charts Network WebSockets Quick QuickWidgets Qml)
 
 qt_standard_project_setup()
+qt_add_resources(QML_RESOURCES qml.qrc)
 
 qt_add_executable(tuning_app
     WIN32 MACOSX_BUNDLE
@@ -14,9 +15,7 @@ qt_add_executable(tuning_app
     design/rom_structures.h
     communication/ros_bridge_client.hpp
     communication/ros_bridge_client.cpp
-    design/qcgaugewidget.h
-    design/qcgaugewidget.cpp
-    
+    ${QML_RESOURCES}
 )
 
 target_link_libraries(tuning_app PRIVATE
@@ -26,6 +25,9 @@ target_link_libraries(tuning_app PRIVATE
     Qt${QT_VERSION_MAJOR}::Charts
     Qt${QT_VERSION_MAJOR}::Network
     Qt${QT_VERSION_MAJOR}::WebSockets
+    Qt${QT_VERSION_MAJOR}::Quick
+    Qt${QT_VERSION_MAJOR}::QuickWidgets
+    Qt${QT_VERSION_MAJOR}::Qml
 )
 
 include(GNUInstallDirs)

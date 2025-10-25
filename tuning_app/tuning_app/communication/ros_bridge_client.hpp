@@ -28,6 +28,8 @@ signals:
     void connected();
     void disconnected();
     void errorOccurred(const QString &msg);
+    // raw topic message received: topic name and the 'msg' JSON object
+    void topicMessageReceived(const QString &topic, const QJsonObject &msg);
 
 
 private slots:
