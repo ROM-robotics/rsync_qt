@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QJsonObject>
 #include "design/rom_structures.h"
 #include "communication/ros_bridge_client.hpp"
 
@@ -22,14 +23,52 @@ public:
     ~MainWindow();
 
     void initRos2ControlTab();
+    void activateRos2ControlTab();
+    void deactivateRos2ControlTab();
+
+    void initEkfTab();
+    void activateEkfTab();
+    void deactivateEkfTab();
+
+    void initCartoTab();
+    void activateCartoTab();
+    void deactivateCartoTab();
+
+    void initNav2_1Tab();
+    void activateNav2_1Tab();
+    void deactivateNav2_1Tab();
+
+    void initNav2_2Tab();
+    void activateNav2_2Tab();
+    void deactivateNav2_2Tab();
+
+    void initNav2_3Tab();
+    void activateNav2_3Tab();
+    void deactivateNav2_3Tab();
+
+    void initBtTab();
+    void activateBtTab();
+    void deactivateBtTab();
+
+    void initTopicTab();
+    void activateTopicTab();
+    void deactivateTopicTab();
+
+    void initLogTab();
+    void activateLogTab();
+    void deactivateLogTab();
+
 
 private:
     Ui::MainWindow *ui;
 
+    QString RobotIp = "192.168.1.9";
+    QString RobotPort = "9090";
+
     Mode currentMode;
     RosBridgeClient *communication_ = nullptr;
 
-    QcGaugeWidget *cmd_vel_unstamped_;
+    QcGaugeWidget *gauge_cmd_vel_unstamped_;
 
     QcGaugeWidget *reserve1_;
 
@@ -37,6 +76,7 @@ private:
     
 private slots:
     void onTabChanged(int index);
+
 
     
 };

@@ -21,14 +21,17 @@ public:
     bool isConnected() const { return m_socket.state() == QAbstractSocket::ConnectedState; }
 
     // --------------------------------- TOPIC SUBSCRIPTIONS
-    void subscribeTopic(const QString &topic_name, const QString &msg_type, const QString &ns);
-    void unsubscribeTopic(const QString &topic_name, const QString &ns);
+    void subscribeTopic(const QString &topic_name, const QString &msg_type);
+    void unsubscribeTopic(const QString &topic_name);
 
 signals:
+    // --------------------------------- MAIN API
     void connected();
     void disconnected();
     void errorOccurred(const QString &msg);
-
+    
+    // --------------------------------- TOPIC SUBSCRIPTIONS
+    void receivedRos2controlMessage(const QString &topic_name, const QJsonObject &msg);
 
 private slots:
     void onSocketConnected();

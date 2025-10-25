@@ -21,6 +21,8 @@ RosBridgeClient::RosBridgeClient(const QString &robot_ns, const QString &host, q
     connect(&m_socket, &QWebSocket::textMessageReceived, this, &RosBridgeClient::onTextMessageReceived);
     connect(&m_socket, QOverload<QAbstractSocket::SocketError>::of(&QWebSocket::errorOccurred), this, &RosBridgeClient::onSocketError);
 
+    this->connectToServer();
+
     m_reconnectTimer.setInterval(3000);
     m_reconnectTimer.setSingleShot(true);
     connect(&m_reconnectTimer, &QTimer::timeout, this, &RosBridgeClient::ensureReconnect);
@@ -128,28 +130,55 @@ void RosBridgeClient::onTextMessageReceived(const QString &msg)
                               .arg(ROM_COLOR_GREEN).arg(msg).arg(ROM_COLOR_RESET);
     #endif
 
-    // Handle incoming messages as needed
+    qDebug() << " RosBridgeClient::onTextMessageReceived Msg: " << msg;
+
+    QJsonParseError err{};
+    QJsonDocument doc = QJsonDocument::fromJson(msg.toUtf8(), &err);
+
+    if (err.error != QJsonParseError::NoError) 
+    {
+        #ifdef ROM_DEBUG
+            qWarning() << "RosBridgeClient JSON parse error:" << err.errorString();
+        #endif
+
+        return;
+    }
+
+    if (!doc.isObject()) return;
+    QJsonObject obj = doc.object();
+
+    const QString op = obj.value("op").toString();
+    if (op == "publish") 
+    {
+        const QString topic = obj.value("topic").toString();
+        
+            emit receivedRos2controlMessage(topic, obj.value("msg").toObject());
+            qDebug() << "receivedRos2controlMessage emitted" << obj;
+        
+    }
+
+
 }
 
 
 
 // ROSBRIDGE API
-void RosBridgeClient::subscribeTopic(const QString &topic_name, const QString &msg_type, const QString &ns)
+void RosBridgeClient::subscribeTopic(const QString &topic_name, const QString &msg_type)
 {
     if (!isConnected())
     {
         connectToServer();
     }
 
-    QString topic_to_subscribe = ns + topic_name;
+    QString topic_to_subscribe = m_robotNamespace + topic_name;
 
     QJsonObject msg;
 
     msg["op"] = "subscribe";
     msg["topic"] = topic_to_subscribe;
-    // geometry_msgs/Twist message type; not strictly required but helpful
-    msg["type"] = msg_type; // ROS 2 style type name
+    msg["type"] = msg_type;
     sendJson(msg);
+   
 
     #ifdef ROM_DEBUG
         qDebug().noquote() << QString("%1[      RosBridgeClient::subscribeTopic      ] : %2 %3 ")
@@ -158,7 +187,7 @@ void RosBridgeClient::subscribeTopic(const QString &topic_name, const QString &m
 }
 
 
-void RosBridgeClient::unsubscribeTopic(const QString &topic_name, const QString &ns)
+void RosBridgeClient::unsubscribeTopic(const QString &topic_name)
 {
     #ifdef ROM_DEBUG
         qDebug().noquote() << QString("%1[     RosBridgeClient::unsubscribeTopic     ]%2")
@@ -167,7 +196,7 @@ void RosBridgeClient::unsubscribeTopic(const QString &topic_name, const QString 
 
     if (!isConnected() ) return;
 
-    QString topic_to_unsubscribe = ns + topic_name;
+    QString topic_to_unsubscribe = m_robotNamespace + topic_name;
 
     QJsonObject msg;
     msg["op"] = "unsubscribe";
