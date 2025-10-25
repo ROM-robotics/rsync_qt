@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>800</width>
+    <height>600</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <widget class="QTabWidget" name="tabWidget">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>10</y>
+      <width>781</width>
+      <height>581</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true"/>
+    </property>
+    <property name="currentIndex">
+     <number>1</number>
+    </property>
+    <widget class="QWidget" name="ssh">
+     <property name="styleSheet">
+      <string notr="true">
+ background: qlineargradient(
+        x1: 0, y1: 0, x2: 1, y2: 1,
+        stop: 0 #5b3cc4,
+        stop: 0.5 #8a42e8,
+        stop: 1 #ff6f91
+    );</string>
+     </property>
+     <attribute name="title">
+      <string>ssh</string>
+     </attribute>
+    </widget>
+    <widget class="QWidget" name="ros2_control">
+     <property name="styleSheet">
+      <string notr="true">background: #222;</string>
+     </property>
+     <attribute name="title">
+      <string>ros2_control</string>
+     </attribute>
+    </widget>
+    <widget class="QWidget" name="ekf">
+     <property name="styleSheet">
+      <string notr="true">background:qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgba(0, 0, 0, 255), stop:1 rgba(255, 255, 255, 255))</string>
+     </property>
+     <attribute name="title">
+      <string>ekf</string>
+     </attribute>
+    </widget>
+    <widget class="QWidget" name="carto">
+     <property name="styleSheet">
+      <string notr="true">background:qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgba(9, 41, 4, 255), stop:0.085 rgba(2, 79, 0, 255), stop:0.19 rgba(50, 147, 22, 255), stop:0.275 rgba(236, 191, 49, 255), stop:0.39 rgba(243, 61, 34, 255), stop:0.555 rgba(135, 81, 60, 255), stop:0.667 rgba(121, 75, 255, 255), stop:0.825 rgba(164, 255, 244, 255), stop:0.885 rgba(104, 222, 71, 255), stop:1 rgba(93, 128, 0, 255))</string>
+     </property>
+     <attribute name="title">
+      <string>carto</string>
+     </attribute>
+    </widget>
+    <widget class="QWidget" name="navi2_one">
+     <property name="styleSheet">
+      <string notr="true">background: rgb(249, 240, 107)</string>
+     </property>
+     <attribute name="title">
+      <string>navi2 one</string>
+     </attribute>
+    </widget>
+    <widget class="QWidget" name="navi2_two">
+     <property name="styleSheet">
+      <string notr="true">background: rgb(220, 138, 221)</string>
+     </property>
+     <attribute name="title">
+      <string>navi2 two</string>
+     </attribute>
+    </widget>
+    <widget class="QWidget" name="navi2_three">
+     <property name="styleSheet">
+      <string notr="true">background: rgb(153, 193, 241)</string>
+     </property>
+     <attribute name="title">
+      <string>navi2 three</string>
+     </attribute>
+    </widget>
+    <widget class="QWidget" name="bt">
+     <property name="styleSheet">
+      <string notr="true">background: rgb(152, 106, 68)</string>
+     </property>
+     <attribute name="title">
+      <string>bt</string>
+     </attribute>
+    </widget>
+    <widget class="QWidget" name="topic">
+     <property name="styleSheet">
+      <string notr="true">background: qconicalgradient(cx:0, cy:0, angle:135, stop:0 rgba(255, 255, 0, 69), stop:0.375 rgba(255, 255, 0, 69), stop:0.423533 rgba(251, 255, 0, 145), stop:0.45 rgba(247, 255, 0, 208), stop:0.477581 rgba(255, 244, 71, 130), stop:0.518717 rgba(255, 218, 71, 130), stop:0.55 rgba(255, 255, 0, 255), stop:0.57754 rgba(255, 203, 0, 130), stop:0.625 rgba(255, 255, 0, 69), stop:1 rgba(255, 255, 0, 69))</string>
+     </property>
+     <attribute name="title">
+      <string>topic</string>
+     </attribute>
+    </widget>
+    <widget class="QWidget" name="log">
+     <property name="styleSheet">
+      <string notr="true">background: qradialgradient(spread:repeat, cx:0.5, cy:0.5, radius:0.077, fx:0.5, fy:0.5, stop:0 rgba(0, 169, 255, 147), stop:0.497326 rgba(0, 0, 0, 147), stop:1 rgba(0, 169, 255, 147))</string>
+     </property>
+     <attribute name="title">
+      <string>log</string>
+     </attribute>
+    </widget>
+   </widget>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
