@@ -1,8 +1,18 @@
 #include "qcgaugewidget.h"
-m_maxValue = maxValue;
-update();
+
+QcGaugeWidget::QcGaugeWidget(QWidget *parent)
+: QWidget(parent)
+{
+setMinimumSize(150, 150);
 }
 
+
+void QcGaugeWidget::setRange(float minValue, float maxValue)
+{
+    m_minValue = minValue;
+    m_maxValue = maxValue;
+    update();
+}
 
 void QcGaugeWidget::setValue(float value)
 {
@@ -67,3 +77,4 @@ font.setPointSize(10);
 painter.setFont(font);
 painter.drawText(QRectF(-50, 30, 100, 30), Qt::AlignCenter,
 QString::number(m_value, 'f', 1));
+}
