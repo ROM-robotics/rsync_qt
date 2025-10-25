@@ -14,8 +14,8 @@ qt_add_executable(tuning_app
     design/rom_structures.h
     communication/ros_bridge_client.hpp
     communication/ros_bridge_client.cpp
-    design/qcgaugewidget.h
-    design/qcgaugewidget.cpp
+
+
     
 )
 

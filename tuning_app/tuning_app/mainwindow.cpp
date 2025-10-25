@@ -185,24 +185,7 @@ void MainWindow::initRos2ControlTab()
 {
     if (ui->ros2_control) 
     {
-        gauge_cmd_vel_unstamped_ = new QcGaugeWidget(ui->ros2_control);
-        gauge_cmd_vel_unstamped_->setMinimumSize(50, 50);
-        gauge_cmd_vel_unstamped_->setRange(0, 70.0);
-        gauge_cmd_vel_unstamped_->setValue(35);
-        gauge_cmd_vel_unstamped_->setObjectName("cmdVelUnstamped");
 
-
-
-        // Ensure the tab has a layout; create a horizontal layout if needed
-        QLayout *existing = ui->ros2_control->layout();
-        QHBoxLayout *layout = qobject_cast<QHBoxLayout*>(existing);
-        if (!layout) {
-            layout = new QHBoxLayout(ui->ros2_control);
-            layout->setContentsMargins(8, 8, 8, 8);
-        }
-
-
-        layout->addWidget(gauge_cmd_vel_unstamped_);
     }
 }
 void MainWindow::activateRos2ControlTab()

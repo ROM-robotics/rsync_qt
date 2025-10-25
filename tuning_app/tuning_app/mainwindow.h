@@ -6,7 +6,6 @@
 #include "design/rom_structures.h"
 #include "communication/ros_bridge_client.hpp"
 
-#include "design/qcgaugewidget.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -68,11 +67,7 @@ private:
     Mode currentMode;
     RosBridgeClient *communication_ = nullptr;
 
-    QcGaugeWidget *gauge_cmd_vel_unstamped_;
 
-    QcGaugeWidget *reserve1_;
-
-    QcGaugeWidget *reserve2_;
     
 private slots:
     void onTabChanged(int index);
