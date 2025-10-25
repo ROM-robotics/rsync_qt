@@ -6,54 +6,474 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>800</width>
+    <width>1000</width>
     <height>600</height>
    </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>800</width>
+    <height>600</height>
+   </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>1400</width>
+    <height>600</height>
+   </size>
   </property>
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
+  <property name="styleSheet">
+   <string notr="true">QTabBar::tab { background: transparent; color: #c3c9d4; }
+QTabBar::tab:hover { background: transparent; color: white; }
+QTabBar::tab:selected { background: white; color: black; }</string>
+  </property>
   <widget class="QWidget" name="centralwidget">
+   <property name="maximumSize">
+    <size>
+     <width>800</width>
+     <height>600</height>
+    </size>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">background: #222;
+color: white;</string>
+   </property>
    <widget class="QTabWidget" name="tabWidget">
     <property name="geometry">
      <rect>
-      <x>10</x>
-      <y>10</y>
-      <width>781</width>
-      <height>581</height>
+      <x>0</x>
+      <y>0</y>
+      <width>800</width>
+      <height>600</height>
      </rect>
     </property>
+    <property name="maximumSize">
+     <size>
+      <width>800</width>
+      <height>600</height>
+     </size>
+    </property>
     <property name="styleSheet">
-     <string notr="true"/>
+     <string notr="true">
+</string>
     </property>
     <property name="currentIndex">
      <number>0</number>
     </property>
     <widget class="QWidget" name="ssh">
      <property name="styleSheet">
-      <string notr="true">
- background: qlineargradient(
-        x1: 0, y1: 0, x2: 1, y2: 1,
-        stop: 0 #5b3cc4,
-        stop: 0.5 #8a42e8,
-        stop: 1 #ff6f91
-    );</string>
+      <string notr="true">background:qlineargradient(spread:pad, x1:0.9, y1:0.2, x2:1, y2:0, stop:0 rgba(0, 0, 0, 255), stop:1 rgba(255, 255, 255, 255))</string>
      </property>
      <attribute name="title">
       <string>ssh</string>
      </attribute>
+     <widget class="QLineEdit" name="ipLineEdit">
+      <property name="geometry">
+       <rect>
+        <x>50</x>
+        <y>30</y>
+        <width>131</width>
+        <height>25</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QLineEdit {
+    padding: 5px;
+    background: #c3c9d4; 
+    color: gray;
+    border-radius: 4px;
+}
+
+QLineEdit:focus {
+	color: black;
+    border: 1px solid orange; 
+    background: white; 
+    qproperty-frame: true; 
+}</string>
+      </property>
+      <property name="placeholderText">
+       <string>192.168.1.1</string>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="passwordLineEdit">
+      <property name="geometry">
+       <rect>
+        <x>220</x>
+        <y>31</y>
+        <width>131</width>
+        <height>25</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QLineEdit {
+    padding: 5px;
+    background: #c3c9d4; 
+    color: gray;
+    border-radius: 4px;
+}
+
+QLineEdit:focus {
+	color: black;
+    border: 1px solid orange; 
+    background: white; 
+    qproperty-frame: true; 
+}</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="rsyncBtn">
+      <property name="geometry">
+       <rect>
+        <x>390</x>
+        <y>31</y>
+        <width>131</width>
+        <height>25</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QPushButton {
+	color: #c3c9d4;
+   border-radius: 4px;
+	border: 1px solid #c3c9d4;
+}
+
+QPushButton:hover {
+	color: white;
+	border: 1px solid orange;
+}
+
+QPushButton:focus {
+    color: white;
+    border: 1px solid orange;
+}</string>
+      </property>
+      <property name="text">
+       <string>Rsync copy</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label">
+      <property name="geometry">
+       <rect>
+        <x>50</x>
+        <y>109</y>
+        <width>701</width>
+        <height>181</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>TextLabel</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="instructionLabel">
+      <property name="geometry">
+       <rect>
+        <x>50</x>
+        <y>80</y>
+        <width>701</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background : transparent;
+color: #c3c9d4;</string>
+      </property>
+      <property name="text">
+       <string>Host ပေါ်က ~/Desktop/Git/rom_robotics directory ကို rsync ဖြင့် Robot ပေါ်သို့ ကူးရန်  အမှန်ခြစ်ပါ။ </string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="terminalStatusLabel">
+      <property name="geometry">
+       <rect>
+        <x>50</x>
+        <y>300</y>
+        <width>471</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">color: #c3c9d4;
+background: transparent;</string>
+      </property>
+      <property name="text">
+       <string>Build Status : </string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="terminalLabel">
+      <property name="geometry">
+       <rect>
+        <x>51</x>
+        <y>330</y>
+        <width>471</width>
+        <height>221</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background: gray;
+color: rgb(246, 245, 244)</string>
+      </property>
+      <property name="text">
+       <string>TextLabel</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="buildDriverBtn">
+      <property name="geometry">
+       <rect>
+        <x>637</x>
+        <y>340</y>
+        <width>131</width>
+        <height>25</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QPushButton {
+	color: #c3c9d4;
+   border-radius: 4px;
+	border: 1px solid #c3c9d4;
+}
+
+QPushButton:hover {
+	color: white;
+	border: 1px solid orange;
+}
+
+QPushButton:focus {
+    color: white;
+    border: 1px solid orange;
+}</string>
+      </property>
+      <property name="text">
+       <string>build driver ws</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="buildSdkBtn">
+      <property name="geometry">
+       <rect>
+        <x>637</x>
+        <y>379</y>
+        <width>131</width>
+        <height>25</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QPushButton {
+	color: #c3c9d4;
+   border-radius: 4px;
+	border: 1px solid #c3c9d4;
+}
+QPushButton:hover {
+	color: white;
+	border: 1px solid orange;
+}
+
+QPushButton:focus {
+    color: white;
+    border: 1px solid orange;
+}</string>
+      </property>
+      <property name="text">
+       <string>build sdk ws</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="buildNavBtn">
+      <property name="geometry">
+       <rect>
+        <x>637</x>
+        <y>419</y>
+        <width>131</width>
+        <height>25</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QPushButton {
+	color: #c3c9d4;
+   border-radius: 4px;
+	border: 1px solid #c3c9d4;
+}
+
+QPushButton:hover {
+	color: white;
+	border: 1px solid orange;
+}
+
+QPushButton:focus {
+    color: white;
+    border: 1px solid orange;
+}</string>
+      </property>
+      <property name="text">
+       <string>build nav2 ws</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="robotTerminalBtn">
+      <property name="geometry">
+       <rect>
+        <x>637</x>
+        <y>479</y>
+        <width>131</width>
+        <height>25</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QPushButton {
+	color: #c3c9d4;
+   border-radius: 4px;
+	border: 1px solid #c3c9d4;
+}
+
+QPushButton:hover {
+	color: white;
+	border: 1px solid orange;
+}
+
+QPushButton:focus {
+    color: white;
+    border: 1px solid orange;
+}</string>
+      </property>
+      <property name="text">
+       <string>Robot Terminal</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="hostTerminalBtn">
+      <property name="geometry">
+       <rect>
+        <x>637</x>
+        <y>519</y>
+        <width>131</width>
+        <height>25</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QPushButton {
+	color: #c3c9d4;
+   border-radius: 4px;
+	border: 1px solid #c3c9d4;
+}
+
+QPushButton:hover {
+	color: white;
+	border: 1px solid orange;
+}
+
+QPushButton:focus {
+    color: white;
+    border: 1px solid orange;
+}</string>
+      </property>
+      <property name="text">
+       <string>Host Terminal</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="rmDriverWsBtn">
+      <property name="geometry">
+       <rect>
+        <x>540</x>
+        <y>340</y>
+        <width>81</width>
+        <height>25</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QPushButton {
+	color: #c3c9d4;
+   border-radius: 4px;
+	border: 1px solid #c3c9d4;
+}
+
+QPushButton:hover {
+	color: white;
+	border: 1px solid orange;
+}
+
+QPushButton:focus {
+    color: white;
+    border: 1px solid orange;
+}</string>
+      </property>
+      <property name="text">
+       <string>Clear</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="rmSdkWsBtn">
+      <property name="geometry">
+       <rect>
+        <x>540</x>
+        <y>380</y>
+        <width>81</width>
+        <height>25</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QPushButton {
+	color: #c3c9d4;
+   border-radius: 4px;
+	border: 1px solid #c3c9d4;
+}
+
+QPushButton:hover {
+	color: white;
+	border: 1px solid orange;
+}
+
+QPushButton:focus {
+    color: white;
+    border: 1px solid orange;
+}</string>
+      </property>
+      <property name="text">
+       <string>Clear</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="rmNav2WsBtn">
+      <property name="geometry">
+       <rect>
+        <x>540</x>
+        <y>419</y>
+        <width>81</width>
+        <height>25</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QPushButton {
+	color: #c3c9d4;
+   border-radius: 4px;
+	border: 1px solid #c3c9d4;
+}
+
+QPushButton:hover {
+	color: white;
+	border: 1px solid orange;
+}
+
+QPushButton:focus {
+    color: white;
+    border: 1px solid orange;
+}</string>
+      </property>
+      <property name="text">
+       <string>Clear</string>
+      </property>
+     </widget>
     </widget>
     <widget class="QWidget" name="ros2_control">
      <property name="styleSheet">
-      <string notr="true">background: #222;</string>
+      <string notr="true">background:qlineargradient(spread:pad, x1:0.8, y1:0.3, x2:1, y2:0, stop:0 rgba(0, 0, 0, 255), stop:1 rgba(255, 255, 255, 255))</string>
      </property>
      <attribute name="title">
-      <string>ros2_control</string>
+      <string>control</string>
      </attribute>
     </widget>
     <widget class="QWidget" name="ekf">
      <property name="styleSheet">
-      <string notr="true">background:qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgba(0, 0, 0, 255), stop:1 rgba(255, 255, 255, 255))</string>
+      <string notr="true">background:qlineargradient(spread:pad, x1:0.7, y1:0.4, x2:1, y2:0, stop:0 rgba(0, 0, 0, 255), stop:1 rgba(255, 255, 255, 255))</string>
      </property>
      <attribute name="title">
       <string>ekf</string>
@@ -61,7 +481,7 @@
     </widget>
     <widget class="QWidget" name="carto">
      <property name="styleSheet">
-      <string notr="true">background:qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgba(9, 41, 4, 255), stop:0.085 rgba(2, 79, 0, 255), stop:0.19 rgba(50, 147, 22, 255), stop:0.275 rgba(236, 191, 49, 255), stop:0.39 rgba(243, 61, 34, 255), stop:0.555 rgba(135, 81, 60, 255), stop:0.667 rgba(121, 75, 255, 255), stop:0.825 rgba(164, 255, 244, 255), stop:0.885 rgba(104, 222, 71, 255), stop:1 rgba(93, 128, 0, 255))</string>
+      <string notr="true">background:qlineargradient(spread:pad, x1:0.6, y1:0.5, x2:1, y2:0, stop:0 rgba(0, 0, 0, 255), stop:1 rgba(255, 255, 255, 255))</string>
      </property>
      <attribute name="title">
       <string>carto</string>
@@ -69,31 +489,31 @@
     </widget>
     <widget class="QWidget" name="navi2_one">
      <property name="styleSheet">
-      <string notr="true">background: rgb(249, 240, 107)</string>
+      <string notr="true">background:qlineargradient(spread:pad, x1:0.5, y1:0.6, x2:1, y2:0, stop:0 rgba(0, 0, 0, 255), stop:1 rgba(255, 255, 255, 255))</string>
      </property>
      <attribute name="title">
-      <string>navi2 one</string>
+      <string>navi2 1</string>
      </attribute>
     </widget>
     <widget class="QWidget" name="navi2_two">
      <property name="styleSheet">
-      <string notr="true">background: rgb(220, 138, 221)</string>
+      <string notr="true">background:qlineargradient(spread:pad, x1:0.7, y1:0.8, x2:1, y2:0, stop:0 rgba(0, 0, 0, 255), stop:1 rgba(255, 255, 255, 255))</string>
      </property>
      <attribute name="title">
-      <string>navi2 two</string>
+      <string>navi2 2</string>
      </attribute>
     </widget>
     <widget class="QWidget" name="navi2_three">
      <property name="styleSheet">
-      <string notr="true">background: rgb(153, 193, 241)</string>
+      <string notr="true">background:qlineargradient(spread:pad, x1:0.9, y1:1.0, x2:1, y2:0, stop:0 rgba(0, 0, 0, 255), stop:1 rgba(255, 255, 255, 255))</string>
      </property>
      <attribute name="title">
-      <string>navi2 three</string>
+      <string>navi2 3</string>
      </attribute>
     </widget>
     <widget class="QWidget" name="bt">
      <property name="styleSheet">
-      <string notr="true">background: rgb(152, 106, 68)</string>
+      <string notr="true">background:qlineargradient(spread:pad, x1:1.1, y1:1.2, x2:1, y2:0, stop:0 rgba(0, 0, 0, 255), stop:1 rgba(255, 255, 255, 255))</string>
      </property>
      <attribute name="title">
       <string>bt</string>
@@ -101,7 +521,7 @@
     </widget>
     <widget class="QWidget" name="topic">
      <property name="styleSheet">
-      <string notr="true">background: qconicalgradient(cx:0, cy:0, angle:135, stop:0 rgba(255, 255, 0, 69), stop:0.375 rgba(255, 255, 0, 69), stop:0.423533 rgba(251, 255, 0, 145), stop:0.45 rgba(247, 255, 0, 208), stop:0.477581 rgba(255, 244, 71, 130), stop:0.518717 rgba(255, 218, 71, 130), stop:0.55 rgba(255, 255, 0, 255), stop:0.57754 rgba(255, 203, 0, 130), stop:0.625 rgba(255, 255, 0, 69), stop:1 rgba(255, 255, 0, 69))</string>
+      <string notr="true">background:qlineargradient(spread:pad, x1:1.3, y1:1.4, x2:1, y2:0, stop:0 rgba(0, 0, 0, 255), stop:1 rgba(255, 255, 255, 255))</string>
      </property>
      <attribute name="title">
       <string>topic</string>
@@ -109,12 +529,42 @@
     </widget>
     <widget class="QWidget" name="log">
      <property name="styleSheet">
-      <string notr="true">background: qradialgradient(spread:repeat, cx:0.5, cy:0.5, radius:0.077, fx:0.5, fy:0.5, stop:0 rgba(0, 169, 255, 147), stop:0.497326 rgba(0, 0, 0, 147), stop:1 rgba(0, 169, 255, 147))</string>
+      <string notr="true">background:qlineargradient(spread:pad, x1:1.7, y1:1.8, x2:1, y2:0, stop:0 rgba(0, 0, 0, 255), stop:1 rgba(255, 255, 255, 255))</string>
      </property>
      <attribute name="title">
       <string>log</string>
      </attribute>
     </widget>
+   </widget>
+   <widget class="QPushButton" name="closeBtn">
+    <property name="geometry">
+     <rect>
+      <x>778</x>
+      <y>5</y>
+      <width>20</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="maximumSize">
+     <size>
+      <width>50</width>
+      <height>50</height>
+     </size>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QPushButton {
+    color: white;
+background-color: #222;
+}
+
+QPushButton:hover {
+    background-color: white;
+color: black;
+}</string>
+    </property>
+    <property name="text">
+     <string>X</string>
+    </property>
    </widget>
   </widget>
  </widget>

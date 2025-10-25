@@ -67,12 +67,20 @@ private:
     Mode currentMode;
     RosBridgeClient *communication_ = nullptr;
 
-
+    // --- Window Drag Members ---
+    QPoint m_dragPosition;
+    bool m_isDragging = false;
+    // ---------------------------
     
 private slots:
     void onTabChanged(int index);
+    void on_closeBtn_clicked();
 
-
+protected:
+    // --- Window Drag Functionality ---
+    void mousePressEvent(QMouseEvent *event) override;
+    void mouseMoveEvent(QMouseEvent *event) override;
+    void mouseReleaseEvent(QMouseEvent *event) override;
     
 };
 #endif // MAINWINDOW_H
