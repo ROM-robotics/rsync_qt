@@ -11,6 +11,9 @@
 #include <QDir>
 #include <QProcess>
 #include <QRandomGenerator>
+#include <QObject>
+#include <QQmlContext>
+#include <QQuickItem>
 
 
 MainWindow::MainWindow(QWidget *parent)
@@ -20,6 +23,8 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
     this->setFixedSize(800, 600);
     this->setWindowFlags(this->windowFlags() | Qt::FramelessWindowHint);
+    // allow the main window to have a transparent background so QQuickWidget alpha shows through
+    //this->setAttribute(Qt::WA_TranslucentBackground);
     
     if (ui->tabWidget && ui->tabWidget->tabBar()) 
     {   // tab bar တွေညီအောင်လို့။
@@ -38,6 +43,8 @@ MainWindow::MainWindow(QWidget *parent)
 
     // signal and slots 
     connect(ui->tabWidget, &QTabWidget::currentChanged, this, &MainWindow::onTabChanged);
+    connect(communication_, &RosBridgeClient::receivedRos2controlMessage, this, &MainWindow::onRos2ControlVelocity);
+
 
     currentMode = Mode::ssh;
     qDebug() << " currentMode = " << ModeToString(currentMode).c_str();
@@ -341,9 +348,72 @@ void MainWindow::on_robotTerminalBtn_clicked()
 // OUR UI METHODS
 void MainWindow::initRos2ControlTab()
 {
-    if (ui->ros2_control) 
+    if (ui->ros2_control)
     {
+         // Remove any existing layout
+        QLayout *existing = ui->ros2_control->layout();
+        if (existing) {
+            delete existing;
+        }
 
+        // --- Create a vertical layout (main container) ---
+        QVBoxLayout *vLayout = new QVBoxLayout(ui->ros2_control);
+        vLayout->setContentsMargins(8, 8, 8, 8);  // 8px padding around edges
+        vLayout->setSpacing(8);                   // Space between elements (layouts)
+        ui->ros2_control->setLayout(vLayout);
+
+        // --- Create a horizontal layout for the 3 meters ---
+        QHBoxLayout *hLayout = new QHBoxLayout();
+        hLayout->setSpacing(16);  // space between meters
+
+        // --- Prepare meters ---
+        qmlView_.clear();
+
+        QQuickWidget *speed_meter   = new QQuickWidget(ui->ros2_control);
+        QQuickWidget *leftRpm_meter = new QQuickWidget(ui->ros2_control);
+        QQuickWidget *rightRpm_meter= new QQuickWidget(ui->ros2_control);
+
+        QVector<QQuickWidget*> meterWidgets = { speed_meter, leftRpm_meter, rightRpm_meter };
+
+        for(int i = 0; i < meterWidgets.size(); ++i)
+        {
+            QQuickWidget *meter = meterWidgets[i];
+            meter->setResizeMode(QQuickWidget::SizeRootObjectToView);
+
+            // Set fixed height (e.g., 60% of container height)
+            int meterHeight = static_cast<int>(ui->ros2_control->height() * 0.6);
+            meter->setMinimumHeight(meterHeight);
+            meter->setMaximumHeight(meterHeight);
+
+            meter->setClearColor(QColor("#2e2e2e"));
+
+
+            // Make them expand horizontally but fixed vertically
+            meter->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
+
+            // Load the QML
+            if (i == 0) {
+                meter->setSource(QUrl(QStringLiteral("qrc:/Speed.qml")));
+            } else if (i == 1) {
+                meter->setSource(QUrl(QStringLiteral("qrc:/LeftSpeed.qml")));
+            } else if (i == 2) {
+                meter->setSource(QUrl(QStringLiteral("qrc:/RightSpeed.qml")));
+            }
+
+            if (meter->status() != QQuickWidget::Ready) {
+                qWarning() << "Failed to load QML for meter" << i << ":" << meter->errors();
+            }
+
+            // Add to layout and store reference
+            hLayout->addWidget(meter, 1);  // equal width
+            qmlView_.append(meter);
+        }
+
+        // --- Add the horizontal layout to the vertical layout ---
+        vLayout->addLayout(hLayout);
+
+        // --- Add a stretch below so meters stay at the top ---
+        vLayout->addStretch(1);
     }
 }
 void MainWindow::activateRos2ControlTab()
@@ -573,6 +643,83 @@ void MainWindow::deactivateLogTab()
     //qDebug() << "Unsubscribed to " << example_topic_name;
 
 }
+
+
+void MainWindow::onRos2ControlVelocity(const QString &topic, const QJsonObject &msg)
+{
+    // topic name က /diff_controller/cmd_vel_unstamped 
+    if( topic == "/diff_controller/cmd_vel_unstamped" )
+    {
+        if (qmlView_.size() != 3) return;
+
+        QObject* root = qmlView_[0] ? qmlView_[0]->rootObject() : nullptr;
+
+        // If the message is empty or does not contain 'linear', treat as no data (publisher exists but not publishing)
+        if ( msg.isEmpty() || !msg.contains("linear") ) {
+            if (root) {
+                root->setProperty("speed", 0.0);
+            }
+            return;
+        }
+
+        QJsonObject linear = msg.value("linear").toObject();
+        double vx = linear.value("x").toDouble();
+        //double vy = linear.value("y").toDouble();
+        if ( vx < 0 ) { vx *= -1; }
+
+        double speed = vx; 
+
+        if (root) 
+        {
+            QVariant qmlSpeed = QVariant::fromValue(speed);
+            root->setProperty("speed", qmlSpeed);
+        }
+
+        int right_rpm = 0;
+        int left_rpm  = 0;
+
+        QJsonObject angular = msg.value("angular").toObject();
+        double vz = angular.value("z").toDouble();
+        robotVelocityToWheelRpms(vx, vz, wheel_radius_, wheel_seperation_, left_rpm, right_rpm);
+
+        if( right_rpm < 0 ) { right_rpm *= -1; }
+        if( left_rpm  < 0 ) { left_rpm  *= -1; }
+
+        // right rpm
+        QObject* right_root = qmlView_[2] ? qmlView_[2]->rootObject() : nullptr;
+        if (right_root)
+        {
+            QVariant qmlRightRpm = QVariant::fromValue(right_rpm);
+            right_root->setProperty("speed", qmlRightRpm);
+        }
+        // left rpm
+        QObject* left_root = qmlView_[1] ? qmlView_[1]->rootObject() : nullptr;
+        if (left_root)
+        {
+            QVariant qmlLeftRpm = QVariant::fromValue(left_rpm);
+            left_root->setProperty("speed", qmlLeftRpm);
+        }
+
+    }
+
+}
+
+
+void MainWindow::robotVelocityToWheelRpms(double linear_velocity, double angular_velocity, double wheel_radius, double wheel_seperation, int &left_rpm, int &right_rpm)
+{
+    // Calculate wheel linear velocities
+    double v_left = linear_velocity - (angular_velocity * wheel_seperation / 2.0);
+    double v_right = linear_velocity + (angular_velocity * wheel_seperation / 2.0);
+
+    // Convert linear velocities to angular velocities (rad/s)
+    double omega_left = v_left / wheel_radius;
+    double omega_right = v_right / wheel_radius;
+
+    // Convert angular velocities to RPM
+    left_rpm = static_cast<int>((omega_left * 60.0) / (2.0 * M_PI));
+    right_rpm = static_cast<int>((omega_right * 60.0) / (2.0 * M_PI));
+}
+
 
 
 // OVERRIDE METHODS

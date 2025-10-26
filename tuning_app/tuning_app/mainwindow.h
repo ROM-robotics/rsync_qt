@@ -6,6 +6,7 @@
 #include "design/rom_structures.h"
 #include "communication/ros_bridge_client.hpp"
 #include <QString>
+#include <QQuickWidget>
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -57,6 +58,8 @@ public:
     void activateLogTab();
     void deactivateLogTab();
 
+    void robotVelocityToWheelRpms(double linear_velocity, double angular_velocity, double wheel_radius, double wheel_seperation, int &left_rpm, int &right_rpm);
+
 
 private:
     Ui::MainWindow *ui;
@@ -70,6 +73,19 @@ private:
 
     Mode currentMode;
     RosBridgeClient *communication_ = nullptr;
+
+    // QRC speed meter
+    QVector<QQuickWidget*> qmlView_;
+    QQuickItem *qmlRoot_ = nullptr;
+    QTimer *qmlUpdateTimer_ = nullptr;
+
+    // robotspecs
+    double wheel_radius_ = 0.05; // meters
+    double wheel_seperation_ = 0.3; // meters
+
+    QVector<QTimer*> speedTimeoutTimers_;
+
+
     
 private slots:
     void onTabChanged(int index);
@@ -77,6 +93,11 @@ private slots:
     void on_rsyncBtn_clicked();
     void on_hostTerminalBtn_clicked();
     void on_robotTerminalBtn_clicked();
+    
+    
+    // from web socket    
+    void onRos2ControlVelocity(const QString &topic, const QJsonObject &msg);
+
 
 protected:
     

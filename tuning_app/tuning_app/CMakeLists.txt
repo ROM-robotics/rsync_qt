@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.19)
 project(tuning_app LANGUAGES CXX)
 
-find_package(Qt6 6.5 REQUIRED COMPONENTS Core Widgets Gui Charts Network WebSockets)
+find_package(Qt6 6.5 REQUIRED COMPONENTS Core Widgets Gui Charts Network WebSockets Quick QuickWidgets Qml)
 
 qt_standard_project_setup()
 
@@ -28,9 +28,22 @@ target_link_libraries(tuning_app PRIVATE
     Qt${QT_VERSION_MAJOR}::Charts
     Qt${QT_VERSION_MAJOR}::Network
     Qt${QT_VERSION_MAJOR}::WebSockets
+    Qt${QT_VERSION_MAJOR}::Quick
+    Qt${QT_VERSION_MAJOR}::QuickWidgets
+    Qt${QT_VERSION_MAJOR}::Qml
 )
 
 include(GNUInstallDirs)
+
+qt_add_resources(tuning_app "resources"
+    PREFIX "/"
+    FILES
+        Speed.qml
+        RightSpeed.qml
+        LeftSpeed.qml
+)
+
+
 
 install(TARGETS tuning_app
     BUNDLE  DESTINATION .

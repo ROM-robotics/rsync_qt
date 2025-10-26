@@ -130,7 +130,7 @@ void RosBridgeClient::onTextMessageReceived(const QString &msg)
                               .arg(ROM_COLOR_GREEN).arg(msg).arg(ROM_COLOR_RESET);
     #endif
 
-    qDebug() << " RosBridgeClient::onTextMessageReceived Msg: " << msg;
+    // qDebug() << " RosBridgeClient::onTextMessageReceived Msg: " << msg;
 
     QJsonParseError err{};
     QJsonDocument doc = QJsonDocument::fromJson(msg.toUtf8(), &err);
