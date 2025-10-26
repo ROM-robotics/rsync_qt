@@ -23,8 +23,6 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
     this->setFixedSize(800, 600);
     this->setWindowFlags(this->windowFlags() | Qt::FramelessWindowHint);
-    // allow the main window to have a transparent background so QQuickWidget alpha shows through
-    //this->setAttribute(Qt::WA_TranslucentBackground);
     
     if (ui->tabWidget && ui->tabWidget->tabBar()) 
     {   // tab bar တွေညီအောင်လို့။
@@ -38,13 +36,10 @@ MainWindow::MainWindow(QWidget *parent)
         }
     }
 
-    // bridge driver နဲ့ ဆက်သွယ်ဖို့ 
-    communication_ = new RosBridgeClient("", RobotIp, RobotPort.toInt(), this);
+    ui->ipLineEdit->setFocus();
 
     // signal and slots 
     connect(ui->tabWidget, &QTabWidget::currentChanged, this, &MainWindow::onTabChanged);
-    connect(communication_, &RosBridgeClient::receivedRos2controlMessage, this, &MainWindow::onRos2ControlVelocity);
-
 
     currentMode = Mode::ssh;
     qDebug() << " currentMode = " << ModeToString(currentMode).c_str();
@@ -61,37 +56,51 @@ MainWindow::~MainWindow()
 // SLOT METHODS
 void MainWindow::onTabChanged(int index)
 {
+    qDebug() << "is connected status: " << this->isConnected_; 
     switch (index) 
     {
         case 0:
             currentMode = Mode::ssh;
             break;
         case 1:
+            if(!this->isConnected_) { ui->tabWidget->setCurrentIndex(0); return; }
             currentMode = Mode::ros2_control;
             break;
         case 2:
+            if(!this->isConnected_) { ui->tabWidget->setCurrentIndex(0); return; }
             currentMode = Mode::ekf;
             break;
         case 3:
-            currentMode = Mode::nav2_1;
+            if(!this->isConnected_) { ui->tabWidget->setCurrentIndex(0); return; }
+            currentMode = Mode::carto;
             break;
         case 4:
-            currentMode = Mode::nav2_2;
+            if(!this->isConnected_) { ui->tabWidget->setCurrentIndex(0); return; }
+            currentMode = Mode::nav2_1;
             break;
         case 5:
-            currentMode = Mode::nav2_3;
+            if(!this->isConnected_) { ui->tabWidget->setCurrentIndex(0); return; }
+            currentMode = Mode::nav2_2;
             break;
         case 6:
-            currentMode = Mode::bt;
+            if(!this->isConnected_) { ui->tabWidget->setCurrentIndex(0); return; }
+            currentMode = Mode::nav2_3;
             break;
         case 7:
-            currentMode = Mode::topic;
+            if(!this->isConnected_) { ui->tabWidget->setCurrentIndex(0); return; }
+            currentMode = Mode::bt;
             break;
         case 8:
+            if(!this->isConnected_) { ui->tabWidget->setCurrentIndex(0); return; }
+            currentMode = Mode::topic;
+            break;
+        case 9:
+            if(!this->isConnected_) { ui->tabWidget->setCurrentIndex(0); return; }
             currentMode = Mode::log;
             break;
         default:
             // Handle unexpected index
+            if(!this->isConnected_) { ui->tabWidget->setCurrentIndex(0); return; }
             break;
     }
     qDebug() << " currentMode = " << ModeToString(currentMode).c_str();
@@ -112,6 +121,7 @@ void MainWindow::onTabChanged(int index)
             break;
         case Mode::ros2_control:
             activateRos2ControlTab();
+
             deactivateEkfTab();
             deactivateCartoTab();
             deactivateNav2_1Tab();
@@ -124,8 +134,23 @@ void MainWindow::onTabChanged(int index)
             break;
         case Mode::ekf:
             deactivateRos2ControlTab();
+
             activateEkfTab();
+
             deactivateCartoTab();
+            deactivateNav2_1Tab();
+            deactivateNav2_2Tab();
+            deactivateNav2_3Tab();
+            deactivateBtTab();
+            deactivateTopicTab();
+            deactivateLogTab();
+            break;
+        case Mode::carto:
+            deactivateRos2ControlTab();
+            deactivateEkfTab();
+
+            activateCartoTab();
+
             deactivateNav2_1Tab();
             deactivateNav2_2Tab();
             deactivateNav2_3Tab();
@@ -137,7 +162,9 @@ void MainWindow::onTabChanged(int index)
             deactivateRos2ControlTab();
             deactivateEkfTab();
             deactivateCartoTab();
+
             activateNav2_1Tab();
+
             deactivateNav2_2Tab();
             deactivateNav2_3Tab();
             deactivateBtTab();
@@ -149,7 +176,9 @@ void MainWindow::onTabChanged(int index)
             deactivateEkfTab();
             deactivateCartoTab();
             deactivateNav2_1Tab();
+
             activateNav2_2Tab();
+
             deactivateNav2_3Tab();
             deactivateBtTab();
             deactivateTopicTab();
@@ -161,7 +190,9 @@ void MainWindow::onTabChanged(int index)
             deactivateCartoTab();
             deactivateNav2_1Tab();
             deactivateNav2_2Tab();
+
             activateNav2_3Tab();
+
             deactivateBtTab();
             deactivateTopicTab();
             deactivateLogTab();
@@ -173,7 +204,9 @@ void MainWindow::onTabChanged(int index)
             deactivateNav2_1Tab();
             deactivateNav2_2Tab();
             deactivateNav2_3Tab();
+
             activateBtTab();
+
             deactivateTopicTab();
             deactivateLogTab();
             break;
@@ -185,7 +218,9 @@ void MainWindow::onTabChanged(int index)
             deactivateNav2_2Tab();
             deactivateNav2_3Tab();
             deactivateBtTab();
+
             activateTopicTab();
+
             deactivateLogTab();
             break;
         case Mode::log:
@@ -196,15 +231,15 @@ void MainWindow::onTabChanged(int index)
             deactivateNav2_2Tab();
             deactivateNav2_3Tab();
             deactivateBtTab();
-            deactivateTopicTab(); 
+            deactivateTopicTab();
+
             activateLogTab();
             break;
         default:
             // Handle unexpected index
             break;
     }
-
-
+    qDebug() << "Done";
 }
 void MainWindow::on_rsyncBtn_clicked()
 {
@@ -223,7 +258,13 @@ void MainWindow::on_rsyncBtn_clicked()
         label->setAlignment(Qt::AlignCenter);
         QPushButton *okBtn = new QPushButton("OK", &dlg);
         okBtn->setGeometry(150, 150, 100, 30);
-        QObject::connect(okBtn, &QPushButton::clicked, &dlg, &QDialog::accept);
+
+        //QObject::connect(okBtn, &QPushButton::clicked, &dlg, &QDialog::accept);
+        QObject::connect(okBtn, &QPushButton::clicked, this, [this, dlgPtr = &dlg]() {
+            dlgPtr->accept();
+            if (ui && ui->ipLineEdit) ui->ipLineEdit->setFocus();
+        });
+
         QVBoxLayout *layout = new QVBoxLayout;
         layout->addWidget(label);
         layout->addWidget(okBtn);
@@ -246,7 +287,13 @@ void MainWindow::on_rsyncBtn_clicked()
         label->setAlignment(Qt::AlignCenter);
         QPushButton *okBtn = new QPushButton("OK", &dlg);
         okBtn->setGeometry(150, 150, 100, 30);
-        QObject::connect(okBtn, &QPushButton::clicked, &dlg, &QDialog::accept);
+
+        //QObject::connect(okBtn, &QPushButton::clicked, &dlg, &QDialog::accept);
+        QObject::connect(okBtn, &QPushButton::clicked, this, [this, dlgPtr = &dlg]() {
+            dlgPtr->accept();
+            if (ui && ui->passwordLineEdit) ui->passwordLineEdit->setFocus();
+        });
+
         QVBoxLayout *layout = new QVBoxLayout;
         layout->addWidget(label);
         layout->addWidget(okBtn);
@@ -262,11 +309,15 @@ void MainWindow::on_rsyncBtn_clicked()
     }
 
     // Store in class variable
-    RobotIp = ip;
-    password_ = password;
-    RobotNamespace = robot_ns;
-    qDebug() << "RobotIp set to: " << RobotIp;
-    qDebug() << "RobotNamespace set to: " << RobotNamespace;
+    this->robotIp_ = ip;
+    this->password_ = password;
+    this->robotNamespace_ = robot_ns;
+
+    createCommunicationClient(this->robotNamespace_, this->robotIp_, this->robotPort_.toInt());
+
+    qDebug() << "robotIp_: " << this->robotIp_;
+    qDebug() << "password_ : " << this->password_;
+    qDebug() << "robotNamespace_ : " << this->robotNamespace_;
 
     QDir currentDir = QDir::currentPath();
     qDebug() << "Current Directory: " << currentDir.path();
@@ -276,11 +327,89 @@ void MainWindow::on_rsyncBtn_clicked()
     QString rsync_app = currentDir.path() + "/rsync_qt/apprsync_qt";
 
     QStringList arguments;
-    arguments << "--ip" << RobotIp << "--password" << password;
+    arguments << "--ip" << robotIp_ << "--password" << password;
     
     QProcess *proc = new QProcess(this);
     proc->start(rsync_app, arguments);
     //proc->start(rsync_app);
+}
+void MainWindow::on_connectBtn_clicked()
+{
+    qDebug() << "Connection button clicked!";
+
+    QString ip = ui->ipLineEdit->text().trimmed();
+    QString password = ui->passwordLineEdit->text();
+    QString robot_ns = ui->nsLineEdit->text().trimmed();
+
+    if (ip.isEmpty()) 
+    {
+        QDialog dlg(this);
+        dlg.setWindowTitle("Missing IP");
+        dlg.setFixedSize(400, 100);
+        QLabel *label = new QLabel("Please enter the robot IP address.", &dlg);
+        label->setAlignment(Qt::AlignCenter);
+        QPushButton *okBtn = new QPushButton("OK", &dlg);
+        okBtn->setGeometry(150, 150, 100, 30);
+
+        //QObject::connect(okBtn, &QPushButton::clicked, &dlg, &QDialog::accept);
+        QObject::connect(okBtn, &QPushButton::clicked, this, [this, dlgPtr = &dlg]() {
+            dlgPtr->accept();
+            if (ui && ui->ipLineEdit) ui->ipLineEdit->setFocus();
+        });
+
+        QVBoxLayout *layout = new QVBoxLayout;
+        layout->addWidget(label);
+        layout->addWidget(okBtn);
+        dlg.setLayout(layout);
+        // Center dialog over main window
+        QPoint center = this->geometry().center();
+        QPoint globalCenter = this->mapToGlobal(center);
+        int dlgX = globalCenter.x() - dlg.width() / 2;
+        int dlgY = globalCenter.y() - dlg.height() / 2;
+        dlg.move(dlgX, dlgY);
+        dlg.exec();
+        return;
+    }
+    if (password.isEmpty()) 
+    {
+        QDialog dlg(this);
+        dlg.setWindowTitle("Missing Password");
+        dlg.setFixedSize(400, 100);
+        QLabel *label = new QLabel("Please enter the password.", &dlg);
+        label->setAlignment(Qt::AlignCenter);
+        QPushButton *okBtn = new QPushButton("OK", &dlg);
+        okBtn->setGeometry(150, 150, 100, 30);
+
+        //QObject::connect(okBtn, &QPushButton::clicked, &dlg, &QDialog::accept);
+        QObject::connect(okBtn, &QPushButton::clicked, this, [this, dlgPtr = &dlg]() {
+            dlgPtr->accept();
+            if (ui && ui->passwordLineEdit) ui->passwordLineEdit->setFocus();
+        });
+
+        QVBoxLayout *layout = new QVBoxLayout;
+        layout->addWidget(label);
+        layout->addWidget(okBtn);
+        dlg.setLayout(layout);
+        // Center dialog over main window
+        QPoint center = this->geometry().center();
+        QPoint globalCenter = this->mapToGlobal(center);
+        int dlgX = globalCenter.x() - dlg.width() / 2;
+        int dlgY = globalCenter.y() - dlg.height() / 2;
+        dlg.move(dlgX, dlgY);
+        dlg.exec();
+        return;
+    }
+
+    // Store in class variable
+    this->robotIp_ = ip;
+    this->password_ = password;
+    this->robotNamespace_ = robot_ns;
+
+    createCommunicationClient(this->robotNamespace_, this->robotIp_, this->robotPort_.toInt());
+
+    qDebug() << "robotIp_: " << this->robotIp_;
+    qDebug() << "password_ : " << this->password_;
+    qDebug() << "robotNamespace_ : " << this->robotNamespace_;
 }
 void MainWindow::on_closeBtn_clicked()
 {
@@ -288,22 +417,6 @@ void MainWindow::on_closeBtn_clicked()
 }
 void MainWindow::on_hostTerminalBtn_clicked()
 {
-    // QString echo_style1  = "echo -e '\e]11;rgb:00/AA/BB\a'";
-    // QString class_black  = "echo -e '\e]11;rgb:00/00/00\a'";
-    // QString bright_white = "echo -e '\e]11;rgb:FF/FF/FF\a'";
-    // QString navy_blue    = "echo -e '\e]11;rgb:00/00/80\a'";
-    // QString forest_green = "echo -e '\e]11;rgb:22/8B/22\a'";
-    // QString vibrant_cyan = "echo -e '\e]11;rgb:00/FF/FF\a'";
-    // QString warm_sepia   = "echo -e '\e]11;rgb:F0/E6/8C\a'";
-    // QString deep_purple  = "echo -e '\e]11;rgb:4B/00/82\a'";
-    // QString soft_gray    = "echo -e '\e]11;rgb:A9/A9/A9\a'";
-    // QString bold_old     = "echo -e '\e]11;rgb:FF/A5/00\a'";
-    // QString hot_pink     = "echo -e '\e]11;rgb:FF/69/B4\a'";
-
-    // QStringList args;
-    // args << "--" << "bash" << "-c" << echo_style1 + "; exec bash";
-    // QProcess::startDetached("gnome-terminal", args);
-
     QStringList colorCmds = {
         "echo -e '\\e]11;rgb:00/AA/BB\\a'", // echo_style1
         "echo -e '\\e]11;rgb:00/00/00\\a'", // class_black
@@ -335,13 +448,27 @@ void MainWindow::on_hostTerminalBtn_clicked()
 }
 void MainWindow::on_robotTerminalBtn_clicked()
 {
-    qDebug() << "RobotIp set to: " << RobotIp;
+    qDebug() << "robotIp_ set to: " << robotIp_;
     qDebug() << "input_password set to: " << password_;
 
-    QString sshCmd = QString("sshpass -p '%1' ssh mr_robot@%2").arg(password_, RobotIp);
+    QString sshCmd = QString("sshpass -p '%1' ssh mr_robot@%2").arg(password_, robotIp_);
     QStringList args;
     args << "--" << "bash" << "-c" << sshCmd;
     QProcess::startDetached("gnome-terminal", args);
+}
+void MainWindow::createCommunicationClient(const QString &robot_ns, const QString &host, quint16 port)
+{
+    qDebug() << "Hacked" ;
+    this->isConnected_ = true;
+
+    if(communication_)
+    {
+        communication_->deleteLater();
+        communication_ = nullptr;
+    }
+    // bridge driver နဲ့ ဆက်သွယ်ဖို့ 
+    communication_ = new RosBridgeClient(robot_ns, host, port, this);
+    connect(communication_, &RosBridgeClient::receivedRos2controlMessage, this, &MainWindow::onRos2ControlVelocity);
 }
 
 

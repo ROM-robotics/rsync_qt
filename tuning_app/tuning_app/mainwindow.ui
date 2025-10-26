@@ -82,7 +82,7 @@ color: white;</string>
      <widget class="QLineEdit" name="ipLineEdit">
       <property name="geometry">
        <rect>
-        <x>79</x>
+        <x>59</x>
         <y>260</y>
         <width>131</width>
         <height>25</height>
@@ -110,7 +110,7 @@ QLineEdit:focus {
      <widget class="QLineEdit" name="passwordLineEdit">
       <property name="geometry">
        <rect>
-        <x>249</x>
+        <x>220</x>
         <y>261</y>
         <width>131</width>
         <height>25</height>
@@ -138,7 +138,7 @@ QLineEdit:focus {
      <widget class="QLineEdit" name="nsLineEdit">
       <property name="geometry">
        <rect>
-        <x>420</x>
+        <x>380</x>
         <y>260</y>
         <width>131</width>
         <height>25</height>
@@ -166,7 +166,7 @@ QLineEdit:focus {
      <widget class="QPushButton" name="rsyncBtn">
       <property name="geometry">
        <rect>
-        <x>590</x>
+        <x>540</x>
         <y>260</y>
         <width>131</width>
         <height>25</height>
@@ -191,6 +191,38 @@ QPushButton:focus {
       </property>
       <property name="text">
        <string>Rsync App</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="connectBtn">
+      <property name="geometry">
+       <rect>
+        <x>700</x>
+        <y>260</y>
+        <width>25</width>
+        <height>25</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QPushButton {
+	color: #c3c9d4;
+    border-radius: 12px;
+	border: 1px solid #c3c9d4;
+}
+
+QPushButton:hover {
+	color: white;
+	border: 1px solid orange;
+}
+
+QPushButton:focus {
+    color: white;
+    border: 1px solid orange;
+}
+
+</string>
+      </property>
+      <property name="text">
+       <string>Go</string>
       </property>
      </widget>
      <widget class="QPushButton" name="hostTerminalBtn">

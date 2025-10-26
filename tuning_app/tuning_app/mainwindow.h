@@ -22,6 +22,8 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
+    void createCommunicationClient(const QString &robot_ns, const QString &host, quint16 port);
+
     void initRos2ControlTab();
     void activateRos2ControlTab();
     void deactivateRos2ControlTab();
@@ -64,10 +66,11 @@ public:
 private:
     Ui::MainWindow *ui;
 
-    QString RobotIp = "192.168.1.9";
-    QString RobotPort = "9090";
-    QString password_ = "ghostman";
-    QString RobotNamespace = "";
+    QString robotIp_         = "192.168.1.xx";
+    QString robotPort_       = "9090";
+    QString password_        = "ghostman";
+    QString robotNamespace_  = "";
+    bool isConnected_        = false;
 
     int previousCmdColorIndex = -1;
 
@@ -78,22 +81,22 @@ private:
     QVector<QQuickWidget*> qmlView_;
     QQuickItem *qmlRoot_ = nullptr;
     QTimer *qmlUpdateTimer_ = nullptr;
+    QVector<QTimer*> speedTimeoutTimers_;
 
     // robotspecs
     double wheel_radius_ = 0.05; // meters
     double wheel_seperation_ = 0.3; // meters
 
-    QVector<QTimer*> speedTimeoutTimers_;
+signals:
+    //void createCommunicationClient(const QString &robot_ns, const QString &host, quint16 port);
 
-
-    
 private slots:
     void onTabChanged(int index);
     void on_closeBtn_clicked();
     void on_rsyncBtn_clicked();
+    void on_connectBtn_clicked();
     void on_hostTerminalBtn_clicked();
     void on_robotTerminalBtn_clicked();
-    
     
     // from web socket    
     void onRos2ControlVelocity(const QString &topic, const QJsonObject &msg);

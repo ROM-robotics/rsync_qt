@@ -33,6 +33,7 @@ enum class Mode {
     ssh,          // default
     ros2_control,
     ekf,
+    carto,
     nav2_1,
     nav2_2,
     nav2_3,
@@ -49,6 +50,8 @@ inline std::string ModeToString(Mode mode)
             return "ros2_control";
         case Mode::ekf:
             return "ekf";
+        case Mode::carto:
+            return "carto";
         case Mode::nav2_1:
             return "nav2_1";
         case Mode::nav2_2:
