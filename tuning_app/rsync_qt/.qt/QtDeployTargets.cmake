@@ -1,0 +1,2 @@
+set(__QT_DEPLOY_TARGET_apprsync_qt_FILE /home/mr_robot/Desktop/Git/rsync_qt/rsync_qt/build/Desktop_Qt_6_8_3-Debug/apprsync_qt)
+set(__QT_DEPLOY_TARGET_apprsync_qt_TYPE EXECUTABLE)

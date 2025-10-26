@@ -32,7 +32,11 @@
    <string>MainWindow</string>
   </property>
   <property name="styleSheet">
-   <string notr="true">QTabBar::tab { background: transparent; color: #c3c9d4; }
+   <string notr="true">
+Window {
+font: 279 11pt &quot;SF Pro&quot;;
+}
+QTabBar::tab { background: transparent; color: #c3c9d4; }
 QTabBar::tab:hover { background: transparent; color: white; }
 QTabBar::tab:selected { background: white; color: black; }</string>
   </property>
@@ -63,8 +67,7 @@ color: white;</string>
      </size>
     </property>
     <property name="styleSheet">
-     <string notr="true">
-</string>
+     <string notr="true"/>
     </property>
     <property name="currentIndex">
      <number>0</number>
@@ -79,8 +82,8 @@ color: white;</string>
      <widget class="QLineEdit" name="ipLineEdit">
       <property name="geometry">
        <rect>
-        <x>50</x>
-        <y>30</y>
+        <x>79</x>
+        <y>260</y>
         <width>131</width>
         <height>25</height>
        </rect>
@@ -107,8 +110,8 @@ QLineEdit:focus {
      <widget class="QLineEdit" name="passwordLineEdit">
       <property name="geometry">
        <rect>
-        <x>220</x>
-        <y>31</y>
+        <x>249</x>
+        <y>261</y>
         <width>131</width>
         <height>25</height>
        </rect>
@@ -128,12 +131,43 @@ QLineEdit:focus {
     qproperty-frame: true; 
 }</string>
       </property>
+      <property name="placeholderText">
+       <string>password</string>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="nsLineEdit">
+      <property name="geometry">
+       <rect>
+        <x>420</x>
+        <y>260</y>
+        <width>131</width>
+        <height>25</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QLineEdit {
+    padding: 5px;
+    background: #c3c9d4; 
+    color: gray;
+    border-radius: 4px;
+}
+
+QLineEdit:focus {
+	color: black;
+    border: 1px solid orange; 
+    background: white; 
+    qproperty-frame: true; 
+}</string>
+      </property>
+      <property name="placeholderText">
+       <string>ns ( Optional )</string>
+      </property>
      </widget>
      <widget class="QPushButton" name="rsyncBtn">
       <property name="geometry">
        <rect>
-        <x>390</x>
-        <y>31</y>
+        <x>590</x>
+        <y>260</y>
         <width>131</width>
         <height>25</height>
        </rect>
@@ -156,310 +190,61 @@ QPushButton:focus {
 }</string>
       </property>
       <property name="text">
-       <string>Rsync copy</string>
-      </property>
-     </widget>
-     <widget class="QLabel" name="label">
-      <property name="geometry">
-       <rect>
-        <x>50</x>
-        <y>109</y>
-        <width>701</width>
-        <height>181</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>TextLabel</string>
-      </property>
-     </widget>
-     <widget class="QLabel" name="instructionLabel">
-      <property name="geometry">
-       <rect>
-        <x>50</x>
-        <y>80</y>
-        <width>701</width>
-        <height>21</height>
-       </rect>
-      </property>
-      <property name="styleSheet">
-       <string notr="true">background : transparent;
-color: #c3c9d4;</string>
-      </property>
-      <property name="text">
-       <string>Host ပေါ်က ~/Desktop/Git/rom_robotics directory ကို rsync ဖြင့် Robot ပေါ်သို့ ကူးရန်  အမှန်ခြစ်ပါ။ </string>
-      </property>
-     </widget>
-     <widget class="QLabel" name="terminalStatusLabel">
-      <property name="geometry">
-       <rect>
-        <x>50</x>
-        <y>300</y>
-        <width>471</width>
-        <height>21</height>
-       </rect>
-      </property>
-      <property name="styleSheet">
-       <string notr="true">color: #c3c9d4;
-background: transparent;</string>
-      </property>
-      <property name="text">
-       <string>Build Status : </string>
-      </property>
-     </widget>
-     <widget class="QLabel" name="terminalLabel">
-      <property name="geometry">
-       <rect>
-        <x>51</x>
-        <y>330</y>
-        <width>471</width>
-        <height>221</height>
-       </rect>
-      </property>
-      <property name="styleSheet">
-       <string notr="true">background: gray;
-color: rgb(246, 245, 244)</string>
-      </property>
-      <property name="text">
-       <string>TextLabel</string>
-      </property>
-     </widget>
-     <widget class="QPushButton" name="buildDriverBtn">
-      <property name="geometry">
-       <rect>
-        <x>637</x>
-        <y>340</y>
-        <width>131</width>
-        <height>25</height>
-       </rect>
-      </property>
-      <property name="styleSheet">
-       <string notr="true">QPushButton {
-	color: #c3c9d4;
-   border-radius: 4px;
-	border: 1px solid #c3c9d4;
-}
-
-QPushButton:hover {
-	color: white;
-	border: 1px solid orange;
-}
-
-QPushButton:focus {
-    color: white;
-    border: 1px solid orange;
-}</string>
-      </property>
-      <property name="text">
-       <string>build driver ws</string>
-      </property>
-     </widget>
-     <widget class="QPushButton" name="buildSdkBtn">
-      <property name="geometry">
-       <rect>
-        <x>637</x>
-        <y>379</y>
-        <width>131</width>
-        <height>25</height>
-       </rect>
-      </property>
-      <property name="styleSheet">
-       <string notr="true">QPushButton {
-	color: #c3c9d4;
-   border-radius: 4px;
-	border: 1px solid #c3c9d4;
-}
-QPushButton:hover {
-	color: white;
-	border: 1px solid orange;
-}
-
-QPushButton:focus {
-    color: white;
-    border: 1px solid orange;
-}</string>
-      </property>
-      <property name="text">
-       <string>build sdk ws</string>
-      </property>
-     </widget>
-     <widget class="QPushButton" name="buildNavBtn">
-      <property name="geometry">
-       <rect>
-        <x>637</x>
-        <y>419</y>
-        <width>131</width>
-        <height>25</height>
-       </rect>
-      </property>
-      <property name="styleSheet">
-       <string notr="true">QPushButton {
-	color: #c3c9d4;
-   border-radius: 4px;
-	border: 1px solid #c3c9d4;
-}
-
-QPushButton:hover {
-	color: white;
-	border: 1px solid orange;
-}
-
-QPushButton:focus {
-    color: white;
-    border: 1px solid orange;
-}</string>
-      </property>
-      <property name="text">
-       <string>build nav2 ws</string>
-      </property>
-     </widget>
-     <widget class="QPushButton" name="robotTerminalBtn">
-      <property name="geometry">
-       <rect>
-        <x>637</x>
-        <y>479</y>
-        <width>131</width>
-        <height>25</height>
-       </rect>
-      </property>
-      <property name="styleSheet">
-       <string notr="true">QPushButton {
-	color: #c3c9d4;
-   border-radius: 4px;
-	border: 1px solid #c3c9d4;
-}
-
-QPushButton:hover {
-	color: white;
-	border: 1px solid orange;
-}
-
-QPushButton:focus {
-    color: white;
-    border: 1px solid orange;
-}</string>
-      </property>
-      <property name="text">
-       <string>Robot Terminal</string>
+       <string>Rsync App</string>
       </property>
      </widget>
      <widget class="QPushButton" name="hostTerminalBtn">
       <property name="geometry">
        <rect>
-        <x>637</x>
-        <y>519</y>
-        <width>131</width>
+        <x>3</x>
+        <y>550</y>
+        <width>81</width>
         <height>25</height>
        </rect>
       </property>
       <property name="styleSheet">
        <string notr="true">QPushButton {
-	color: #c3c9d4;
-   border-radius: 4px;
-	border: 1px solid #c3c9d4;
+background: transparent;
+	color: gray;
+	border: none;
+font: 279 7pt &quot;SF Pro&quot;;
 }
 
 QPushButton:hover {
+background: transparent;
 	color: white;
-	border: 1px solid orange;
 }
-
-QPushButton:focus {
-    color: white;
-    border: 1px solid orange;
-}</string>
+</string>
       </property>
       <property name="text">
        <string>Host Terminal</string>
       </property>
      </widget>
-     <widget class="QPushButton" name="rmDriverWsBtn">
+     <widget class="QPushButton" name="robotTerminalBtn">
       <property name="geometry">
        <rect>
-        <x>540</x>
-        <y>340</y>
+        <x>70</x>
+        <y>550</y>
         <width>81</width>
         <height>25</height>
        </rect>
       </property>
       <property name="styleSheet">
        <string notr="true">QPushButton {
-	color: #c3c9d4;
-   border-radius: 4px;
-	border: 1px solid #c3c9d4;
+background: transparent;
+	color: gray;
+	border: none;
+font: 279 7pt &quot;SF Pro&quot;;
 }
 
 QPushButton:hover {
+background: transparent;
 	color: white;
-	border: 1px solid orange;
 }
-
-QPushButton:focus {
-    color: white;
-    border: 1px solid orange;
-}</string>
+</string>
       </property>
       <property name="text">
-       <string>Clear</string>
-      </property>
-     </widget>
-     <widget class="QPushButton" name="rmSdkWsBtn">
-      <property name="geometry">
-       <rect>
-        <x>540</x>
-        <y>380</y>
-        <width>81</width>
-        <height>25</height>
-       </rect>
-      </property>
-      <property name="styleSheet">
-       <string notr="true">QPushButton {
-	color: #c3c9d4;
-   border-radius: 4px;
-	border: 1px solid #c3c9d4;
-}
-
-QPushButton:hover {
-	color: white;
-	border: 1px solid orange;
-}
-
-QPushButton:focus {
-    color: white;
-    border: 1px solid orange;
-}</string>
-      </property>
-      <property name="text">
-       <string>Clear</string>
-      </property>
-     </widget>
-     <widget class="QPushButton" name="rmNav2WsBtn">
-      <property name="geometry">
-       <rect>
-        <x>540</x>
-        <y>419</y>
-        <width>81</width>
-        <height>25</height>
-       </rect>
-      </property>
-      <property name="styleSheet">
-       <string notr="true">QPushButton {
-	color: #c3c9d4;
-   border-radius: 4px;
-	border: 1px solid #c3c9d4;
-}
-
-QPushButton:hover {
-	color: white;
-	border: 1px solid orange;
-}
-
-QPushButton:focus {
-    color: white;
-    border: 1px solid orange;
-}</string>
-      </property>
-      <property name="text">
-       <string>Clear</string>
+       <string>Robot Terminal</string>
       </property>
      </widget>
     </widget>

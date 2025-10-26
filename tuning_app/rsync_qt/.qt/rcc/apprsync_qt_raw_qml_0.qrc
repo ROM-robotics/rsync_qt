@@ -1,0 +1,7 @@
+<RCC>
+  <qresource prefix="/qt/qml/rsync_qt/">
+    <file alias="Main.qml">/home/mr_robot/Desktop/Git/rsync_qt/rsync_qt/Main.qml</file>
+    <file alias="font.qrc">/home/mr_robot/Desktop/Git/rsync_qt/rsync_qt/font.qrc</file>
+  </qresource>
+</RCC>
+

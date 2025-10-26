@@ -7,6 +7,11 @@
 #include <QCoreApplication>
 #include <QTabBar>
 #include <QtGui/QMouseEvent>
+#include <QMessageBox>
+#include <QDir>
+#include <QProcess>
+#include <QRandomGenerator>
+
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -14,11 +19,10 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
     this->setFixedSize(800, 600);
-        this->setWindowFlags(this->windowFlags() | Qt::FramelessWindowHint);
-        //this->setWindowFlags(this->windowFlags() & ~Qt::WindowMaximizeButtonHint);
+    this->setWindowFlags(this->windowFlags() | Qt::FramelessWindowHint);
     
     if (ui->tabWidget && ui->tabWidget->tabBar()) 
-    {
+    {   // tab bar တွေညီအောင်လို့။
         int tabCount = ui->tabWidget->count();
         if (tabCount > 0) 
         {
@@ -29,9 +33,10 @@ MainWindow::MainWindow(QWidget *parent)
         }
     }
 
-    // initialize communication client
+    // bridge driver နဲ့ ဆက်သွယ်ဖို့ 
     communication_ = new RosBridgeClient("", RobotIp, RobotPort.toInt(), this);
 
+    // signal and slots 
     connect(ui->tabWidget, &QTabWidget::currentChanged, this, &MainWindow::onTabChanged);
 
     currentMode = Mode::ssh;
@@ -194,7 +199,143 @@ void MainWindow::onTabChanged(int index)
 
 
 }
+void MainWindow::on_rsyncBtn_clicked()
+{
+    qDebug() << "Rsync button clicked!";
 
+    QString ip = ui->ipLineEdit->text().trimmed();
+    QString password = ui->passwordLineEdit->text();
+    QString robot_ns = ui->nsLineEdit->text().trimmed();
+
+    if (ip.isEmpty()) 
+    {
+        QDialog dlg(this);
+        dlg.setWindowTitle("Missing IP");
+        dlg.setFixedSize(400, 100);
+        QLabel *label = new QLabel("Please enter the robot IP address.", &dlg);
+        label->setAlignment(Qt::AlignCenter);
+        QPushButton *okBtn = new QPushButton("OK", &dlg);
+        okBtn->setGeometry(150, 150, 100, 30);
+        QObject::connect(okBtn, &QPushButton::clicked, &dlg, &QDialog::accept);
+        QVBoxLayout *layout = new QVBoxLayout;
+        layout->addWidget(label);
+        layout->addWidget(okBtn);
+        dlg.setLayout(layout);
+        // Center dialog over main window
+        QPoint center = this->geometry().center();
+        QPoint globalCenter = this->mapToGlobal(center);
+        int dlgX = globalCenter.x() - dlg.width() / 2;
+        int dlgY = globalCenter.y() - dlg.height() / 2;
+        dlg.move(dlgX, dlgY);
+        dlg.exec();
+        return;
+    }
+    if (password.isEmpty()) 
+    {
+        QDialog dlg(this);
+        dlg.setWindowTitle("Missing Password");
+        dlg.setFixedSize(400, 100);
+        QLabel *label = new QLabel("Please enter the password.", &dlg);
+        label->setAlignment(Qt::AlignCenter);
+        QPushButton *okBtn = new QPushButton("OK", &dlg);
+        okBtn->setGeometry(150, 150, 100, 30);
+        QObject::connect(okBtn, &QPushButton::clicked, &dlg, &QDialog::accept);
+        QVBoxLayout *layout = new QVBoxLayout;
+        layout->addWidget(label);
+        layout->addWidget(okBtn);
+        dlg.setLayout(layout);
+        // Center dialog over main window
+        QPoint center = this->geometry().center();
+        QPoint globalCenter = this->mapToGlobal(center);
+        int dlgX = globalCenter.x() - dlg.width() / 2;
+        int dlgY = globalCenter.y() - dlg.height() / 2;
+        dlg.move(dlgX, dlgY);
+        dlg.exec();
+        return;
+    }
+
+    // Store in class variable
+    RobotIp = ip;
+    password_ = password;
+    RobotNamespace = robot_ns;
+    qDebug() << "RobotIp set to: " << RobotIp;
+    qDebug() << "RobotNamespace set to: " << RobotNamespace;
+
+    QDir currentDir = QDir::currentPath();
+    qDebug() << "Current Directory: " << currentDir.path();
+    currentDir.cdUp(); currentDir.cdUp();currentDir.cdUp();
+    qDebug() << "Up three directories: " << currentDir.path();
+
+    QString rsync_app = currentDir.path() + "/rsync_qt/apprsync_qt";
+
+    QStringList arguments;
+    arguments << "--ip" << RobotIp << "--password" << password;
+    
+    QProcess *proc = new QProcess(this);
+    proc->start(rsync_app, arguments);
+    //proc->start(rsync_app);
+}
+void MainWindow::on_closeBtn_clicked()
+{
+    QCoreApplication::quit();
+}
+void MainWindow::on_hostTerminalBtn_clicked()
+{
+    // QString echo_style1  = "echo -e '\e]11;rgb:00/AA/BB\a'";
+    // QString class_black  = "echo -e '\e]11;rgb:00/00/00\a'";
+    // QString bright_white = "echo -e '\e]11;rgb:FF/FF/FF\a'";
+    // QString navy_blue    = "echo -e '\e]11;rgb:00/00/80\a'";
+    // QString forest_green = "echo -e '\e]11;rgb:22/8B/22\a'";
+    // QString vibrant_cyan = "echo -e '\e]11;rgb:00/FF/FF\a'";
+    // QString warm_sepia   = "echo -e '\e]11;rgb:F0/E6/8C\a'";
+    // QString deep_purple  = "echo -e '\e]11;rgb:4B/00/82\a'";
+    // QString soft_gray    = "echo -e '\e]11;rgb:A9/A9/A9\a'";
+    // QString bold_old     = "echo -e '\e]11;rgb:FF/A5/00\a'";
+    // QString hot_pink     = "echo -e '\e]11;rgb:FF/69/B4\a'";
+
+    // QStringList args;
+    // args << "--" << "bash" << "-c" << echo_style1 + "; exec bash";
+    // QProcess::startDetached("gnome-terminal", args);
+
+    QStringList colorCmds = {
+        "echo -e '\\e]11;rgb:00/AA/BB\\a'", // echo_style1
+        "echo -e '\\e]11;rgb:00/00/00\\a'", // class_black
+        "echo -e '\\e]11;rgb:FF/FF/FF\\a'", // bright_white
+        "echo -e '\\e]11;rgb:00/00/80\\a'", // navy_blue
+        "echo -e '\\e]11;rgb:22/8B/22\\a'", // forest_green
+        "echo -e '\\e]11;rgb:00/FF/FF\\a'", // vibrant_cyan
+        "echo -e '\\e]11;rgb:F0/E6/8C\\a'", // warm_sepia
+        "echo -e '\\e]11;rgb:4B/00/82\\a'", // deep_purple
+        "echo -e '\\e]11;rgb:A9/A9/A9\\a'", // soft_gray
+        "echo -e '\\e]11;rgb:FF/A5/00\\a'", // bold_old
+        "echo -e '\\e]11;rgb:FF/69/B4\\a'"  // hot_pink
+    };
+
+    int idx = QRandomGenerator::global()->bounded(colorCmds.size());
+    while( idx == previousCmdColorIndex )
+    {
+        idx = QRandomGenerator::global()->bounded(colorCmds.size());
+    }
+
+    previousCmdColorIndex = idx;
+    QString colorCmd = colorCmds[idx]; 
+
+    QStringList args;
+    args << "--geometry=80x25-0+0";
+    args << "--" << "bash" << "-c" << colorCmd + "; exec bash";
+    QProcess::startDetached("gnome-terminal", args);
+   
+}
+void MainWindow::on_robotTerminalBtn_clicked()
+{
+    qDebug() << "RobotIp set to: " << RobotIp;
+    qDebug() << "input_password set to: " << password_;
+
+    QString sshCmd = QString("sshpass -p '%1' ssh mr_robot@%2").arg(password_, RobotIp);
+    QStringList args;
+    args << "--" << "bash" << "-c" << sshCmd;
+    QProcess::startDetached("gnome-terminal", args);
+}
 
 
 // OUR UI METHODS
@@ -433,65 +574,29 @@ void MainWindow::deactivateLogTab()
 
 }
 
-void MainWindow::on_closeBtn_clicked()
-{
-    QCoreApplication::quit();
-}
-
 
 // OVERRIDE METHODS
-// =====================================================================================
-// --- WINDOW DRAG EVENT HANDLERS ---
-// =====================================================================================
 
-/**
- * @brief Handles mouse button press events.
- *
- * Checks if the left button is pressed. If so, it starts the dragging process by:
- * 1. Setting the dragging flag to true.
- * 2. Calculating and storing the relative drag position (the offset of the mouse
- * click from the top-left corner of the window's frame).
- */
-void MainWindow::mousePressEvent(QMouseEvent *event)
-{
-    if (event->button() == Qt::LeftButton) {
-        m_isDragging = true;
-        // Calculate position relative to the window's top-left corner
-        m_dragPosition = event->globalPosition().toPoint() - frameGeometry().topLeft();
-        event->accept();
-    }
-    QMainWindow::mousePressEvent(event);
-}
 
-/**
- * @brief Handles mouse movement events.
- *
- * If the dragging flag is true and the left mouse button is held down, it moves
- * the window to the new position calculated by subtracting the stored drag offset
- * from the current global mouse position.
- */
-void MainWindow::mouseMoveEvent(QMouseEvent *event)
-{
-    // Check if dragging is enabled and the left button is currently held down
-    if (m_isDragging && (event->buttons() & Qt::LeftButton)) {
-        // Move the window to the new position
-        move(event->globalPosition().toPoint() - m_dragPosition);
-        event->accept();
-    }
-    QMainWindow::mouseMoveEvent(event);
-}
 
-/**
- * @brief Handles mouse button release events.
- *
- * If the left button is released, it stops the dragging process by resetting
- * the dragging flag to false.
- */
-void MainWindow::mouseReleaseEvent(QMouseEvent *event)
-{
-    if (event->button() == Qt::LeftButton) {
-        m_isDragging = false;
-        event->accept();
-    }
-    QMainWindow::mouseReleaseEvent(event);
-}
+// QDIALOG BOX
+//  QDialog dlg(this);
+//         dlg.setWindowTitle("Missing IP");
+//         dlg.setFixedSize(400, 100);
+//         QLabel *label = new QLabel("Please enter the robot IP address.", &dlg);
+//         label->setAlignment(Qt::AlignCenter);
+//         QPushButton *okBtn = new QPushButton("OK", &dlg);
+//         okBtn->setGeometry(150, 150, 100, 30);
+//         QObject::connect(okBtn, &QPushButton::clicked, &dlg, &QDialog::accept);
+//         QVBoxLayout *layout = new QVBoxLayout;
+//         layout->addWidget(label);
+//         layout->addWidget(okBtn);
+//         dlg.setLayout(layout);
+//         // Center dialog over main window
+//         QPoint center = this->geometry().center();
+//         QPoint globalCenter = this->mapToGlobal(center);
+//         int dlgX = globalCenter.x() - dlg.width() / 2;
+//         int dlgY = globalCenter.y() - dlg.height() / 2;
+//         dlg.move(dlgX, dlgY);
+//         dlg.exec();
+//         return;

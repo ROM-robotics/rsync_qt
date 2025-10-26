@@ -1,0 +1,5 @@
+--resource
+/home/mr_robot/Desktop/Git/rsync_qt/rsync_qt/build/Desktop_Qt_6_8_3-Debug/.qt/rcc/qmake_rsync_qt.qrc
+--resource
+/home/mr_robot/Desktop/Git/rsync_qt/rsync_qt/build/Desktop_Qt_6_8_3-Debug/.qt/rcc/apprsync_qt_raw_qml_0.qrc
+/qt/qml/rsync_qt/Main.qml

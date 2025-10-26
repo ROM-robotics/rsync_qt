@@ -1,0 +1,10 @@
+--bare
+-I
+/home/mr_robot/Desktop/Git/rsync_qt/rsync_qt/build/Desktop_Qt_6_8_3-Debug
+-I
+/home/mr_robot/Qt/6.8.3/gcc_64/qml
+--resource
+/home/mr_robot/Desktop/Git/rsync_qt/rsync_qt/build/Desktop_Qt_6_8_3-Debug/.qt/rcc/qmake_rsync_qt.qrc
+--resource
+/home/mr_robot/Desktop/Git/rsync_qt/rsync_qt/build/Desktop_Qt_6_8_3-Debug/.qt/rcc/apprsync_qt_raw_qml_0.qrc
+/home/mr_robot/Desktop/Git/rsync_qt/rsync_qt/Main.qml

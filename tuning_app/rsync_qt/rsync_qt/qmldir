@@ -1,0 +1,5 @@
+module rsync_qt
+typeinfo apprsync_qt.qmltypes
+prefer :/qt/qml/rsync_qt/
+Main 1.0 Main.qml
+

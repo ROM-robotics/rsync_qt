@@ -5,7 +5,7 @@
 #include <QJsonObject>
 #include "design/rom_structures.h"
 #include "communication/ros_bridge_client.hpp"
-
+#include <QString>
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -63,24 +63,23 @@ private:
 
     QString RobotIp = "192.168.1.9";
     QString RobotPort = "9090";
+    QString password_ = "ghostman";
+    QString RobotNamespace = "";
+
+    int previousCmdColorIndex = -1;
 
     Mode currentMode;
     RosBridgeClient *communication_ = nullptr;
-
-    // --- Window Drag Members ---
-    QPoint m_dragPosition;
-    bool m_isDragging = false;
-    // ---------------------------
     
 private slots:
     void onTabChanged(int index);
     void on_closeBtn_clicked();
+    void on_rsyncBtn_clicked();
+    void on_hostTerminalBtn_clicked();
+    void on_robotTerminalBtn_clicked();
 
 protected:
-    // --- Window Drag Functionality ---
-    void mousePressEvent(QMouseEvent *event) override;
-    void mouseMoveEvent(QMouseEvent *event) override;
-    void mouseReleaseEvent(QMouseEvent *event) override;
+    
     
 };
 #endif // MAINWINDOW_H

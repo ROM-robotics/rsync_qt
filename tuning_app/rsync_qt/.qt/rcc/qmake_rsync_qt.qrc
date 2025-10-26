@@ -1,0 +1,6 @@
+<RCC>
+  <qresource prefix="/qt/qml/rsync_qt">
+    <file alias="qmldir">/home/mr_robot/Desktop/Git/rsync_qt/rsync_qt/build/Desktop_Qt_6_8_3-Debug/rsync_qt/qmldir</file>
+  </qresource>
+</RCC>
+
