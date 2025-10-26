@@ -74,7 +74,7 @@ color: white;</string>
     </property>
     <widget class="QWidget" name="ssh">
      <property name="styleSheet">
-      <string notr="true">background:qlineargradient(spread:pad, x1:0.9, y1:0.2, x2:1, y2:0, stop:0 rgba(0, 0, 0, 255), stop:1 rgba(255, 255, 255, 255))</string>
+      <string notr="true">background: #2e2e2e;</string>
      </property>
      <attribute name="title">
       <string>ssh</string>
@@ -258,7 +258,7 @@ background: transparent;
     </widget>
     <widget class="QWidget" name="ekf">
      <property name="styleSheet">
-      <string notr="true">background:qlineargradient(spread:pad, x1:0.7, y1:0.4, x2:1, y2:0, stop:0 rgba(0, 0, 0, 255), stop:1 rgba(255, 255, 255, 255))</string>
+      <string notr="true">background: #2e2e2e;</string>
      </property>
      <attribute name="title">
       <string>ekf</string>
@@ -266,7 +266,7 @@ background: transparent;
     </widget>
     <widget class="QWidget" name="carto">
      <property name="styleSheet">
-      <string notr="true">background:qlineargradient(spread:pad, x1:0.6, y1:0.5, x2:1, y2:0, stop:0 rgba(0, 0, 0, 255), stop:1 rgba(255, 255, 255, 255))</string>
+      <string notr="true">background: #2e2e2e;</string>
      </property>
      <attribute name="title">
       <string>carto</string>
@@ -274,7 +274,7 @@ background: transparent;
     </widget>
     <widget class="QWidget" name="navi2_one">
      <property name="styleSheet">
-      <string notr="true">background:qlineargradient(spread:pad, x1:0.5, y1:0.6, x2:1, y2:0, stop:0 rgba(0, 0, 0, 255), stop:1 rgba(255, 255, 255, 255))</string>
+      <string notr="true">background: #2e2e2e;</string>
      </property>
      <attribute name="title">
       <string>navi2 1</string>
@@ -282,7 +282,7 @@ background: transparent;
     </widget>
     <widget class="QWidget" name="navi2_two">
      <property name="styleSheet">
-      <string notr="true">background:qlineargradient(spread:pad, x1:0.7, y1:0.8, x2:1, y2:0, stop:0 rgba(0, 0, 0, 255), stop:1 rgba(255, 255, 255, 255))</string>
+      <string notr="true">background: #2e2e2e;</string>
      </property>
      <attribute name="title">
       <string>navi2 2</string>
@@ -290,7 +290,7 @@ background: transparent;
     </widget>
     <widget class="QWidget" name="navi2_three">
      <property name="styleSheet">
-      <string notr="true">background:qlineargradient(spread:pad, x1:0.9, y1:1.0, x2:1, y2:0, stop:0 rgba(0, 0, 0, 255), stop:1 rgba(255, 255, 255, 255))</string>
+      <string notr="true">background: #2e2e2e;</string>
      </property>
      <attribute name="title">
       <string>navi2 3</string>
@@ -298,7 +298,7 @@ background: transparent;
     </widget>
     <widget class="QWidget" name="bt">
      <property name="styleSheet">
-      <string notr="true">background:qlineargradient(spread:pad, x1:1.1, y1:1.2, x2:1, y2:0, stop:0 rgba(0, 0, 0, 255), stop:1 rgba(255, 255, 255, 255))</string>
+      <string notr="true">background: #2e2e2e;</string>
      </property>
      <attribute name="title">
       <string>bt</string>
@@ -306,7 +306,7 @@ background: transparent;
     </widget>
     <widget class="QWidget" name="topic">
      <property name="styleSheet">
-      <string notr="true">background:qlineargradient(spread:pad, x1:1.3, y1:1.4, x2:1, y2:0, stop:0 rgba(0, 0, 0, 255), stop:1 rgba(255, 255, 255, 255))</string>
+      <string notr="true">background: #2e2e2e;</string>
      </property>
      <attribute name="title">
       <string>topic</string>
@@ -314,7 +314,7 @@ background: transparent;
     </widget>
     <widget class="QWidget" name="log">
      <property name="styleSheet">
-      <string notr="true">background:qlineargradient(spread:pad, x1:1.7, y1:1.8, x2:1, y2:0, stop:0 rgba(0, 0, 0, 255), stop:1 rgba(255, 255, 255, 255))</string>
+      <string notr="true">background: #2e2e2e;</string>
      </property>
      <attribute name="title">
       <string>log</string>
