@@ -479,7 +479,8 @@ void MainWindow::initRos2ControlTab()
     {
          // Remove any existing layout
         QLayout *existing = ui->ros2_control->layout();
-        if (existing) {
+        if (existing) 
+        {
             delete existing;
         }
 
@@ -489,11 +490,11 @@ void MainWindow::initRos2ControlTab()
         vLayout->setSpacing(8);                   // Space between elements (layouts)
         ui->ros2_control->setLayout(vLayout);
 
+        // ---------------------------------------------------------------------------- create 3 meters
         // --- Create a horizontal layout for the 3 meters ---
         QHBoxLayout *hLayout = new QHBoxLayout();
-        hLayout->setSpacing(16);  // space between meters
-
-        // --- Prepare meters ---
+        hLayout->setSpacing(16); 
+        hLayout->setAlignment(Qt::AlignLeft);
         qmlView_.clear();
 
         QQuickWidget *speed_meter   = new QQuickWidget(ui->ros2_control);
@@ -508,17 +509,14 @@ void MainWindow::initRos2ControlTab()
             meter->setResizeMode(QQuickWidget::SizeRootObjectToView);
 
             // Set fixed height (e.g., 60% of container height)
-            int meterHeight = static_cast<int>(ui->ros2_control->height() * 0.6);
+            int meterHeight = static_cast<int>(ui->ros2_control->height() * 0.45);
             meter->setMinimumHeight(meterHeight);
             meter->setMaximumHeight(meterHeight);
 
             meter->setClearColor(QColor("#2e2e2e"));
-
-
-            // Make them expand horizontally but fixed vertically
+            
             meter->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
-
-            // Load the QML
+            
             if (i == 0) {
                 meter->setSource(QUrl(QStringLiteral("qrc:/Speed.qml")));
             } else if (i == 1) {
@@ -538,8 +536,54 @@ void MainWindow::initRos2ControlTab()
 
         // --- Add the horizontal layout to the vertical layout ---
         vLayout->addLayout(hLayout);
+        vLayout->addStretch(1);
 
-        // --- Add a stretch below so meters stay at the top ---
+        // ---------------------------------------------------------------------------- next 3 meters
+        // --- Create a horizontal layout for the Actual 3 meters ---
+        QHBoxLayout *lower_hLayout = new QHBoxLayout();
+        lower_hLayout->setSpacing(16); 
+        
+        //qmlView_.clear();
+
+        QQuickWidget *actual_speed_meter   = new QQuickWidget(ui->ros2_control);
+        QQuickWidget *actualLeftRpm_meter  = new QQuickWidget(ui->ros2_control);
+        QQuickWidget *actualRightRpm_meter = new QQuickWidget(ui->ros2_control);
+
+        QVector<QQuickWidget*> lower_meterWidgets = { actual_speed_meter, actualLeftRpm_meter, actualRightRpm_meter };
+
+        for(int i = 0; i < lower_meterWidgets.size(); ++i)
+        {
+            QQuickWidget *meter = lower_meterWidgets[i];
+            meter->setResizeMode(QQuickWidget::SizeRootObjectToView);
+
+            // Set fixed height (e.g., 60% of container height)
+            int meterHeight = static_cast<int>(ui->ros2_control->height() * 0.45);
+            meter->setMinimumHeight(meterHeight);
+            meter->setMaximumHeight(meterHeight);
+
+            meter->setClearColor(QColor("#2e2e2e"));
+            
+            meter->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
+            
+            if (i == 0) {
+                meter->setSource(QUrl(QStringLiteral("qrc:/ActualSpeed.qml")));
+            } else if (i == 1) {
+                meter->setSource(QUrl(QStringLiteral("qrc:/ActualLeftSpeed.qml")));
+            } else if (i == 2) {
+                meter->setSource(QUrl(QStringLiteral("qrc:/ActualRightSpeed.qml")));
+            }
+
+            if (meter->status() != QQuickWidget::Ready) {
+                qWarning() << "Failed to load QML for meter" << i << ":" << meter->errors();
+            }
+
+            // Add to layout and store reference
+            lower_hLayout->addWidget(meter, 1);  // equal width
+            qmlView_.append(meter);
+        }
+
+        // --- Add the horizontal layout to the vertical layout ---
+        vLayout->addLayout(lower_hLayout);
         vLayout->addStretch(1);
     }
 }

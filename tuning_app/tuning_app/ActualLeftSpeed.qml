@@ -8,7 +8,7 @@ Item {
     anchors.fill: parent
 
     Canvas {
-        id: rightSpeedCanvas
+        id: actualLeftSpeedCanvas
         anchors.fill: parent
         onPaint: {
             var ctx = getContext("2d");
@@ -135,14 +135,14 @@ Item {
             ctx.fillStyle = '#cfcfcf';
             ctx.font = Math.round(radius*0.09) + 'px sans-serif';
             //ctx.fillText('m/s', cx, cy + radius*0.08);
-            ctx.fillText('Right Wheel RPM', cx, cy + 55);
+            ctx.fillText('Actual Left Wheel RPM', cx, cy + 55);
         }
     }
 
     // repaint whenever speed or size changes
-    onSpeedChanged: rightSpeedCanvas.requestPaint()
-    onWidthChanged: rightSpeedCanvas.requestPaint()
-    onHeightChanged: rightSpeedCanvas.requestPaint()
+    onSpeedChanged: actualLeftSpeedCanvas.requestPaint()
+    onWidthChanged: actualLeftSpeedCanvas.requestPaint()
+    onHeightChanged: actualLeftSpeedCanvas.requestPaint()
 
-    Component.onCompleted: rightSpeedCanvas.requestPaint()
+    Component.onCompleted: actualLeftSpeedCanvas.requestPaint()
 }

@@ -4,11 +4,11 @@ import QtQuick 2.15
 Item {
     id: root
     property real speed: 0
-    property real maxSpeed: 70
+    property real maxSpeed: 100
     anchors.fill: parent
 
     Canvas {
-        id: rightSpeedCanvas
+        id: actualSpeedCanvas
         anchors.fill: parent
         onPaint: {
             var ctx = getContext("2d");
@@ -38,7 +38,8 @@ Item {
             ctx.stroke();
 
             // ticks and numbers
-            // make the left-most tick correspond to 0 degrees (pointing left)
+            //var startAngle = (3*Math.PI)/4; // 180 degrees -> left-most
+            //var endAngle = 0; // 0 degrees -> right-most
             var startAngle = Math.PI; // 180 degrees -> left-most
             var endAngle = 0; // 0 degrees -> right-most
             var span = startAngle - endAngle;
@@ -50,6 +51,7 @@ Item {
 
             var majorStep = 10; // label every 10 km/h
             var numSteps = root.maxSpeed / 5; // minor steps per 5 km/h
+
             for (var i=0;i<=numSteps;i++) {
                 var t = i / numSteps;
                 var angle = startAngle + t * span;
@@ -73,12 +75,13 @@ Item {
 
                 // draw numeric labels every majorStep
                 var value = t * root.maxSpeed;
+                var show_value = (t * root.maxSpeed)/100.0;
                 if (Math.round(value) % majorStep === 0) {
                     var tx = cx + (radius*0.62) * Math.cos(angle);
                     var ty = cy + (radius*0.62) * Math.sin(angle);
                     ctx.fillStyle = '#dcdcdc';
                     ctx.font = Math.round(radius*0.09) + 'px sans-serif';
-                    ctx.fillText(Math.round(value), tx, ty);
+                    ctx.fillText(show_value.toFixed(1), tx, ty);
                 }
             }
 
@@ -134,15 +137,15 @@ Item {
             // unit text - place below the number but still near center
             ctx.fillStyle = '#cfcfcf';
             ctx.font = Math.round(radius*0.09) + 'px sans-serif';
-            //ctx.fillText('m/s', cx, cy + radius*0.08);
-            ctx.fillText('Right Wheel RPM', cx, cy + 55);
+            //ctx.fillText('Desired [ m/s ]', cx, cy + radius*0.08);
+            ctx.fillText('Actual  Linear Velocity m/s', cx, cy + 55);
         }
     }
 
     // repaint whenever speed or size changes
-    onSpeedChanged: rightSpeedCanvas.requestPaint()
-    onWidthChanged: rightSpeedCanvas.requestPaint()
-    onHeightChanged: rightSpeedCanvas.requestPaint()
+    onSpeedChanged: actualSpeedCanvas.requestPaint()
+    onWidthChanged: actualSpeedCanvas.requestPaint()
+    onHeightChanged: actualSpeedCanvas.requestPaint()
 
-    Component.onCompleted: rightSpeedCanvas.requestPaint()
+    Component.onCompleted: actualSpeedCanvas.requestPaint()
 }

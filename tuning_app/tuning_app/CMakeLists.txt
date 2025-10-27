@@ -41,6 +41,9 @@ qt_add_resources(tuning_app "resources"
         Speed.qml
         RightSpeed.qml
         LeftSpeed.qml
+        ActualSpeed.qml
+        ActualRightSpeed.qml
+        ActualLeftSpeed.qml
 )
 
 

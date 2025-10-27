@@ -128,12 +128,14 @@ Item {
             // central speed text - move upward so number appears above center
             ctx.fillStyle = '#ffffff';
             ctx.font = Math.round(radius*0.30) + 'px sans-serif';
-            ctx.fillText(Math.round(root.speed), cx, cy - radius*0.12);
+            //ctx.fillText(Math.round(root.speed), cx, cy - radius*0.12);
+            ctx.fillText(Math.round(root.speed), cx, cy + 40);
 
             // unit text - place below the number but still near center
             ctx.fillStyle = '#cfcfcf';
             ctx.font = Math.round(radius*0.09) + 'px sans-serif';
-            ctx.fillText('m/s', cx, cy + radius*0.08);
+            //ctx.fillText('m/s', cx, cy + radius*0.08);
+            ctx.fillText('Left Wheel RPM', cx, cy + 55);
         }
     }
 
