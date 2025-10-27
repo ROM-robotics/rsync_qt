@@ -154,7 +154,7 @@ void RosBridgeClient::onTextMessageReceived(const QString &msg)
         const QString topic = obj.value("topic").toString();
         
             emit receivedTopicMessage(topic, obj.value("msg").toObject());
-            qDebug() << "receivedTopicMessage emitted" << obj;
+            // qDebug() << "receivedTopicMessage emitted" << obj;
     }
 }
 

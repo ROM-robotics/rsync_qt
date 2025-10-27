@@ -132,7 +132,8 @@ Item {
             ctx.fillStyle = '#ffffff';
             ctx.font = Math.round(radius*0.30) + 'px sans-serif';
             //ctx.fillText(Math.round(root.speed), cx, cy - radius*0.12);
-            ctx.fillText(Math.round(root.speed), cx, cy + 40);
+            // ctx.fillText(Math.round(root.speed), cx, cy + 40);
+            ctx.fillText((root.speed / 100.0).toFixed(3), cx, cy + 40);
 
             // unit text - place below the number but still near center
             ctx.fillStyle = '#cfcfcf';

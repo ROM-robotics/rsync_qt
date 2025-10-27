@@ -608,7 +608,7 @@ void MainWindow::activateRos2ControlTab()
     communication_->subscribeTopic(cmd_vel_topic_name, cmd_vel_msg_type);
 
     QString odom_topic_name = "/diff_controller/odom";
-    QString odom_msg_type   = "geometry_msgs/msg/Twist";
+    QString odom_msg_type   = "nav_msgs/msg/Odometry";
     communication_->subscribeTopic(odom_topic_name, odom_msg_type);
 
     QString js_topic_name = "/joint_states";
@@ -911,10 +911,12 @@ void MainWindow::onReceivedTopicMessage(const QString &topic, const QJsonObject 
             }
 
             QJsonObject twist = msg.value("twist").toObject();
-            QJsonObject linear = twist.value("linear").toObject();
+            QJsonObject child_twist = twist.value("twist").toObject();
+            QJsonObject linear = child_twist.value("linear").toObject();
             double vx = linear.value("x").toDouble();
             //double vy = linear.value("y").toDouble();
 
+            
             if ( vx < 0 ) { vx *= -1; }
 
             double speed = vx;
