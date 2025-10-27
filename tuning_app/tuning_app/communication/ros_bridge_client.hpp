@@ -31,7 +31,7 @@ signals:
     void errorOccurred(const QString &msg);
     
     // --------------------------------- TOPIC SUBSCRIPTIONS
-    void receivedRos2controlMessage(const QString &topic_name, const QJsonObject &msg);
+    void receivedTopicMessage(const QString &topic_name, const QJsonObject &msg);
 
 private slots:
     void onSocketConnected();

@@ -148,18 +148,15 @@ void RosBridgeClient::onTextMessageReceived(const QString &msg)
     QJsonObject obj = doc.object();
 
     const QString op = obj.value("op").toString();
+
     if (op == "publish") 
     {
         const QString topic = obj.value("topic").toString();
         
-            emit receivedRos2controlMessage(topic, obj.value("msg").toObject());
-            qDebug() << "receivedRos2controlMessage emitted" << obj;
-        
+            emit receivedTopicMessage(topic, obj.value("msg").toObject());
+            qDebug() << "receivedTopicMessage emitted" << obj;
     }
-
-
 }
-
 
 
 // ROSBRIDGE API

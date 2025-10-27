@@ -78,14 +78,14 @@ private:
     RosBridgeClient *communication_ = nullptr;
 
     // QRC speed meter
-    QVector<QQuickWidget*> qmlView_;
+    QVector<QQuickWidget*> ros2ControlQmlView_;
     QQuickItem *qmlRoot_ = nullptr;
     QTimer *qmlUpdateTimer_ = nullptr;
     QVector<QTimer*> speedTimeoutTimers_;
 
     // robotspecs
-    double wheel_radius_ = 0.05; // meters
-    double wheel_seperation_ = 0.3; // meters
+    double wheel_radius_ = 0.100; // meters
+    double wheel_seperation_ = 0.400; // meters
 
 signals:
     //void createCommunicationClient(const QString &robot_ns, const QString &host, quint16 port);
@@ -99,7 +99,7 @@ private slots:
     void on_robotTerminalBtn_clicked();
     
     // from web socket    
-    void onRos2ControlVelocity(const QString &topic, const QJsonObject &msg);
+    void onReceivedTopicMessage(const QString &topic, const QJsonObject &msg);
 
 
 protected:

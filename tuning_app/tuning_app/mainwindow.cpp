@@ -45,6 +45,8 @@ MainWindow::MainWindow(QWidget *parent)
     qDebug() << " currentMode = " << ModeToString(currentMode).c_str();
 
     initRos2ControlTab();
+    //initEkfTab();
+    //initCartoTab();
 }
 
 MainWindow::~MainWindow()
@@ -468,7 +470,7 @@ void MainWindow::createCommunicationClient(const QString &robot_ns, const QStrin
     }
     // bridge driver နဲ့ ဆက်သွယ်ဖို့ 
     communication_ = new RosBridgeClient(robot_ns, host, port, this);
-    connect(communication_, &RosBridgeClient::receivedRos2controlMessage, this, &MainWindow::onRos2ControlVelocity);
+    connect(communication_, &RosBridgeClient::receivedTopicMessage, this, &MainWindow::onReceivedTopicMessage);
 }
 
 
@@ -495,7 +497,7 @@ void MainWindow::initRos2ControlTab()
         QHBoxLayout *hLayout = new QHBoxLayout();
         hLayout->setSpacing(16); 
         hLayout->setAlignment(Qt::AlignLeft);
-        qmlView_.clear();
+        ros2ControlQmlView_.clear();
 
         QQuickWidget *speed_meter   = new QQuickWidget(ui->ros2_control);
         QQuickWidget *leftRpm_meter = new QQuickWidget(ui->ros2_control);
@@ -531,7 +533,7 @@ void MainWindow::initRos2ControlTab()
 
             // Add to layout and store reference
             hLayout->addWidget(meter, 1);  // equal width
-            qmlView_.append(meter);
+            ros2ControlQmlView_.append(meter);
         }
 
         // --- Add the horizontal layout to the vertical layout ---
@@ -543,7 +545,7 @@ void MainWindow::initRos2ControlTab()
         QHBoxLayout *lower_hLayout = new QHBoxLayout();
         lower_hLayout->setSpacing(16); 
         
-        //qmlView_.clear();
+        //ros2ControlQmlView_.clear();
 
         QQuickWidget *actual_speed_meter   = new QQuickWidget(ui->ros2_control);
         QQuickWidget *actualLeftRpm_meter  = new QQuickWidget(ui->ros2_control);
@@ -579,27 +581,41 @@ void MainWindow::initRos2ControlTab()
 
             // Add to layout and store reference
             lower_hLayout->addWidget(meter, 1);  // equal width
-            qmlView_.append(meter);
+            ros2ControlQmlView_.append(meter);
         }
 
         // --- Add the horizontal layout to the vertical layout ---
         vLayout->addLayout(lower_hLayout);
         vLayout->addStretch(1);
+        
+        ui->desireVelHzLabel->raise();ui->desireVelHzUnitLabel->raise();
+        ui->desireLeftWheelRpmLabel->raise();ui->desireLeftWheelRpmUnitLabel->raise();
+        ui->desireRightWheelRpmLabel->raise();ui->desireRightWheelRpmUnitLabel->raise();
+
+        ui->actualVelHzLabel->raise();ui->actualVelHzUnitLabel->raise();
+        ui->actualLeftWheelRpmLabel->raise();ui->actualLeftWheelRpmUnitLabel->raise();
+        ui->actualRightWheelRpmLabel->raise();ui->actualRightWheelRpmUnitLabel->raise();
+        
+        
     }
 }
 void MainWindow::activateRos2ControlTab()
 {
     if (!communication_) return;
+
     QString cmd_vel_topic_name = "/diff_controller/cmd_vel_unstamped";
     QString cmd_vel_msg_type   = "geometry_msgs/msg/Twist";
-
-    //QString example_topic_name = "/diff_controller/cmd_vel_unstamped";
-    //QString example_msg_type   = "geometry_msgs/msg/Twist";
-
     communication_->subscribeTopic(cmd_vel_topic_name, cmd_vel_msg_type);
-    //communication_->subscribeTopic(example_topic_name, example_msg_type);
 
-    qDebug() << "Subscribed to " << cmd_vel_topic_name << ","; // << example_topic_name;
+    QString odom_topic_name = "/diff_controller/odom";
+    QString odom_msg_type   = "geometry_msgs/msg/Twist";
+    communication_->subscribeTopic(odom_topic_name, odom_msg_type);
+
+    QString js_topic_name = "/joint_states";
+    QString js_msg_type   = "sensor_msgs/msg/JointState";
+    communication_->subscribeTopic(js_topic_name, js_msg_type);
+
+    qDebug() << "Subscribed to " << cmd_vel_topic_name << "," << odom_topic_name << "," << js_topic_name;
 }
 void MainWindow::deactivateRos2ControlTab()
 {
@@ -607,15 +623,11 @@ void MainWindow::deactivateRos2ControlTab()
     
     QString cmd_vel_topic_name = "/diff_controller/cmd_vel_unstamped";
     QString cmd_vel_msg_type   = "geometry_msgs/msg/Twist";
-
-    //QString example_topic_name = "/diff_controller/cmd_vel_unstamped";
-    //QString example_msg_type   = "geometry_msgs/msg/Twist";
-
     communication_->unsubscribeTopic(cmd_vel_topic_name);
-    //communication_->unsubscribeTopic(example_topic_name, example_msg_type);
 
-    qDebug() << "Unsubscribed from " << cmd_vel_topic_name << ","; // << example_topic_name;
+    qDebug() << "Unsubscribed from " << cmd_vel_topic_name ; //<< "," << odom_topic_name << "," << js_topic_name;
 }
+
 
 void MainWindow::initEkfTab()
 {
@@ -816,63 +828,188 @@ void MainWindow::deactivateLogTab()
 }
 
 
-void MainWindow::onRos2ControlVelocity(const QString &topic, const QJsonObject &msg)
+void MainWindow::onReceivedTopicMessage(const QString &topic, const QJsonObject &msg)
 {
-    // topic name က /diff_controller/cmd_vel_unstamped 
-    if( topic == "/diff_controller/cmd_vel_unstamped" )
+    /* ROS2 CONTROL TAB */
+    if( currentMode == Mode::ros2_control )
     {
-        if (qmlView_.size() != 3) return;
+       // topic name က /diff_controller/cmd_vel_unstamped 
+        if( topic == "/diff_controller/cmd_vel_unstamped" )
+        {
+            if (ros2ControlQmlView_.size() != 6) return;
 
-        QObject* root = qmlView_[0] ? qmlView_[0]->rootObject() : nullptr;
-
-        // If the message is empty or does not contain 'linear', treat as no data (publisher exists but not publishing)
-        if ( msg.isEmpty() || !msg.contains("linear") ) {
-            if (root) {
-                root->setProperty("speed", 0.0);
+            QObject* root = ros2ControlQmlView_[0] ? ros2ControlQmlView_[0]->rootObject() : nullptr;
+            
+            if ( msg.isEmpty() || !msg.contains("linear") ) 
+            {
+                if (root) 
+                {
+                    root->setProperty("speed", 0.0);
+                }
+                return;
             }
-            return;
+
+            QJsonObject linear = msg.value("linear").toObject();
+            double vx = linear.value("x").toDouble();
+            //double vy = linear.value("y").toDouble();
+
+            if ( vx < 0 ) { vx *= -1; }
+
+            double speed = vx;
+            if (speed > 1.0) { speed = 1.0; } // cap at 1.0 m/s
+            
+            speed = speed * 100.0; // convert to m/s for display
+
+
+            if (root) 
+            {
+                QVariant qmlSpeed = QVariant::fromValue(speed);
+                root->setProperty("speed", qmlSpeed);
+            }
+
+            int right_rpm = 0;
+            int left_rpm  = 0;
+
+            QJsonObject angular = msg.value("angular").toObject();
+            double vz = angular.value("z").toDouble();
+
+            robotVelocityToWheelRpms(vx, vz, wheel_radius_, wheel_seperation_, left_rpm, right_rpm);
+
+            if( right_rpm < 0 ) { right_rpm *= -1; }
+            if( left_rpm  < 0 ) { left_rpm  *= -1; }
+        
+            // left rpm
+            QObject* left_root = ros2ControlQmlView_[1] ? ros2ControlQmlView_[1]->rootObject() : nullptr;
+            if (left_root)
+            {
+                QVariant qmlLeftRpm = QVariant::fromValue(left_rpm);
+                left_root->setProperty("speed", qmlLeftRpm);
+            }
+            // right rpm
+            QObject* right_root = ros2ControlQmlView_[2] ? ros2ControlQmlView_[2]->rootObject() : nullptr;
+            if (right_root)
+            {
+                QVariant qmlRightRpm = QVariant::fromValue(right_rpm);
+                right_root->setProperty("speed", qmlRightRpm);
+            }
+
         }
-
-        QJsonObject linear = msg.value("linear").toObject();
-        double vx = linear.value("x").toDouble();
-        //double vy = linear.value("y").toDouble();
-        if ( vx < 0 ) { vx *= -1; }
-
-        double speed = vx; 
-
-        if (root) 
+        // topic name က /diff_controller/odom for Actual Robot Velocity
+        else if( topic == "/diff_controller/odom" )
         {
-            QVariant qmlSpeed = QVariant::fromValue(speed);
-            root->setProperty("speed", qmlSpeed);
+            if (ros2ControlQmlView_.size() != 6) return;
+
+            QObject* root = ros2ControlQmlView_[3] ? ros2ControlQmlView_[3]->rootObject() : nullptr;
+            
+            if ( msg.isEmpty() || !msg.contains("twist") ) 
+            {
+                if (root) 
+                {
+                    root->setProperty("speed", 0.0);
+                }
+                return;
+            }
+
+            QJsonObject twist = msg.value("twist").toObject();
+            QJsonObject linear = twist.value("linear").toObject();
+            double vx = linear.value("x").toDouble();
+            //double vy = linear.value("y").toDouble();
+
+            if ( vx < 0 ) { vx *= -1; }
+
+            double speed = vx;
+            if (speed > 1.0) { speed = 1.0; } // cap at 1.0 m/s
+            
+            speed = speed * 100.0; // convert to m/s for display
+
+            if (root) 
+            {
+                QVariant qmlSpeed = QVariant::fromValue(speed);
+                root->setProperty("speed", qmlSpeed);
+            }
         }
-
-        int right_rpm = 0;
-        int left_rpm  = 0;
-
-        QJsonObject angular = msg.value("angular").toObject();
-        double vz = angular.value("z").toDouble();
-        robotVelocityToWheelRpms(vx, vz, wheel_radius_, wheel_seperation_, left_rpm, right_rpm);
-
-        if( right_rpm < 0 ) { right_rpm *= -1; }
-        if( left_rpm  < 0 ) { left_rpm  *= -1; }
-
-        // right rpm
-        QObject* right_root = qmlView_[2] ? qmlView_[2]->rootObject() : nullptr;
-        if (right_root)
+        // topic name က /joint_states for Actual Robot RPMs
+        else if( topic == "/joint_states" )
         {
-            QVariant qmlRightRpm = QVariant::fromValue(right_rpm);
-            right_root->setProperty("speed", qmlRightRpm);
-        }
-        // left rpm
-        QObject* left_root = qmlView_[1] ? qmlView_[1]->rootObject() : nullptr;
-        if (left_root)
-        {
-            QVariant qmlLeftRpm = QVariant::fromValue(left_rpm);
-            left_root->setProperty("speed", qmlLeftRpm);
-        }
+            if (ros2ControlQmlView_.size() != 6) return;
+            QObject* leftActualRpmRoot  = ros2ControlQmlView_[4] ? ros2ControlQmlView_[4]->rootObject() : nullptr;
+            QObject* rightActualRpmRoot = ros2ControlQmlView_[5] ? ros2ControlQmlView_[5]->rootObject() : nullptr;
 
+            if ( msg.isEmpty() || !msg.contains("name") || !msg.contains("velocity") ) 
+            {
+                if (leftActualRpmRoot) 
+                {
+                    leftActualRpmRoot->setProperty("speed", 0.0);
+                }
+                if (rightActualRpmRoot) 
+                {
+                    rightActualRpmRoot->setProperty("speed", 0.0);
+                }
+                return;
+            }
+
+            QJsonArray nameArray = msg.value("name").toArray();
+            QJsonArray velocityArray = msg.value("velocity").toArray();
+            double left_wheel_velocity  = 0.0;
+            double right_wheel_velocity = 0.0;
+
+            for (int i = 0; i < nameArray.size(); ++i) 
+            {
+                QString joint_name = nameArray[i].toString();
+                double joint_velocity = velocityArray[i].toDouble();
+
+                if (joint_name == "left_wheel_joint") 
+                {
+                    left_wheel_velocity = joint_velocity;
+                } 
+                else if (joint_name == "right_wheel_joint") 
+                {
+                    right_wheel_velocity = joint_velocity;
+                }
+            }
+            left_wheel_velocity = left_wheel_velocity * (60.0 / (2.0 * M_PI)); // convert rad/s to RPM
+            right_wheel_velocity = right_wheel_velocity * (60.0 / (2.0 * M_PI)); // convert rad/s to RPM
+
+            if( left_wheel_velocity < 0 ) { left_wheel_velocity *= -1; }
+            if( right_wheel_velocity < 0 ) { right_wheel_velocity *= -1; }
+
+            if (leftActualRpmRoot)
+            {
+                QVariant qmlLeftActualRpm = QVariant::fromValue(static_cast<int>(left_wheel_velocity));
+                leftActualRpmRoot->setProperty("speed", qmlLeftActualRpm);
+            }
+            if (rightActualRpmRoot)
+            {
+                QVariant qmlRightActualRpm = QVariant::fromValue(static_cast<int>(right_wheel_velocity));
+                rightActualRpmRoot->setProperty("speed", qmlRightActualRpm);
+            }
+        }
     }
+    
 
+    /* EKF TAB */
+    else if( currentMode == Mode::ekf ) {}
+
+    /* CARTO TAB */
+    else if( currentMode == Mode::carto ) {}
+
+    /* NAV2 1 TAB */
+    else if( currentMode == Mode::nav2_1 ) {}
+
+    /* NAV2 2 TAB */
+    else if( currentMode == Mode::nav2_2 ) {}
+
+    /* NAV2 3 TAB */
+    else if( currentMode == Mode::nav2_3 ) {}
+
+    /* BT TAB */
+    else if( currentMode == Mode::bt ) {}
+
+    /* TOPIC TAB */
+    else if( currentMode == Mode::topic ) {}
+
+    /* LOG TAB */
+    else if( currentMode == Mode::log ) {}
 }
 
 

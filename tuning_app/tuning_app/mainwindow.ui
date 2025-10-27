@@ -70,7 +70,7 @@ color: white;</string>
      <string notr="true"/>
     </property>
     <property name="currentIndex">
-     <number>1</number>
+     <number>0</number>
     </property>
     <widget class="QWidget" name="ssh">
      <property name="styleSheet">
@@ -287,7 +287,7 @@ background: transparent;
      <attribute name="title">
       <string>control</string>
      </attribute>
-     <widget class="QLabel" name="label">
+     <widget class="QLabel" name="gpio1Label">
       <property name="geometry">
        <rect>
         <x>-4</x>
@@ -307,7 +307,7 @@ font: 10px solid;</string>
        <set>Qt::AlignmentFlag::AlignCenter</set>
       </property>
      </widget>
-     <widget class="QLabel" name="label_2">
+     <widget class="QLabel" name="gpio2Label">
       <property name="geometry">
        <rect>
         <x>47</x>
@@ -327,7 +327,7 @@ font: 10px solid;</string>
        <set>Qt::AlignmentFlag::AlignCenter</set>
       </property>
      </widget>
-     <widget class="QLabel" name="label_3">
+     <widget class="QLabel" name="gpio4Label">
       <property name="geometry">
        <rect>
         <x>148</x>
@@ -347,7 +347,7 @@ font: 10px solid;</string>
        <set>Qt::AlignmentFlag::AlignCenter</set>
       </property>
      </widget>
-     <widget class="QLabel" name="label_4">
+     <widget class="QLabel" name="gpio3Label">
       <property name="geometry">
        <rect>
         <x>97</x>
@@ -367,7 +367,7 @@ font: 10px solid;</string>
        <set>Qt::AlignmentFlag::AlignCenter</set>
       </property>
      </widget>
-     <widget class="QLabel" name="label_5">
+     <widget class="QLabel" name="gpio6Label">
       <property name="geometry">
        <rect>
         <x>250</x>
@@ -387,7 +387,7 @@ font: 10px solid;</string>
        <set>Qt::AlignmentFlag::AlignCenter</set>
       </property>
      </widget>
-     <widget class="QLabel" name="label_6">
+     <widget class="QLabel" name="gpio7Label">
       <property name="geometry">
        <rect>
         <x>300</x>
@@ -408,7 +408,7 @@ color: black;</string>
        <set>Qt::AlignmentFlag::AlignCenter</set>
       </property>
      </widget>
-     <widget class="QLabel" name="label_7">
+     <widget class="QLabel" name="gpio5Label">
       <property name="geometry">
        <rect>
         <x>199</x>
@@ -428,7 +428,7 @@ font: 10px solid;</string>
        <set>Qt::AlignmentFlag::AlignCenter</set>
       </property>
      </widget>
-     <widget class="QLabel" name="label_8">
+     <widget class="QLabel" name="gpio8Label">
       <property name="geometry">
        <rect>
         <x>351</x>
@@ -448,7 +448,7 @@ font: 10px solid;</string>
        <set>Qt::AlignmentFlag::AlignCenter</set>
       </property>
      </widget>
-     <widget class="QLabel" name="label_9">
+     <widget class="QLabel" name="res9Label">
       <property name="geometry">
        <rect>
         <x>453</x>
@@ -462,13 +462,13 @@ font: 10px solid;</string>
 font: 10px solid;</string>
       </property>
       <property name="text">
-       <string>RES2</string>
+       <string>RES9</string>
       </property>
       <property name="alignment">
        <set>Qt::AlignmentFlag::AlignCenter</set>
       </property>
      </widget>
-     <widget class="QLabel" name="label_10">
+     <widget class="QLabel" name="res10Label">
       <property name="geometry">
        <rect>
         <x>503</x>
@@ -482,13 +482,13 @@ font: 10px solid;</string>
 font: 10px solid;</string>
       </property>
       <property name="text">
-       <string>RES3</string>
+       <string>RES10</string>
       </property>
       <property name="alignment">
        <set>Qt::AlignmentFlag::AlignCenter</set>
       </property>
      </widget>
-     <widget class="QLabel" name="label_11">
+     <widget class="QLabel" name="res8Label">
       <property name="geometry">
        <rect>
         <x>402</x>
@@ -502,13 +502,13 @@ font: 10px solid;</string>
 font: 10px solid;</string>
       </property>
       <property name="text">
-       <string>RES1</string>
+       <string>RES8</string>
       </property>
       <property name="alignment">
        <set>Qt::AlignmentFlag::AlignCenter</set>
       </property>
      </widget>
-     <widget class="QLabel" name="label_13">
+     <widget class="QLabel" name="res13Label">
       <property name="geometry">
        <rect>
         <x>656</x>
@@ -522,13 +522,13 @@ font: 10px solid;</string>
 font: 10px solid;</string>
       </property>
       <property name="text">
-       <string>RES6</string>
+       <string>RES13</string>
       </property>
       <property name="alignment">
        <set>Qt::AlignmentFlag::AlignCenter</set>
       </property>
      </widget>
-     <widget class="QLabel" name="label_14">
+     <widget class="QLabel" name="res11Label">
       <property name="geometry">
        <rect>
         <x>554</x>
@@ -542,13 +542,13 @@ font: 10px solid;</string>
 font: 10px solid;</string>
       </property>
       <property name="text">
-       <string>RES4</string>
+       <string>RES11</string>
       </property>
       <property name="alignment">
        <set>Qt::AlignmentFlag::AlignCenter</set>
       </property>
      </widget>
-     <widget class="QLabel" name="label_16">
+     <widget class="QLabel" name="res12Label">
       <property name="geometry">
        <rect>
         <x>605</x>
@@ -562,13 +562,13 @@ font: 10px solid;</string>
 font: 10px solid;</string>
       </property>
       <property name="text">
-       <string>RES5</string>
+       <string>RES12</string>
       </property>
       <property name="alignment">
        <set>Qt::AlignmentFlag::AlignCenter</set>
       </property>
      </widget>
-     <widget class="QLabel" name="label_17">
+     <widget class="QLabel" name="res5Label">
       <property name="geometry">
        <rect>
         <x>605</x>
@@ -588,7 +588,7 @@ font: 10px solid;</string>
        <set>Qt::AlignmentFlag::AlignCenter</set>
       </property>
      </widget>
-     <widget class="QLabel" name="label_19">
+     <widget class="QLabel" name="res6Label">
       <property name="geometry">
        <rect>
         <x>656</x>
@@ -608,7 +608,7 @@ font: 10px solid;</string>
        <set>Qt::AlignmentFlag::AlignCenter</set>
       </property>
      </widget>
-     <widget class="QLabel" name="label_12">
+     <widget class="QLabel" name="res1Label">
       <property name="geometry">
        <rect>
         <x>402</x>
@@ -628,7 +628,7 @@ font: 10px solid;</string>
        <set>Qt::AlignmentFlag::AlignCenter</set>
       </property>
      </widget>
-     <widget class="QLabel" name="label_20">
+     <widget class="QLabel" name="res2Label">
       <property name="geometry">
        <rect>
         <x>453</x>
@@ -648,7 +648,7 @@ font: 10px solid;</string>
        <set>Qt::AlignmentFlag::AlignCenter</set>
       </property>
      </widget>
-     <widget class="QLabel" name="label_21">
+     <widget class="QLabel" name="led2Label">
       <property name="geometry">
        <rect>
         <x>47</x>
@@ -668,7 +668,7 @@ font: 10px solid;</string>
        <set>Qt::AlignmentFlag::AlignCenter</set>
       </property>
      </widget>
-     <widget class="QLabel" name="label_22">
+     <widget class="QLabel" name="res4Label">
       <property name="geometry">
        <rect>
         <x>554</x>
@@ -688,7 +688,7 @@ font: 10px solid;</string>
        <set>Qt::AlignmentFlag::AlignCenter</set>
       </property>
      </widget>
-     <widget class="QLabel" name="label_23">
+     <widget class="QLabel" name="led3Label">
       <property name="geometry">
        <rect>
         <x>97</x>
@@ -709,7 +709,7 @@ font: 10px solid;
        <set>Qt::AlignmentFlag::AlignCenter</set>
       </property>
      </widget>
-     <widget class="QLabel" name="label_24">
+     <widget class="QLabel" name="led1Label">
       <property name="geometry">
        <rect>
         <x>-4</x>
@@ -729,7 +729,7 @@ font: 10px solid;</string>
        <set>Qt::AlignmentFlag::AlignCenter</set>
       </property>
      </widget>
-     <widget class="QLabel" name="label_25">
+     <widget class="QLabel" name="led8Label">
       <property name="geometry">
        <rect>
         <x>351</x>
@@ -749,7 +749,7 @@ font: 10px solid;</string>
        <set>Qt::AlignmentFlag::AlignCenter</set>
       </property>
      </widget>
-     <widget class="QLabel" name="label_26">
+     <widget class="QLabel" name="led6Label">
       <property name="geometry">
        <rect>
         <x>250</x>
@@ -770,7 +770,7 @@ font: 10px solid;
        <set>Qt::AlignmentFlag::AlignCenter</set>
       </property>
      </widget>
-     <widget class="QLabel" name="label_27">
+     <widget class="QLabel" name="led4Label">
       <property name="geometry">
        <rect>
         <x>148</x>
@@ -790,7 +790,7 @@ font: 10px solid;</string>
        <set>Qt::AlignmentFlag::AlignCenter</set>
       </property>
      </widget>
-     <widget class="QLabel" name="label_28">
+     <widget class="QLabel" name="res3Label">
       <property name="geometry">
        <rect>
         <x>503</x>
@@ -810,7 +810,7 @@ font: 10px solid;</string>
        <set>Qt::AlignmentFlag::AlignCenter</set>
       </property>
      </widget>
-     <widget class="QLabel" name="label_29">
+     <widget class="QLabel" name="led7Label">
       <property name="geometry">
        <rect>
         <x>300</x>
@@ -830,7 +830,7 @@ font: 10px solid;</string>
        <set>Qt::AlignmentFlag::AlignCenter</set>
       </property>
      </widget>
-     <widget class="QLabel" name="label_30">
+     <widget class="QLabel" name="led5Label">
       <property name="geometry">
        <rect>
         <x>199</x>
@@ -851,7 +851,7 @@ font: 10px solid;
        <set>Qt::AlignmentFlag::AlignCenter</set>
       </property>
      </widget>
-     <widget class="QLabel" name="label_15">
+     <widget class="QLabel" name="res7Label">
       <property name="geometry">
        <rect>
         <x>707</x>
@@ -871,7 +871,7 @@ font: 10px solid;</string>
        <set>Qt::AlignmentFlag::AlignCenter</set>
       </property>
      </widget>
-     <widget class="QLabel" name="label_18">
+     <widget class="QLabel" name="res14Label">
       <property name="geometry">
        <rect>
         <x>707</x>
@@ -885,13 +885,13 @@ font: 10px solid;</string>
 font: 10px solid;</string>
       </property>
       <property name="text">
-       <string>RES7</string>
+       <string>RES14</string>
       </property>
       <property name="alignment">
        <set>Qt::AlignmentFlag::AlignCenter</set>
       </property>
      </widget>
-     <widget class="QLabel" name="label_31">
+     <widget class="QLabel" name="estopLabel">
       <property name="geometry">
        <rect>
         <x>758</x>
@@ -910,6 +910,228 @@ color: black;</string>
       </property>
       <property name="alignment">
        <set>Qt::AlignmentFlag::AlignCenter</set>
+      </property>
+     </widget>
+     <widget class="QLabel" name="desireVelHzLabel">
+      <property name="geometry">
+       <rect>
+        <x>210</x>
+        <y>180</y>
+        <width>21</width>
+        <height>17</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">color: rgb(0, 255, 0);
+background: transparent;</string>
+      </property>
+      <property name="text">
+       <string>0</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
+      </property>
+     </widget>
+     <widget class="QLabel" name="desireVelHzUnitLabel">
+      <property name="geometry">
+       <rect>
+        <x>236</x>
+        <y>180</y>
+        <width>21</width>
+        <height>17</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">color: rgb(0, 255, 0);
+background: transparent;</string>
+      </property>
+      <property name="text">
+       <string>Hz</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="desireLeftWheelRpmLabel">
+      <property name="geometry">
+       <rect>
+        <x>474</x>
+        <y>180</y>
+        <width>21</width>
+        <height>17</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">color: rgb(0, 255, 0);
+background: transparent;</string>
+      </property>
+      <property name="text">
+       <string>0</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
+      </property>
+     </widget>
+     <widget class="QLabel" name="desireLeftWheelRpmUnitLabel">
+      <property name="geometry">
+       <rect>
+        <x>500</x>
+        <y>180</y>
+        <width>21</width>
+        <height>17</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">color: rgb(0, 255, 0);
+background: transparent;</string>
+      </property>
+      <property name="text">
+       <string>Hz</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="desireRightWheelRpmLabel">
+      <property name="geometry">
+       <rect>
+        <x>740</x>
+        <y>180</y>
+        <width>21</width>
+        <height>17</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">color: rgb(0, 255, 0);
+background: transparent;</string>
+      </property>
+      <property name="text">
+       <string>0</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
+      </property>
+     </widget>
+     <widget class="QLabel" name="desireRightWheelRpmUnitLabel">
+      <property name="geometry">
+       <rect>
+        <x>766</x>
+        <y>180</y>
+        <width>21</width>
+        <height>17</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">color: rgb(0, 255, 0);
+background: transparent;</string>
+      </property>
+      <property name="text">
+       <string>Hz</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="actualVelHzLabel">
+      <property name="geometry">
+       <rect>
+        <x>209</x>
+        <y>460</y>
+        <width>21</width>
+        <height>17</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">color: rgb(0, 255, 0);
+background: transparent;</string>
+      </property>
+      <property name="text">
+       <string>0</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
+      </property>
+     </widget>
+     <widget class="QLabel" name="actualLeftWheelRpmUnitLabel">
+      <property name="geometry">
+       <rect>
+        <x>500</x>
+        <y>460</y>
+        <width>21</width>
+        <height>17</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">color: rgb(0, 255, 0);
+background: transparent;</string>
+      </property>
+      <property name="text">
+       <string>Hz</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="actualLeftWheelRpmLabel">
+      <property name="geometry">
+       <rect>
+        <x>474</x>
+        <y>460</y>
+        <width>21</width>
+        <height>17</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">color: rgb(0, 255, 0);
+background: transparent;</string>
+      </property>
+      <property name="text">
+       <string>0</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
+      </property>
+     </widget>
+     <widget class="QLabel" name="actualRightWheelRpmLabel">
+      <property name="geometry">
+       <rect>
+        <x>734</x>
+        <y>460</y>
+        <width>21</width>
+        <height>17</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">color: rgb(0, 255, 0);
+background: transparent;</string>
+      </property>
+      <property name="text">
+       <string>0</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
+      </property>
+     </widget>
+     <widget class="QLabel" name="actualRightWheelRpmUnitLabel">
+      <property name="geometry">
+       <rect>
+        <x>760</x>
+        <y>460</y>
+        <width>21</width>
+        <height>17</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">color: rgb(0, 255, 0);
+background: transparent;</string>
+      </property>
+      <property name="text">
+       <string>Hz</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="actualVelHzUnitLabel">
+      <property name="geometry">
+       <rect>
+        <x>235</x>
+        <y>460</y>
+        <width>21</width>
+        <height>17</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">color: rgb(0, 255, 0);
+background: transparent;</string>
+      </property>
+      <property name="text">
+       <string>Hz</string>
       </property>
      </widget>
     </widget>
