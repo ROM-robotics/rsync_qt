@@ -14,6 +14,7 @@ qt_add_executable(tuning_app
     design/rom_structures.h
     communication/ros_bridge_client.hpp
     communication/ros_bridge_client.cpp
+    design/rom_design.hpp
 
 
 

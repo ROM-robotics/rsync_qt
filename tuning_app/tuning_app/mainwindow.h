@@ -8,6 +8,8 @@
 #include <QString>
 #include <QQuickWidget>
 
+#include "design/rom_design.hpp"
+
 QT_BEGIN_NAMESPACE
 namespace Ui {
 class MainWindow;
@@ -62,6 +64,26 @@ public:
 
     void robotVelocityToWheelRpms(double linear_velocity, double angular_velocity, double wheel_radius, double wheel_seperation, int &left_rpm, int &right_rpm);
 
+    double quaternionToYawDegrees(double &qx, double &qy, double &qz, double &qw);
+    double yawDegreesToQuaternion(double &yaw_degrees, double &qx, double &qy, double &qz, double &qw);
+
+signals:
+    //void createCommunicationClient(const QString &robot_ns, const QString &host, quint16 port);
+
+private slots:
+    void onTabChanged(int index);
+    void on_closeBtn_clicked();
+    void on_rsyncBtn_clicked();
+    void on_connectBtn_clicked();
+    void on_hostTerminalBtn_clicked();
+    void on_robotTerminalBtn_clicked();
+
+    // from web socket
+    void onReceivedTopicMessage(const QString &topic, const QJsonObject &msg);
+
+
+protected:
+    // test();
 
 private:
     Ui::MainWindow *ui;
@@ -87,23 +109,11 @@ private:
     double wheel_radius_ = 0.100; // meters
     double wheel_seperation_ = 0.400; // meters
 
-signals:
-    //void createCommunicationClient(const QString &robot_ns, const QString &host, quint16 port);
+    // ekf
+    //OdomPoseChart *diffContOdom_Odom_PosesChart_ = nullptr;
+    //OdomPoseChart *diffContOdom_Imu_Odom_HeadsChart_ = nullptr;
+    RomPolarHeadingGraph *odomDiffOdomImuHeadingGraphPtr_ = nullptr;
+    RomPositionGraph *odomDiffOdomPositionGraphPtr_ = nullptr;
 
-private slots:
-    void onTabChanged(int index);
-    void on_closeBtn_clicked();
-    void on_rsyncBtn_clicked();
-    void on_connectBtn_clicked();
-    void on_hostTerminalBtn_clicked();
-    void on_robotTerminalBtn_clicked();
-    
-    // from web socket    
-    void onReceivedTopicMessage(const QString &topic, const QJsonObject &msg);
-
-
-protected:
-    
-    
 };
 #endif // MAINWINDOW_H

@@ -15,6 +15,7 @@
 #include <QQmlContext>
 #include <QQuickItem>
 
+#include "design/rom_design.hpp"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -45,7 +46,7 @@ MainWindow::MainWindow(QWidget *parent)
     qDebug() << " currentMode = " << ModeToString(currentMode).c_str();
 
     initRos2ControlTab();
-    //initEkfTab();
+    initEkfTab();
     //initCartoTab();
 }
 
@@ -241,7 +242,7 @@ void MainWindow::onTabChanged(int index)
             // Handle unexpected index
             break;
     }
-    qDebug() << "Done";
+    //qDebug() << "Done";
 }
 void MainWindow::on_rsyncBtn_clicked()
 {
@@ -479,7 +480,7 @@ void MainWindow::initRos2ControlTab()
 {
     if (ui->ros2_control)
     {
-         // Remove any existing layout
+        // Remove any existing layout
         QLayout *existing = ui->ros2_control->layout();
         if (existing) 
         {
@@ -622,34 +623,94 @@ void MainWindow::deactivateRos2ControlTab()
     if (!communication_) return;
     
     QString cmd_vel_topic_name = "/diff_controller/cmd_vel_unstamped";
-    QString cmd_vel_msg_type   = "geometry_msgs/msg/Twist";
+    QString odom_topic_name = "/diff_controller/odom";
+    QString js_topic_name = "/joint_states";
     communication_->unsubscribeTopic(cmd_vel_topic_name);
+    communication_->unsubscribeTopic(odom_topic_name);
+    communication_->unsubscribeTopic(js_topic_name);
 
-    qDebug() << "Unsubscribed from " << cmd_vel_topic_name ; //<< "," << odom_topic_name << "," << js_topic_name;
+    qDebug() << "Unsubscribed from " << cmd_vel_topic_name << "," << odom_topic_name << "," << js_topic_name;
 }
 
 
 void MainWindow::initEkfTab()
 {
-    
+    if (ui->ekf)
+    {
+        qDebug() << " Initializing EKF Tab UI components ";
+        QLayout *existing = ui->ekf->layout();
+        if (existing) 
+        {
+            delete existing;
+            qDebug() << " Deleted existing layout in EKF Tab ";
+        }
+        
+        QGridLayout* grid = new QGridLayout(ui->ekf);
+        grid->setContentsMargins(20, 20, 20, 20);
+        grid->setSpacing(0);
+
+        grid->setRowStretch(0, 1);
+        grid->setRowStretch(1, 1);
+        grid->setColumnStretch(0, 1);
+        grid->setColumnStretch(1, 1);
+
+    odomDiffOdomImuHeadingGraphPtr_ = new RomPolarHeadingGraph(ui->ekf);
+    odomDiffOdomPositionGraphPtr_ = new RomPositionGraph(ui->ekf);
+
+    grid->addWidget(odomDiffOdomImuHeadingGraphPtr_, 0, 0);
+    grid->addWidget(odomDiffOdomPositionGraphPtr_, 0, 1);
+
+    // Optionally, add more widgets or adjust grid layout as needed
+
+    ui->ekf->setLayout(grid);
+
+    //=================================
+    // odomDiffOdomPositionGraphPtr_->updateGraph(QPointF(0.1, 4.0), QPointF(0.1, 3.9));
+    // odomDiffOdomPositionGraphPtr_->updateGraph(QPointF(0.2, 3.9), QPointF(0.2, 3.8) );
+    // odomDiffOdomPositionGraphPtr_->updateGraph(QPointF(0.3, 3.8), QPointF(0.3, 3.7) );
+    // odomDiffOdomPositionGraphPtr_->updateGraph(QPointF(0.4, 3.7), QPointF(0.4, 3.6) );
+    // odomDiffOdomPositionGraphPtr_->updateGraph(QPointF(0.5, 3.6), QPointF(0.5, 3.5) );
+    // odomDiffOdomPositionGraphPtr_->updateGraph(QPointF(0.6, 3.5), QPointF(0.6, 3.4) );
+    // odomDiffOdomPositionGraphPtr_->updateGraph(QPointF(0.7, 3.4), QPointF(0.7, 3.3) );
+    // odomDiffOdomPositionGraphPtr_->updateGraph(QPointF(0.8, 3.3), QPointF(0.8, 3.2) );
+    // odomDiffOdomPositionGraphPtr_->updateGraph(QPointF(0.9, 3.2), QPointF(0.9, 3.1) );
+    // odomDiffOdomPositionGraphPtr_->updateGraph(QPointF(1.0, 3.1), QPointF(1.0, 3.0) );
+    // odomDiffOdomPositionGraphPtr_->updateGraph(QPointF(1.1, 3.0), QPointF(1.1, 2.9) );
+    // odomDiffOdomPositionGraphPtr_->updateGraph(QPointF(1.2, 3.1), QPointF(1.2, 2.8) );
+    // odomDiffOdomPositionGraphPtr_->updateGraph(QPointF(1.3, 3.1), QPointF(1.3, 2.7) );
+
+    // odomDiffOdomImuHeadingGraphPtr_->updateGraph(30.0, 45.0, 50.0);
+    //=================================
+    }
 }
 void MainWindow::activateEkfTab()
 {
-    //QString example_topic_name = "/diff_controller/cmd_vel_unstamped";
-    //QString example_msg_type   = "geometry_msgs/msg/Twist";
-    
-    //communication_->subscribeTopic(example_topic_name, example_msg_type);
+    if (!communication_) return;
 
-    //qDebug() << "Subscribed to " << example_topic_name;
+    QString odom_topic_name = "/diff_controller/odom";
+    QString odom_msg_type   = "nav_msgs/msg/Odometry";
+    communication_->subscribeTopic(odom_topic_name, odom_msg_type);
+
+    QString ekf_odom_topic_name = "/odom";
+    QString cmd_vel_msg_type   = "geometry_msgs/msg/Twist";
+    communication_->subscribeTopic(ekf_odom_topic_name, odom_msg_type);
+
+    QString imu_topic_name = "/imu/out";
+    QString imu_msg_type   = "sensor_msgs/msg/Imu";
+    communication_->subscribeTopic(imu_topic_name, imu_msg_type);
+
+    qDebug() << "Subscribed to " << odom_topic_name << "," << ekf_odom_topic_name << "," << imu_topic_name;
 }
 void MainWindow::deactivateEkfTab()
 {
-    //QString example_topic_name = "/diff_controller/cmd_vel_unstamped";
-    //QString example_msg_type   = "geometry_msgs/msg/Twist";
+    QString ekf_odom_topic_name = "/odom";
+    QString odom_topic_name = "/diff_controller/odom";
+    QString imu_topic_name = "/imu/out";
+    communication_->unsubscribeTopic(ekf_odom_topic_name);
+    communication_->unsubscribeTopic(odom_topic_name);
+    communication_->unsubscribeTopic(imu_topic_name);
 
-    //communication_->unsubscribeTopic(example_topic_name, example_msg_type);
-
-    //qDebug() << "Unsubscribed to " << example_topic_name;
+    qDebug() << "Unsubscribed from " << odom_topic_name << "," << ekf_odom_topic_name << "," << imu_topic_name;
 }
 
 void MainWindow::initCartoTab()
@@ -990,7 +1051,94 @@ void MainWindow::onReceivedTopicMessage(const QString &topic, const QJsonObject 
     
 
     /* EKF TAB */
-    else if( currentMode == Mode::ekf ) {}
+    else if( currentMode == Mode::ekf ) 
+    {
+    QString ekf_odom_topic_name = "/odom";
+    QString odom_topic_name = "/diff_controller/odom";
+    QString imu_topic_name = "/imu/out";
+        
+    static QPointF ekf_position;
+    static QPointF odom_position;
+    static double imu_heading = 0.0;
+    static double odom_heading = 0.0;
+    static double ekf_heading = 0.0;
+
+        if( topic == ekf_odom_topic_name )
+        {
+            if ( msg.isEmpty() || !msg.contains("pose") ) 
+            {
+                return;
+            }
+
+            QJsonObject pose = msg.value("pose").toObject();
+            QJsonObject pose_child = pose.value("pose").toObject();
+            QJsonObject position = pose_child.value("position").toObject();
+            double x = position.value("x").toDouble();
+            double y = position.value("y").toDouble();
+            ekf_position = QPointF(x, y);
+
+            QJsonObject orientation = pose_child.value("orientation").toObject();
+            double qx = orientation.value("x").toDouble();
+            double qy = orientation.value("y").toDouble();
+            double qz = orientation.value("z").toDouble();
+            double qw = orientation.value("w").toDouble();
+            ekf_heading = quaternionToYawDegrees(qx, qy, qz, qw);
+
+            // trigger to ui update
+            if( odomDiffOdomImuHeadingGraphPtr_ )
+            {
+                odomDiffOdomImuHeadingGraphPtr_->updateGraph(odom_heading, imu_heading, ekf_heading);
+            }
+            if( odomDiffOdomPositionGraphPtr_ )
+            {
+                odomDiffOdomPositionGraphPtr_->updateGraph(odom_position, ekf_position);
+            }
+            qDebug() << " EKF Odom Position: " << ekf_position << ", Heading: " << ekf_heading;
+            qDebug() << " Diff Odom Position: " << odom_position << ", Heading: " << odom_heading;
+            
+        }
+        else if( topic == odom_topic_name )
+        {
+            if ( msg.isEmpty() || !msg.contains("pose") ) 
+            {
+                return;
+            }
+
+            QJsonObject pose = msg.value("pose").toObject();
+            QJsonObject pose_child = pose.value("pose").toObject();
+            QJsonObject position = pose_child.value("position").toObject();
+            double x = position.value("x").toDouble();
+            double y = position.value("y").toDouble();
+            odom_position = QPointF(x, y);
+
+            QJsonObject orientation = pose_child.value("orientation").toObject();
+            double qx = orientation.value("x").toDouble();
+            double qy = orientation.value("y").toDouble();
+            double qz = orientation.value("z").toDouble();
+            double qw = orientation.value("w").toDouble();
+            odom_heading = quaternionToYawDegrees(qx, qy, qz, qw);
+        }
+        else if( topic == imu_topic_name )
+        {
+            if ( msg.isEmpty() || !msg.contains("orientation") ) 
+            {
+                return;
+            }
+
+            QJsonObject orientation = msg.value("orientation").toObject();
+            double qx = orientation.value("x").toDouble();
+            double qy = orientation.value("y").toDouble();
+            double qz = orientation.value("z").toDouble();
+            double qw = orientation.value("w").toDouble();
+
+            // Convert quaternion to yaw angle in degrees
+            double siny_cosp = 2.0 * (qw * qz + qx * qy);
+            double cosy_cosp = 1.0 - 2.0 * (qy * qy + qz * qz);
+            double yaw = std::atan2(siny_cosp, cosy_cosp);
+            double yaw_degrees = yaw * (180.0 / M_PI);
+            imu_heading = yaw_degrees;
+        }
+    }
 
     /* CARTO TAB */
     else if( currentMode == Mode::carto ) {}
@@ -1030,30 +1178,20 @@ void MainWindow::robotVelocityToWheelRpms(double linear_velocity, double angular
     right_rpm = static_cast<int>((omega_right * 60.0) / (2.0 * M_PI));
 }
 
+double MainWindow::quaternionToYawDegrees(double &qx, double &qy, double &qz, double &qw)
+{
+    double siny_cosp = 2.0 * (qw * qz + qx * qy);
+    double cosy_cosp = 1.0 - 2.0 * (qy * qy + qz * qz);
+    double yaw = std::atan2(siny_cosp, cosy_cosp);
+    double yaw_degrees = yaw * (180.0 / M_PI);
+    return yaw_degrees;
+}
 
-
-// OVERRIDE METHODS
-
-
-
-// QDIALOG BOX
-//  QDialog dlg(this);
-//         dlg.setWindowTitle("Missing IP");
-//         dlg.setFixedSize(400, 100);
-//         QLabel *label = new QLabel("Please enter the robot IP address.", &dlg);
-//         label->setAlignment(Qt::AlignCenter);
-//         QPushButton *okBtn = new QPushButton("OK", &dlg);
-//         okBtn->setGeometry(150, 150, 100, 30);
-//         QObject::connect(okBtn, &QPushButton::clicked, &dlg, &QDialog::accept);
-//         QVBoxLayout *layout = new QVBoxLayout;
-//         layout->addWidget(label);
-//         layout->addWidget(okBtn);
-//         dlg.setLayout(layout);
-//         // Center dialog over main window
-//         QPoint center = this->geometry().center();
-//         QPoint globalCenter = this->mapToGlobal(center);
-//         int dlgX = globalCenter.x() - dlg.width() / 2;
-//         int dlgY = globalCenter.y() - dlg.height() / 2;
-//         dlg.move(dlgX, dlgY);
-//         dlg.exec();
-//         return;
+double MainWindow::yawDegreesToQuaternion(double &yaw_degrees, double &qx, double &qy, double &qz, double &qw)
+{
+    double half_yaw = yaw_degrees * 0.5 * (M_PI / 180.0);
+    qw = std::cos(half_yaw);
+    qx = 0.0;
+    qy = 0.0;
+    qz = std::sin(half_yaw);
+}

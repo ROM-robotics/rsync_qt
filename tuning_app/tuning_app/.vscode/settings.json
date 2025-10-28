@@ -1,0 +1,7 @@
+{
+    "files.associations": {
+        "string": "cpp",
+        "*.backup": "cpp"
+    },
+    "commentTranslate.multiLineMerge": true
+}
