@@ -17,6 +17,9 @@
 
 #include "design/rom_design.hpp"
 
+#include <QDir>
+#include "design/readmeviewer.h"
+
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
@@ -473,7 +476,21 @@ void MainWindow::createCommunicationClient(const QString &robot_ns, const QStrin
     communication_ = new RosBridgeClient(robot_ns, host, port, this);
     connect(communication_, &RosBridgeClient::receivedTopicMessage, this, &MainWindow::onReceivedTopicMessage);
 }
+void MainWindow::on_ekfTuningGuideBtn_clicked()
+{
+    //QString ekf_tuning_guide_url = "https://docs.ros.org/en/foxy/Tutorials/Localization/Understanding-EKF-Localization-With-Nav2.html";
+    //QDesktopServices::openUrl(QUrl(ekf_tuning_guide_url));
 
+    QDir dir = QDir::current();
+    dir.cdUp(); dir.cdUp(); dir.cdUp();
+    QString upTwoDirs = dir.path();
+    QString filePath = upTwoDirs + "/README/ekf_guide.md";
+    
+    qDebug() << "EKF guide path:" << filePath;
+
+    ReadmeDialog dlg(this, filePath);
+    dlg.exec();
+}
 
 // OUR UI METHODS
 void MainWindow::initRos2ControlTab()

@@ -77,6 +77,7 @@ private slots:
     void on_connectBtn_clicked();
     void on_hostTerminalBtn_clicked();
     void on_robotTerminalBtn_clicked();
+    void on_ekfTuningGuideBtn_clicked();
 
     // from web socket
     void onReceivedTopicMessage(const QString &topic, const QJsonObject &msg);

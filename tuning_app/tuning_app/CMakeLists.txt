@@ -15,6 +15,8 @@ qt_add_executable(tuning_app
     communication/ros_bridge_client.hpp
     communication/ros_bridge_client.cpp
     design/rom_design.hpp
+    design/readmeviewer.h
+    design/readmeviewer.cpp
 
 
 

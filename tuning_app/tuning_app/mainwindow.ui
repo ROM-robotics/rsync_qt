@@ -70,7 +70,7 @@ color: white;</string>
      <string notr="true"/>
     </property>
     <property name="currentIndex">
-     <number>0</number>
+     <number>2</number>
     </property>
     <widget class="QWidget" name="ssh">
      <property name="styleSheet">
@@ -1228,6 +1228,36 @@ color: black;
     </property>
     <property name="text">
      <string>X</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="ekfTuningGuideBtn">
+    <property name="geometry">
+     <rect>
+      <x>770</x>
+      <y>40</y>
+      <width>20</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="maximumSize">
+     <size>
+      <width>50</width>
+      <height>50</height>
+     </size>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QPushButton {
+    color: orange;
+background-color: #222;
+}
+
+QPushButton:hover {
+    background-color: orange;
+color: black;
+}</string>
+    </property>
+    <property name="text">
+     <string>?</string>
     </property>
    </widget>
   </widget>
