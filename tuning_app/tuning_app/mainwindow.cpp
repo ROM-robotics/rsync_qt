@@ -1080,6 +1080,14 @@ void MainWindow::onReceivedTopicMessage(const QString &topic, const QJsonObject 
     static double odom_heading = 0.0;
     static double ekf_heading = 0.0;
 
+    // Covariances
+    static double ekf_x  = 0.0; static double ekf_y = 0.0; 
+    static double xx_cov = 0.0; static double xy_cov = 0.0;
+    static double yx_cov = 0.0; static double yy_cov = 0.0;
+
+    double ekf_yaw = 0.0;
+    static double yaw_cov = 0.0;
+
         if( topic == ekf_odom_topic_name )
         {
             if ( msg.isEmpty() || !msg.contains("pose") ) 
@@ -1112,6 +1120,11 @@ void MainWindow::onReceivedTopicMessage(const QString &topic, const QJsonObject 
             }
             qDebug() << " EKF Odom Position: " << ekf_position << ", Heading: " << ekf_heading;
             qDebug() << " Diff Odom Position: " << odom_position << ", Heading: " << odom_heading;
+
+            QJsonObject position_covariance_obj = pose.value("covariance").toObject();
+            // You can extract covariance values as needed
+            qDebug() << " EKF Odom Position Covariance: " << position_covariance_obj;
+            ekf_x = x; ekf_y = y; //ekf_yaw = ekf_heading;
             
         }
         else if( topic == odom_topic_name )

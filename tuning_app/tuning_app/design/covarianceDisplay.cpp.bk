@@ -1,0 +1,166 @@
+#include <QVBoxLayout>
+#include <cmath>
+#include "covarianceDisplay.hpp"
+
+using namespace rom_dynamics;
+//using namespace nav_msgs::msg;
+
+// // Helper function to process ROS events
+// void CovarianceDisplay::spinRos()
+// {
+//     if (rclcpp::ok()) {
+//         rclcpp::spin_some(ros_node_);
+//     } else {
+//         ros_timer_->stop();
+//     }
+// }
+
+CovarianceDisplay::CovarianceDisplay(QWidget *parent)
+    : QWidget(parent)
+{
+    // 1. Initialize ROS 2
+    initializeRosNode();
+
+    // 2. Initialize Chart
+    initializeChart();
+
+    // 3. Setup Layout
+    QVBoxLayout *layout = new QVBoxLayout(this);
+    layout->addWidget(chart_view_position_);
+    setLayout(layout);
+
+    // 4. Start ROS Timer
+    ros_timer_ = new QTimer(this);
+    connect(ros_timer_, &QTimer::timeout, this, &CovarianceDisplay::spinRos);
+    ros_timer_->start(10); // Spin ROS every 10ms
+}
+
+CovarianceDisplay::~CovarianceDisplay()
+{
+    ros_timer_->stop();
+    rclcpp::shutdown();
+}
+
+// void CovarianceDisplay::initializeRosNode()
+// {
+//     ros_node_ = std::make_shared<rclcpp::Node>("qt_localization_subscriber");
+    
+//     // Subscribe to the filtered odometry topic
+//     odom_sub_ = ros_node_->create_subscription<Odometry>(
+//         "/odometry/filtered", 10,
+//         std::bind(&CovarianceDisplay::odomCallback, this, std::placeholders::_1));
+// }
+
+void CovarianceDisplay::initializeChart()
+{
+    // Chart for X-Y Position Ellipse
+    chart_position_ = new QtCharts::QChart();
+    chart_position_->setTitle("EKF Position Covariance (X-Y)");
+    
+    ellipse_series_ = new QtCharts::QScatterSeries();
+    ellipse_series_->setMarkerSize(3.0);
+    ellipse_series_->setColor(QColor(255, 0, 0)); // Red for the ellipse points
+    ellipse_series_->setName("95% Confidence Ellipse");
+    chart_position_->addSeries(ellipse_series_);
+
+    // Axis setup (Fixed range for visualization)
+    axisX_ = new QtCharts::QValueAxis();
+    axisX_->setRange(-1.0, 1.0);
+    axisY_ = new QtCharts::QValueAxis();
+    axisY_->setRange(-1.0, 1.0);
+    chart_position_->addAxis(axisX_, Qt::AlignBottom);
+    chart_position_->addAxis(axisY_, Qt::AlignLeft);
+    ellipse_series_->attachAxis(axisX_);
+    ellipse_series_->attachAxis(axisY_);
+    
+    chart_view_position_ = new QtCharts::QChartView(chart_position_);
+    chart_view_position_->setRenderHint(QPainter::Antialiasing);
+}
+
+// void CovarianceDisplay::odomCallback(const Odometry::SharedPtr msg)
+// {
+//     current_x_ = msg->pose.pose.position.x;
+//     current_y_ = msg->pose.pose.position.y;
+//     current_covariance_ = msg->pose.covariance;
+    
+//     // Convert Quaternion to Yaw (Simplified for 2D)
+//     // Note: ROS nav_msgs/Odometry uses index 35 for Yaw variance
+//     tf2::Quaternion q(
+//         msg->pose.pose.orientation.x,
+//         msg->pose.pose.orientation.y,
+//         msg->pose.pose.orientation.z,
+//         msg->pose.pose.orientation.w);
+//     tf2::Matrix3x3 m(q);
+//     double roll, pitch, yaw;
+//     m.getRPY(roll, pitch, yaw);
+//     current_yaw_ = yaw;
+
+//     // Update the chart visualization
+//     updateVisualization();
+// }
+
+void CovarianceDisplay::updateVisualization()
+{
+    // --- 1. Position Ellipse (2x2 Covariance) ---
+    Eigen::Matrix2d covariance_xy;
+    covariance_xy << current_covariance_[0], current_covariance_[1],
+                     current_covariance_[6], current_covariance_[7];
+    drawPositionEllipse(covariance_xy);
+
+    // --- 2. Yaw Uncertainty (Index 35) ---
+    double yaw_variance = current_covariance_[35];
+    // In a real application, you would draw this on the chart_position_ too, 
+    // for simplicity here we will just set the title to reflect the uncertainty
+    drawYawSector(current_yaw_, yaw_variance);
+}
+
+void CovarianceDisplay::drawPositionEllipse(const Eigen::Matrix2d& covariance_xy)
+{
+    // Calculate Eigenvalues and Eigenvectors for the Ellipse
+    Eigen::EigenSolver<Eigen::Matrix2d> es(covariance_xy);
+    Eigen::Vector2d eigenvalues = es.eigenvalues().real();
+    Eigen::Matrix2d eigenvectors = es.eigenvectors().real();
+
+    // Standard deviation and angle (95% confidence -> 2 standard deviations approx)
+    double k = 2.4477; // Chi-squared value for 2 DOF at 95% confidence
+    double major_axis = k * std::sqrt(eigenvalues(0));
+    double minor_axis = k * std::sqrt(eigenvalues(1));
+    double angle = std::atan2(eigenvectors(1, 0), eigenvectors(0, 0)); // Angle of major axis
+
+    ellipse_series_->clear();
+    
+    // Generate Ellipse points
+    const int num_points = 50;
+    for (int i = 0; i <= num_points; ++i) {
+        double theta = 2.0 * M_PI * i / num_points;
+        double x_rotated = major_axis * std::cos(theta);
+        double y_rotated = minor_axis * std::sin(theta);
+
+        // Rotate and Translate to current (x, y) pose
+        double x_point = current_x_ + (x_rotated * std::cos(angle) - y_rotated * std::sin(angle));
+        double y_point = current_y_ + (x_rotated * std::sin(angle) + y_rotated * std::cos(angle));
+
+        ellipse_series_->append(x_point, y_point);
+    }
+    
+    // Update chart view to follow the current position (optional but useful)
+    double range = 0.5 + std::max(major_axis, minor_axis);
+    axisX_->setRange(current_x_ - range, current_x_ + range);
+    axisY_->setRange(current_y_ - range, current_y_ + range);
+}
+
+void CovarianceDisplay::drawYawSector(double yaw, double yaw_variance)
+{
+    // Yaw Uncertainty Visualization (Simulated as a simple title update for this example)
+    
+    double sigma_yaw = std::sqrt(yaw_variance);
+    double confidence_95_deg = 2.0 * sigma_yaw * 180.0 / M_PI; // Approx 2 sigma
+    
+    QString title = QString("EKF Position Covariance (X-Y)\n"
+                            "Yaw Uncertainty (2σ): %1 degrees").arg(confidence_95_deg, 0, 'f', 2);
+    chart_position_->setTitle(title);
+
+    // TODO: For a full implementation, you would use a QLineSeries or QGraphicsItem
+    // to draw a sector/arc centered at (current_x, current_y) covering the yaw range:
+    // [yaw - k*sigma_yaw, yaw + k*sigma_yaw]
+}

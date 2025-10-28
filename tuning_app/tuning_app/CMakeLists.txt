@@ -17,6 +17,7 @@ qt_add_executable(tuning_app
     design/rom_design.hpp
     design/readmeviewer.h
     design/readmeviewer.cpp
+    design/covarianceDisplay.hpp
 
 
 
@@ -34,9 +35,11 @@ target_link_libraries(tuning_app PRIVATE
     Qt${QT_VERSION_MAJOR}::Quick
     Qt${QT_VERSION_MAJOR}::QuickWidgets
     Qt${QT_VERSION_MAJOR}::Qml
+    /usr/include/eigen3
 )
 
 include(GNUInstallDirs)
+include_directories(/usr/include/eigen3)
 
 qt_add_resources(tuning_app "resources"
     PREFIX "/"
