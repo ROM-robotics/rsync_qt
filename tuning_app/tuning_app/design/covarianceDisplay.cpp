@@ -26,7 +26,12 @@ void rom_dynamics::ui::qt::RomPositionCovarianceGraph::initializeChart()
 {
     // Chart for X-Y Position Ellipse
     chart_ = new QChart();
-    chart_->setTitle("EKF Position Covariance x,y Ellipse");
+    QColor titleColor(QColorConstants::Svg::orange);
+    chart_->setTitle("Covariance of EKF Position");
+    chart_->setTitleBrush(QBrush(titleColor));
+    chart_->setBackgroundBrush(Qt::NoBrush);
+    chart_->setPlotAreaBackgroundBrush(Qt::NoBrush);
+    chart_->setBackgroundRoundness(0);
     chart_->legend()->hide();
     
     ellipse_series_ = new QScatterSeries();
@@ -37,9 +42,24 @@ void rom_dynamics::ui::qt::RomPositionCovarianceGraph::initializeChart()
 
     // Axis setup
     axisX_ = new QValueAxis();
-    axisX_->setTitleText("X Position (m)");
+    // axisX_->setTitleText("X Position (m)");
     axisY_ = new QValueAxis();
-    axisY_->setTitleText("Y Position (m)");
+    // axisY_->setTitleText("Y Position (m)");
+
+    // Set axis label color to white
+    QColor axisColor(189, 183, 183, 80); 
+    axisX_->setGridLineColor(axisColor);
+    axisY_->setGridLineColor(axisColor);
+    axisX_->setLabelsColor(axisColor);
+    axisY_->setLabelsColor(axisColor);
+    axisX_->setLinePen(QPen(axisColor));
+    axisY_->setLinePen(QPen(axisColor));
+
+    QFont axisFont;
+    axisFont.setFamily("SF Pro Text");
+    axisFont.setPointSize(7); // smaller font size for axis
+    axisX_->setLabelsFont(axisFont);
+    axisY_->setLabelsFont(axisFont);
 
     // Initial Range
     axisX_->setRange(-1.0, 1.0);
@@ -87,17 +107,36 @@ void rom_dynamics::ui::qt::RomPositionCovarianceGraph::drawPositionEllipse(const
         double x_rotated = major_axis * std::cos(theta);
         double y_rotated = minor_axis * std::sin(theta);
 
-        // Rotate and Translate to current (x, y) pose
-        double x_point = current_x_ + (x_rotated * std::cos(angle) - y_rotated * std::sin(angle));
-        double y_point = current_y_ + (x_rotated * std::sin(angle) + y_rotated * std::cos(angle));
+        // --- NORMALIZATION: Rotate and Translate to (0, 0) ---
+        // Original: double x_point = current_x_ + (x_rotated * std::cos(angle) - y_rotated * std::sin(angle));
+        // Original: double y_point = current_y_ + (x_rotated * std::sin(angle) + y_rotated * std::cos(angle));
+
+        double x_point = (x_rotated * std::cos(angle) - y_rotated * std::sin(angle));
+        double y_point = (x_rotated * std::sin(angle) + y_rotated * std::cos(angle));
 
         ellipse_series_->append(x_point, y_point);
     }
     
-    // Update chart view to follow the current position 
-    double range = 0.5 + std::max(major_axis, minor_axis);
-    axisX_->setRange(current_x_ - range, current_x_ + range);
-    axisY_->setRange(current_y_ - range, current_y_ + range);
+    // --- AXIS RANGING: Dynamically center on (0, 0) and scale to the ellipse size ---
+    double range = std::max(major_axis, minor_axis) * 1.2; // 20% padding
+    
+    // Ensure a minimum range if covariance is near zero
+    if (range < 0.1) range = 0.1;
+
+    axisX_->setRange(-range, range);
+    axisY_->setRange(-range, range);
+
+    // OPTIONAL: Update title with uncertainty metrics
+    QFont titleFont;
+    QColor titleColor(QColorConstants::Svg::orange);
+    titleFont.setFamily("SF Pro Text");
+    titleFont.setPointSize(10);
+
+    QString title = QString("EKF Position Covariance x,y");
+    chart_->setTitle(title);
+
+    chart_->setTitleBrush(QBrush(titleColor));
+    chart_->setTitleFont(titleFont);
 }
 
 //================================================================================
@@ -118,7 +157,19 @@ rom_dynamics::ui::qt::RomYawCovarianceGraph::RomYawCovarianceGraph(QWidget *pare
 void rom_dynamics::ui::qt::RomYawCovarianceGraph::initializeChart()
 {
     chart_ = new QPolarChart();
+
+    QFont titleFont;
+    QColor titleColor(QColorConstants::Svg::orange);
+    titleFont.setFamily("SF Pro Text");
+    titleFont.setPointSize(10);
+
     chart_->setTitle("EKF Yaw Covariance yaw Polar View");
+    chart_->setTitleBrush(QBrush(titleColor));
+    chart_->setTitleFont(titleFont);
+
+    chart_->setBackgroundBrush(Qt::NoBrush);
+    chart_->setPlotAreaBackgroundBrush(Qt::NoBrush);
+    chart_->setBackgroundRoundness(0);
     chart_->legend()->hide();
     
     // Axis setup (Polar Chart uses Radial and Angular axes)
@@ -126,11 +177,30 @@ void rom_dynamics::ui::qt::RomYawCovarianceGraph::initializeChart()
     radialAxis->setRange(0, 1); // Normalized radius
     radialAxis->setLabelsVisible(false);
     radialAxis->setLinePen(Qt::NoPen);
+
+    QFont axisFont;
+    axisFont.setFamily("SF Pro Text");
+    axisFont.setPointSize(7); // smaller font size for axis
+    radialAxis->setLabelsFont(axisFont);
+
     chart_->addAxis(radialAxis, QPolarChart::PolarOrientationRadial); 
 
     QValueAxis *angularAxis = new QValueAxis();
     angularAxis->setRange(0, 360); // Full circle in degrees
     angularAxis->setTickCount(13); // 0, 30, 60, ..., 330
+    angularAxis->setLabelsFont(axisFont);
+
+    // Set axis label color to white
+    QColor axisColor(189, 183, 183, 80); 
+    radialAxis->setGridLineColor(axisColor);
+    angularAxis->setGridLineColor(axisColor);
+
+    radialAxis->setLabelsColor(axisColor);
+    angularAxis->setLabelsColor(axisColor);
+
+    radialAxis->setLinePen(QPen(axisColor));
+    angularAxis->setLinePen(QPen(axisColor));
+
     chart_->addAxis(angularAxis, QPolarChart::PolarOrientationAngular); 
     
     // Series for Yaw Arc
@@ -198,7 +268,6 @@ void rom_dynamics::ui::qt::RomYawCovarianceGraph::drawYawSector(double yaw, doub
 
     // Update the title to show uncertainty value
     double confidence_95_deg = k * sigma_yaw * 180.0 / M_PI; 
-    QString title = QString("EKF Yaw Covariance Sector (Polar View)\n"
-                            "Yaw Uncertainty (2σ): ±%1 degrees").arg(confidence_95_deg, 0, 'f', 2);
+    QString title = QString("Covariance of EKF Yaw");
     chart_->setTitle(title);
 }

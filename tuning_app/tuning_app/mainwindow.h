@@ -11,6 +11,9 @@
 #include "design/rom_design.hpp"
 #include "design/covarianceDisplay.hpp"
 
+using namespace rom_dynamics::communication;
+using namespace rom_dynamics::data_types;
+
 QT_BEGIN_NAMESPACE
 namespace Ui {
 class MainWindow;
@@ -112,8 +115,8 @@ private:
     double wheel_seperation_ = 0.400; // meters
 
     // ekf
-    RomPolarHeadingGraph *odomDiffOdomImuHeadingGraphPtr_ = nullptr;
-    RomPositionGraph *odomDiffOdomPositionGraphPtr_ = nullptr;
+    rom_dynamics::ui::qt::RomPolarHeadingGraph *odomDiffOdomImuHeadingGraphPtr_ = nullptr;
+    rom_dynamics::ui::qt::RomPositionGraph *odomDiffOdomPositionGraphPtr_ = nullptr;
     rom_dynamics::ui::qt::RomPositionCovarianceGraph *ekfPositionCovarianceGraphPtr_ = nullptr;
     rom_dynamics::ui::qt::RomYawCovarianceGraph *ekfHeadingCovarianceGraphPtr_ = nullptr;
 

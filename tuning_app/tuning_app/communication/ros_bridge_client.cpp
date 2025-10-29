@@ -6,7 +6,7 @@
 #include <cmath>
 #include <QMetaType>
 
-RosBridgeClient::RosBridgeClient(const QString &robot_ns, const QString &host, quint16 port, QObject *parent)
+rom_dynamics::communication::RosBridgeClient::RosBridgeClient(const QString &robot_ns, const QString &host, quint16 port, QObject *parent)
     : QObject(parent), m_robotNamespace(robot_ns), m_host(host), m_port(port) {
     // Ensure custom types used in signals are registered for queued connections
     //qRegisterMetaType<RomTF>("RomTF");
@@ -30,7 +30,7 @@ RosBridgeClient::RosBridgeClient(const QString &robot_ns, const QString &host, q
 }
 
 // MAIN API
-void RosBridgeClient::connectToServer() 
+void rom_dynamics::communication::RosBridgeClient::connectToServer() 
 {
     #ifdef ROM_DEBUG
         qDebug().noquote() << QString("%1[      RosBridgeClient::connectToServer      ]%2")
@@ -43,7 +43,7 @@ void RosBridgeClient::connectToServer()
     m_socket.open(url);
 }
 
-void RosBridgeClient::disconnectFromServer() 
+void rom_dynamics::communication::RosBridgeClient::disconnectFromServer() 
 {
     #ifdef ROM_DEBUG
         qDebug().noquote() << QString("%1[    RosBridgeClient::disconnectFromServer   ]%2")
@@ -58,7 +58,7 @@ void RosBridgeClient::disconnectFromServer()
     }
 }
 
-void RosBridgeClient::sendJson(const QJsonObject &obj) 
+void rom_dynamics::communication::RosBridgeClient::sendJson(const QJsonObject &obj) 
 {
     #ifdef ROM_DEBUG
         qDebug().noquote() << QString("%1[         RosBridgeClient::sendJson          ]%2")
@@ -69,7 +69,7 @@ void RosBridgeClient::sendJson(const QJsonObject &obj)
     m_socket.sendTextMessage(QString::fromUtf8(doc.toJson(QJsonDocument::Compact)));
 }
 
-void RosBridgeClient::ensureReconnect() 
+void rom_dynamics::communication::RosBridgeClient::ensureReconnect() 
 {
     #ifdef ROM_DEBUG
         qDebug().noquote() << QString("%1[      RosBridgeClient::ensureReconnect      ]%2")
@@ -83,7 +83,7 @@ void RosBridgeClient::ensureReconnect()
 }
 
 
-void RosBridgeClient::onSocketConnected() 
+void rom_dynamics::communication::RosBridgeClient::onSocketConnected() 
 {
     #ifdef ROM_DEBUG
         qDebug().noquote() << QString("%1[     RosBridgeClient::onSocketConnected     ]%2")
@@ -94,7 +94,7 @@ void RosBridgeClient::onSocketConnected()
     
 }
 
-void RosBridgeClient::onSocketDisconnected() 
+void rom_dynamics::communication::RosBridgeClient::onSocketDisconnected() 
 {
     #ifdef ROM_DEBUG
         qDebug().noquote() << QString("%1[    RosBridgeClient::onSocketDisconnected   ]%2")
@@ -109,7 +109,7 @@ void RosBridgeClient::onSocketDisconnected()
     }
 }
 
-void RosBridgeClient::onSocketError(QAbstractSocket::SocketError) 
+void rom_dynamics::communication::RosBridgeClient::onSocketError(QAbstractSocket::SocketError) 
 {
     #ifdef ROM_DEBUG
         qDebug().noquote() << QString("%1[       RosBridgeClient::onSocketError       ]%2")
@@ -123,7 +123,7 @@ void RosBridgeClient::onSocketError(QAbstractSocket::SocketError)
     }
 }
 
-void RosBridgeClient::onTextMessageReceived(const QString &msg) 
+void rom_dynamics::communication::RosBridgeClient::onTextMessageReceived(const QString &msg) 
 {
     #ifdef ROM_DEBUG
         qDebug().noquote() << QString("%1[   RosBridgeClient::onTextMessageReceived   ] : %2 %3")
@@ -160,7 +160,7 @@ void RosBridgeClient::onTextMessageReceived(const QString &msg)
 
 
 // ROSBRIDGE API
-void RosBridgeClient::subscribeTopic(const QString &topic_name, const QString &msg_type)
+void rom_dynamics::communication::RosBridgeClient::subscribeTopic(const QString &topic_name, const QString &msg_type)
 {
     if (!isConnected())
     {
@@ -184,7 +184,7 @@ void RosBridgeClient::subscribeTopic(const QString &topic_name, const QString &m
 }
 
 
-void RosBridgeClient::unsubscribeTopic(const QString &topic_name)
+void rom_dynamics::communication::RosBridgeClient::unsubscribeTopic(const QString &topic_name)
 {
     #ifdef ROM_DEBUG
         qDebug().noquote() << QString("%1[     RosBridgeClient::unsubscribeTopic     ]%2")

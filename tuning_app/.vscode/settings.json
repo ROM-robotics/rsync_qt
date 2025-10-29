@@ -1,5 +1,6 @@
 {
     "files.associations": {
-        "*.bk": "cpp"
+        "*.bk": "cpp",
+        "algorithm": "cpp"
     }
 }

@@ -14,6 +14,11 @@
 #include <QHBoxLayout>
 #include <QFrame>
 
+#include <QtWidgets>
+#include <QtCharts>
+#include <QtMath>
+
+namespace rom_dynamics::ui::qt {
 
 class RobotVelocityGraph : public QWidget {
     Q_OBJECT
@@ -64,7 +69,9 @@ public:
         QColor titleColor("#03fc84");
         titleFont.setFamily("SF Pro Text");
         titleFont.setPointSize(10);
+
         chart_->setTitle("Odom, diff Odom Positions");
+        
         chart_->setTitleBrush(QBrush(titleColor));
         chart_->setTitleFont(titleFont);
 
@@ -136,8 +143,6 @@ private:
     QValueAxis *axisY_ = nullptr;
 };
 
-#include <QtWidgets>
-#include <QtCharts>
 
 class RomPositionGraph : public QWidget {
     Q_OBJECT
@@ -251,8 +256,8 @@ public:
 void updateGraph(const QPointF& my_odomPosition, const QPointF& my_diffOdomPosition)
 {
 
-    QPointF odomPosition(my_odomPosition.y(), my_odomPosition.x());
-    QPointF diffOdomPosition(my_diffOdomPosition.y(), my_diffOdomPosition.x());
+    QPointF odomPosition(-1.0 * my_odomPosition.y(), my_odomPosition.x());
+    QPointF diffOdomPosition(-1.0 * my_diffOdomPosition.y(), my_diffOdomPosition.x());
 
     // 1. Sliding Window Logic for BOTH Paths
     if (odomPositions_.size() >= MAX_POINTS) {
@@ -388,9 +393,6 @@ private:
     
 };
 
-#include <QtWidgets>
-#include <QtCharts>
-#include <QtMath>
 
 // Custom arrow class to represent a heading (UNMODIFIED)
 class HeadingArrow : public QGraphicsLineItem
@@ -454,6 +456,10 @@ public:
         chart_->legend()->hide();
 
         // --- 1. Axis Setup ---
+
+        QFont axisFont;
+        axisFont.setFamily("SF Pro Text");
+        axisFont.setPointSize(7); 
         
         // White color for all axis lines and labels
         QColor whiteColor(255, 255, 255); 
@@ -467,17 +473,22 @@ public:
         radialAxis->setLabelsVisible(false);
         radialAxis->setGridLineVisible(true); 
         radialAxis->setLinePen(Qt::NoPen);
-        radialAxis->setGridLinePen(polarColor); // FIX 3: Radial Grid Lines White
-        chart_->addAxis(radialAxis, QPolarChart::PolarOrientationRadial); 
+        radialAxis->setGridLinePen(polarColor); 
 
-        // Angular Axis (Angle)
+        radialAxis->setLabelsFont(axisFont);
+
+
         QValueAxis *angularAxis = new QValueAxis();
         angularAxis->setRange(0, 360);
-        //angularAxis->setLabelFormat("%d°");
-        angularAxis->setLabelsColor(polarColor); // FIX 4: Angular Labels White
-        angularAxis->setGridLineColor(polarColor); // FIX 5: Angular Grid Lines White
-        angularAxis->setLinePen(polarColor); // Angular Axis Line White
+     
+        angularAxis->setLabelsColor(polarColor);
+        angularAxis->setGridLineColor(polarColor);
+        angularAxis->setLinePen(polarColor);
         angularAxis->setTickCount(13);
+
+        angularAxis->setLabelsFont(axisFont);
+
+
         chart_->addAxis(angularAxis, QPolarChart::PolarOrientationAngular); 
         
         // --- 2. Dummy Series for Mapping (Unchanged) ---
@@ -492,16 +503,16 @@ public:
         scatterSeries->attachAxis(angularAxis); 
 
         // --- 3. Arrow Initialization (Colors remain distinct but should be clearly visible) ---
-        qreal arrowLength = 90;
+        qreal arrowLength = 40;
         
         odomArrow_ = new HeadingArrow(arrowLength, chart_);
         odomArrow_->setColor(QColor(Qt::red));
         
-        diffOdomArrow_ = new HeadingArrow(arrowLength * 0.8, chart_);
+        diffOdomArrow_ = new HeadingArrow(arrowLength, chart_);
         diffOdomArrow_->setColor(QColor(Qt::green)); 
 
-        imuArrow_ = new HeadingArrow(arrowLength * 1.1, chart_);
-        imuArrow_->setColor(QColor(Qt::blue)); // Blue
+        imuArrow_ = new HeadingArrow(arrowLength, chart_);
+        imuArrow_->setColor(QColor(Qt::blue)); 
         
         odomArrow_->setVisible(false);
         diffOdomArrow_->setVisible(false);
@@ -568,4 +579,5 @@ private:
     HeadingArrow *imuArrow_ = nullptr;
 };
 
+}
 #endif

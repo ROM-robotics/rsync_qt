@@ -1,3 +1,6 @@
+#ifndef ROSE_BRIDGE_CLIENT_HPP
+#define ROSE_BRIDGE_CLIENT_HPP
+
 #pragma once
 #include <QObject>
 #include <QWebSocket>
@@ -7,6 +10,8 @@
 #include <QJsonObject>
 #include <QJsonArray>
 
+namespace rom_dynamics::communication {
+    
 class RosBridgeClient : public QObject {
     Q_OBJECT
 public:
@@ -57,3 +62,6 @@ private:
 
     
 };
+}
+
+#endif

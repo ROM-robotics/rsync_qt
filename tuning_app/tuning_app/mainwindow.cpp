@@ -21,6 +21,8 @@
 #include "design/readmeviewer.h"
 #include "design/covarianceDisplay.hpp"
 
+using namespace rom_dynamics::ui::qt;
+
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
@@ -678,9 +680,10 @@ void MainWindow::initEkfTab()
     ekfPositionCovarianceGraphPtr_  = new rom_dynamics::ui::qt::RomPositionCovarianceGraph(ui->ekf);
     ekfHeadingCovarianceGraphPtr_   = new rom_dynamics::ui::qt::RomYawCovarianceGraph(ui->ekf);
 
-    grid->addWidget(odomDiffOdomImuHeadingGraphPtr_, 0, 0);
-    grid->addWidget(odomDiffOdomPositionGraphPtr_, 0, 1);
-    grid->addWidget(ekfPositionCovarianceGraphPtr_, 1, 0);
+    
+    grid->addWidget(ekfPositionCovarianceGraphPtr_, 0, 1);
+    grid->addWidget(odomDiffOdomPositionGraphPtr_, 0, 0);
+    grid->addWidget(odomDiffOdomImuHeadingGraphPtr_, 1, 0);
     grid->addWidget(ekfHeadingCovarianceGraphPtr_, 1, 1);
 
     
@@ -689,22 +692,50 @@ void MainWindow::initEkfTab()
     ui->ekf->setLayout(grid);
 
     //=================================
-    // odomDiffOdomPositionGraphPtr_->updateGraph(QPointF(0.1, 4.0), QPointF(0.1, 3.9));
-    // odomDiffOdomPositionGraphPtr_->updateGraph(QPointF(0.2, 3.9), QPointF(0.2, 3.8) );
-    // odomDiffOdomPositionGraphPtr_->updateGraph(QPointF(0.3, 3.8), QPointF(0.3, 3.7) );
-    // odomDiffOdomPositionGraphPtr_->updateGraph(QPointF(0.4, 3.7), QPointF(0.4, 3.6) );
-    // odomDiffOdomPositionGraphPtr_->updateGraph(QPointF(0.5, 3.6), QPointF(0.5, 3.5) );
-    // odomDiffOdomPositionGraphPtr_->updateGraph(QPointF(0.6, 3.5), QPointF(0.6, 3.4) );
-    // odomDiffOdomPositionGraphPtr_->updateGraph(QPointF(0.7, 3.4), QPointF(0.7, 3.3) );
-    // odomDiffOdomPositionGraphPtr_->updateGraph(QPointF(0.8, 3.3), QPointF(0.8, 3.2) );
-    // odomDiffOdomPositionGraphPtr_->updateGraph(QPointF(0.9, 3.2), QPointF(0.9, 3.1) );
-    // odomDiffOdomPositionGraphPtr_->updateGraph(QPointF(1.0, 3.1), QPointF(1.0, 3.0) );
-    // odomDiffOdomPositionGraphPtr_->updateGraph(QPointF(1.1, 3.0), QPointF(1.1, 2.9) );
-    // odomDiffOdomPositionGraphPtr_->updateGraph(QPointF(1.2, 3.1), QPointF(1.2, 2.8) );
-    // odomDiffOdomPositionGraphPtr_->updateGraph(QPointF(1.3, 3.1), QPointF(1.3, 2.7) );
+    ui->porocessNoiseXBtn->raise();
+    ui->porocessNoiseYBtn->raise();
+    ui->porocessNoiseZBtn->raise();
 
-    // odomDiffOdomImuHeadingGraphPtr_->updateGraph(30.0, 45.0, 50.0);
-    //=================================
+    ui->porocessNoiseRollBtn->raise();
+    ui->porocessNoisePitchBtn->raise();
+    ui->porocessNoiseYawBtn->raise();
+
+    ui->porocessNoiseVXBtn->raise();
+    ui->porocessNoiseVYBtn->raise();
+    ui->porocessNoiseVZBtn->raise();
+
+    ui->porocessNoiseVRollBtn->raise();
+    ui->porocessNoiseVPitchBtn->raise();
+    ui->porocessNoiseVYawBtn->raise();
+
+    ui->porocessNoiseAXBtn->raise();
+    ui->porocessNoiseAYBtn->raise();
+    ui->porocessNoiseAZBtn->raise();
+
+
+
+    ui->initialNoiseXBtn->raise();
+    ui->initialNoiseYBtn->raise();
+    ui->initialNoiseZBtn->raise();
+
+    ui->initialNoiseRollBtn->raise();
+    ui->initialNoisePitchBtn->raise();
+    ui->initialNoiseYawBtn->raise();
+
+    ui->initialNoiseVXBtn->raise();
+    ui->initialNoiseVYBtn->raise();
+    ui->initialNoiseVZBtn->raise();
+
+    ui->initialNoiseVRollBtn->raise();
+    ui->initialNoiseVPitchBtn->raise();
+    ui->initialNoiseVYawBtn->raise();
+
+    ui->initialNoiseAXBtn->raise();
+    ui->initialNoiseAYBtn->raise();
+    ui->initialNoiseAZBtn->raise();
+
+
+
     }
 }
 void MainWindow::activateEkfTab()

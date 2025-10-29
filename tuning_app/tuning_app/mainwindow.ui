@@ -55,7 +55,7 @@ color: white;</string>
     <property name="geometry">
      <rect>
       <x>0</x>
-      <y>0</y>
+      <y>10</y>
       <width>800</width>
       <height>600</height>
      </rect>
@@ -1142,6 +1142,644 @@ background: transparent;</string>
      <attribute name="title">
       <string>ekf</string>
      </attribute>
+     <widget class="QPushButton" name="ekfTuningGuideBtn">
+      <property name="geometry">
+       <rect>
+        <x>770</x>
+        <y>9</y>
+        <width>20</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>50</width>
+        <height>50</height>
+       </size>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QPushButton {
+    color: orange;
+background-color: #222;
+border: none;
+}
+
+QPushButton:hover {
+    background-color: orange;
+color: black;
+}</string>
+      </property>
+      <property name="text">
+       <string>?</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="porocessNoiseXBtn">
+      <property name="geometry">
+       <rect>
+        <x>745</x>
+        <y>244</y>
+        <width>51</width>
+        <height>17</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background: rgb(0, 255, 0);
+font: 10px solid;
+color: black;</string>
+      </property>
+      <property name="text">
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:8pt; font-weight:700;&quot;&gt;0.05&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignmentFlag::AlignCenter</set>
+      </property>
+     </widget>
+     <widget class="QLabel" name="porocessNoiseYBtn">
+      <property name="geometry">
+       <rect>
+        <x>745</x>
+        <y>262</y>
+        <width>51</width>
+        <height>17</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background: rgb(0, 255, 0);
+font: 10px solid;
+color: black;
+</string>
+      </property>
+      <property name="text">
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:8pt; font-weight:700;&quot;&gt;0.05&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignmentFlag::AlignCenter</set>
+      </property>
+     </widget>
+     <widget class="QLabel" name="porocessNoiseZBtn">
+      <property name="geometry">
+       <rect>
+        <x>745</x>
+        <y>280</y>
+        <width>51</width>
+        <height>17</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background: rgb(246, 97, 81);
+font: 10px solid;</string>
+      </property>
+      <property name="text">
+       <string>0.06</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignmentFlag::AlignCenter</set>
+      </property>
+     </widget>
+     <widget class="QLabel" name="porocessNoisePitchBtn">
+      <property name="geometry">
+       <rect>
+        <x>745</x>
+        <y>321</y>
+        <width>51</width>
+        <height>17</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background: rgb(246, 97, 81);
+font: 10px solid;</string>
+      </property>
+      <property name="text">
+       <string>0.03</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignmentFlag::AlignCenter</set>
+      </property>
+     </widget>
+     <widget class="QLabel" name="porocessNoiseYawBtn">
+      <property name="geometry">
+       <rect>
+        <x>745</x>
+        <y>339</y>
+        <width>51</width>
+        <height>17</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background: rgb(0, 255, 0);
+font: 10px solid;
+color: black;</string>
+      </property>
+      <property name="text">
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:700;&quot;&gt;0.06&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignmentFlag::AlignCenter</set>
+      </property>
+     </widget>
+     <widget class="QLabel" name="porocessNoiseRollBtn">
+      <property name="geometry">
+       <rect>
+        <x>745</x>
+        <y>303</y>
+        <width>51</width>
+        <height>17</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background: rgb(246, 97, 81);
+font: 10px solid;</string>
+      </property>
+      <property name="text">
+       <string>0.03</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignmentFlag::AlignCenter</set>
+      </property>
+     </widget>
+     <widget class="QLabel" name="porocessNoiseVYBtn">
+      <property name="geometry">
+       <rect>
+        <x>745</x>
+        <y>378</y>
+        <width>51</width>
+        <height>17</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background: rgb(246, 97, 81);
+font: 10px solid;</string>
+      </property>
+      <property name="text">
+       <string>0.025</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignmentFlag::AlignCenter</set>
+      </property>
+     </widget>
+     <widget class="QLabel" name="porocessNoiseVZBtn">
+      <property name="geometry">
+       <rect>
+        <x>745</x>
+        <y>396</y>
+        <width>51</width>
+        <height>17</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background: rgb(246, 97, 81);
+font: 10px solid;</string>
+      </property>
+      <property name="text">
+       <string>0.04</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignmentFlag::AlignCenter</set>
+      </property>
+     </widget>
+     <widget class="QLabel" name="porocessNoiseVXBtn">
+      <property name="geometry">
+       <rect>
+        <x>745</x>
+        <y>360</y>
+        <width>51</width>
+        <height>17</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background: rgb(246, 97, 81);
+font: 10px solid;</string>
+      </property>
+      <property name="text">
+       <string>0.025</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignmentFlag::AlignCenter</set>
+      </property>
+     </widget>
+     <widget class="QLabel" name="porocessNoiseVPitchBtn">
+      <property name="geometry">
+       <rect>
+        <x>745</x>
+        <y>436</y>
+        <width>51</width>
+        <height>17</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background: rgb(246, 97, 81);
+font: 10px solid;</string>
+      </property>
+      <property name="text">
+       <string>0.01</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignmentFlag::AlignCenter</set>
+      </property>
+     </widget>
+     <widget class="QLabel" name="porocessNoiseVYawBtn">
+      <property name="geometry">
+       <rect>
+        <x>745</x>
+        <y>454</y>
+        <width>51</width>
+        <height>17</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background: rgb(246, 97, 81);
+font: 10px solid;</string>
+      </property>
+      <property name="text">
+       <string>0.02</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignmentFlag::AlignCenter</set>
+      </property>
+     </widget>
+     <widget class="QLabel" name="porocessNoiseAXBtn">
+      <property name="geometry">
+       <rect>
+        <x>745</x>
+        <y>476</y>
+        <width>51</width>
+        <height>17</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background: rgb(246, 97, 81);
+font: 10px solid;</string>
+      </property>
+      <property name="text">
+       <string>0.01</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignmentFlag::AlignCenter</set>
+      </property>
+     </widget>
+     <widget class="QLabel" name="porocessNoiseVRollBtn">
+      <property name="geometry">
+       <rect>
+        <x>745</x>
+        <y>418</y>
+        <width>51</width>
+        <height>17</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background: rgb(246, 97, 81);
+font: 10px solid;</string>
+      </property>
+      <property name="text">
+       <string>0.01</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignmentFlag::AlignCenter</set>
+      </property>
+     </widget>
+     <widget class="QLabel" name="porocessNoiseAZBtn">
+      <property name="geometry">
+       <rect>
+        <x>745</x>
+        <y>512</y>
+        <width>51</width>
+        <height>17</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background: rgb(246, 97, 81);
+font: 10px solid;</string>
+      </property>
+      <property name="text">
+       <string>0.015</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignmentFlag::AlignCenter</set>
+      </property>
+     </widget>
+     <widget class="QLabel" name="porocessNoiseAYBtn">
+      <property name="geometry">
+       <rect>
+        <x>745</x>
+        <y>494</y>
+        <width>51</width>
+        <height>17</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background: rgb(246, 97, 81);
+font: 10px solid;</string>
+      </property>
+      <property name="text">
+       <string>0.01</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignmentFlag::AlignCenter</set>
+      </property>
+     </widget>
+     <widget class="QLabel" name="initialNoiseZBtn">
+      <property name="geometry">
+       <rect>
+        <x>121</x>
+        <y>540</y>
+        <width>51</width>
+        <height>17</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background: rgb(246, 97, 81);
+font: 10px solid;</string>
+      </property>
+      <property name="text">
+       <string>1e-9</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignmentFlag::AlignCenter</set>
+      </property>
+     </widget>
+     <widget class="QLabel" name="initialNoiseAYBtn">
+      <property name="geometry">
+       <rect>
+        <x>693</x>
+        <y>540</y>
+        <width>51</width>
+        <height>17</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background: rgb(246, 97, 81);
+font: 10px solid;</string>
+      </property>
+      <property name="text">
+       <string>1e-9</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignmentFlag::AlignCenter</set>
+      </property>
+     </widget>
+     <widget class="QLabel" name="initialNoiseAXBtn">
+      <property name="geometry">
+       <rect>
+        <x>641</x>
+        <y>540</y>
+        <width>51</width>
+        <height>17</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background: rgb(246, 97, 81);
+font: 10px solid;</string>
+      </property>
+      <property name="text">
+       <string>1e-9</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignmentFlag::AlignCenter</set>
+      </property>
+     </widget>
+     <widget class="QLabel" name="initialNoiseVYawBtn">
+      <property name="geometry">
+       <rect>
+        <x>589</x>
+        <y>540</y>
+        <width>51</width>
+        <height>17</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background: rgb(246, 97, 81);
+font: 10px solid;</string>
+      </property>
+      <property name="text">
+       <string>1e-9</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignmentFlag::AlignCenter</set>
+      </property>
+     </widget>
+     <widget class="QLabel" name="initialNoiseVPitchBtn">
+      <property name="geometry">
+       <rect>
+        <x>537</x>
+        <y>540</y>
+        <width>51</width>
+        <height>17</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background: rgb(246, 97, 81);
+font: 10px solid;</string>
+      </property>
+      <property name="text">
+       <string>1e-9</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignmentFlag::AlignCenter</set>
+      </property>
+     </widget>
+     <widget class="QLabel" name="initialNoiseVRollBtn">
+      <property name="geometry">
+       <rect>
+        <x>485</x>
+        <y>540</y>
+        <width>51</width>
+        <height>17</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background: rgb(246, 97, 81);
+font: 10px solid;</string>
+      </property>
+      <property name="text">
+       <string>1e-9</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignmentFlag::AlignCenter</set>
+      </property>
+     </widget>
+     <widget class="QLabel" name="initialNoiseVZBtn">
+      <property name="geometry">
+       <rect>
+        <x>433</x>
+        <y>540</y>
+        <width>51</width>
+        <height>17</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background: rgb(246, 97, 81);
+font: 10px solid;</string>
+      </property>
+      <property name="text">
+       <string>1e-9</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignmentFlag::AlignCenter</set>
+      </property>
+     </widget>
+     <widget class="QLabel" name="initialNoiseVYBtn">
+      <property name="geometry">
+       <rect>
+        <x>381</x>
+        <y>540</y>
+        <width>51</width>
+        <height>17</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background: rgb(246, 97, 81);
+font: 10px solid;</string>
+      </property>
+      <property name="text">
+       <string>1e-9</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignmentFlag::AlignCenter</set>
+      </property>
+     </widget>
+     <widget class="QLabel" name="initialNoiseVXBtn">
+      <property name="geometry">
+       <rect>
+        <x>329</x>
+        <y>540</y>
+        <width>51</width>
+        <height>17</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background: rgb(246, 97, 81);
+font: 10px solid;</string>
+      </property>
+      <property name="text">
+       <string>1e-9</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignmentFlag::AlignCenter</set>
+      </property>
+     </widget>
+     <widget class="QLabel" name="initialNoiseYawBtn">
+      <property name="geometry">
+       <rect>
+        <x>277</x>
+        <y>540</y>
+        <width>51</width>
+        <height>17</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background: rgb(0, 255, 0);
+font: 10px solid;
+color: black;</string>
+      </property>
+      <property name="text">
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:8pt; font-weight:700;&quot;&gt;1e-9&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignmentFlag::AlignCenter</set>
+      </property>
+     </widget>
+     <widget class="QLabel" name="initialNoisePitchBtn">
+      <property name="geometry">
+       <rect>
+        <x>225</x>
+        <y>540</y>
+        <width>51</width>
+        <height>17</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background: rgb(246, 97, 81);
+font: 10px solid;</string>
+      </property>
+      <property name="text">
+       <string>1e-9</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignmentFlag::AlignCenter</set>
+      </property>
+     </widget>
+     <widget class="QLabel" name="initialNoiseRollBtn">
+      <property name="geometry">
+       <rect>
+        <x>173</x>
+        <y>540</y>
+        <width>51</width>
+        <height>17</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background: rgb(246, 97, 81);
+font: 10px solid;</string>
+      </property>
+      <property name="text">
+       <string>1e-9</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignmentFlag::AlignCenter</set>
+      </property>
+     </widget>
+     <widget class="QLabel" name="initialNoiseAZBtn">
+      <property name="geometry">
+       <rect>
+        <x>745</x>
+        <y>540</y>
+        <width>51</width>
+        <height>17</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background: rgb(246, 97, 81);
+font: 10px solid;</string>
+      </property>
+      <property name="text">
+       <string>1e-9</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignmentFlag::AlignCenter</set>
+      </property>
+     </widget>
+     <widget class="QLabel" name="initialNoiseYBtn">
+      <property name="geometry">
+       <rect>
+        <x>69</x>
+        <y>540</y>
+        <width>51</width>
+        <height>17</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background: rgb(0, 255, 0);
+font: 10px solid;
+color: black;</string>
+      </property>
+      <property name="text">
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:8pt; font-weight:700;&quot;&gt;1e-9&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignmentFlag::AlignCenter</set>
+      </property>
+     </widget>
+     <widget class="QLabel" name="initialNoiseXBtn">
+      <property name="geometry">
+       <rect>
+        <x>17</x>
+        <y>540</y>
+        <width>51</width>
+        <height>17</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background: rgb(0, 255, 0);
+font: 10px solid;
+color: black;</string>
+      </property>
+      <property name="text">
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:8pt; font-weight:700;&quot;&gt;1e-9&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignmentFlag::AlignCenter</set>
+      </property>
+     </widget>
     </widget>
     <widget class="QWidget" name="carto">
      <property name="styleSheet">
@@ -1228,36 +1866,6 @@ color: black;
     </property>
     <property name="text">
      <string>X</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="ekfTuningGuideBtn">
-    <property name="geometry">
-     <rect>
-      <x>770</x>
-      <y>40</y>
-      <width>20</width>
-      <height>21</height>
-     </rect>
-    </property>
-    <property name="maximumSize">
-     <size>
-      <width>50</width>
-      <height>50</height>
-     </size>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">QPushButton {
-    color: orange;
-background-color: #222;
-}
-
-QPushButton:hover {
-    background-color: orange;
-color: black;
-}</string>
-    </property>
-    <property name="text">
-     <string>?</string>
     </property>
    </widget>
   </widget>

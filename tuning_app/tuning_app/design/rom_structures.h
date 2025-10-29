@@ -10,6 +10,8 @@
 
 #pragma once
 
+namespace rom_dynamics::data_types {
+
 inline const char* ROM_COLOR_GREEN = "\033[1;32m";  // Bright green
 inline const char* ROM_COLOR_RESET = "\033[0m";     // Reset to default
 inline const char* ROM_COLOR_RED = "\033[1;31m";    // Bright red
@@ -69,6 +71,6 @@ inline std::string ModeToString(Mode mode)
             throw std::runtime_error("Unknown Mode value.");
     }
 }
-
+}
 
 #endif 
