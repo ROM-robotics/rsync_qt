@@ -18,6 +18,7 @@ qt_add_executable(tuning_app
     design/readmeviewer.h
     design/readmeviewer.cpp
     design/covarianceDisplay.hpp
+    design/covarianceDisplay.cpp
 
 
 

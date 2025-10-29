@@ -19,6 +19,7 @@
 
 #include <QDir>
 #include "design/readmeviewer.h"
+#include "design/covarianceDisplay.hpp"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -672,11 +673,17 @@ void MainWindow::initEkfTab()
         grid->setColumnStretch(1, 1);
 
     odomDiffOdomImuHeadingGraphPtr_ = new RomPolarHeadingGraph(ui->ekf);
-    odomDiffOdomPositionGraphPtr_ = new RomPositionGraph(ui->ekf);
+    odomDiffOdomPositionGraphPtr_   = new RomPositionGraph(ui->ekf);
+
+    ekfPositionCovarianceGraphPtr_  = new rom_dynamics::ui::qt::RomPositionCovarianceGraph(ui->ekf);
+    ekfHeadingCovarianceGraphPtr_   = new rom_dynamics::ui::qt::RomYawCovarianceGraph(ui->ekf);
 
     grid->addWidget(odomDiffOdomImuHeadingGraphPtr_, 0, 0);
     grid->addWidget(odomDiffOdomPositionGraphPtr_, 0, 1);
+    grid->addWidget(ekfPositionCovarianceGraphPtr_, 1, 0);
+    grid->addWidget(ekfHeadingCovarianceGraphPtr_, 1, 1);
 
+    
     // Optionally, add more widgets or adjust grid layout as needed
 
     ui->ekf->setLayout(grid);
@@ -1081,11 +1088,10 @@ void MainWindow::onReceivedTopicMessage(const QString &topic, const QJsonObject 
     static double ekf_heading = 0.0;
 
     // Covariances
-    static double ekf_x  = 0.0; static double ekf_y = 0.0; 
+    static double ekf_x  = 0.0; static double ekf_y = 0.0; static double ekf_yaw = 0.0;
+
     static double xx_cov = 0.0; static double xy_cov = 0.0;
     static double yx_cov = 0.0; static double yy_cov = 0.0;
-
-    double ekf_yaw = 0.0;
     static double yaw_cov = 0.0;
 
         if( topic == ekf_odom_topic_name )
@@ -1109,7 +1115,44 @@ void MainWindow::onReceivedTopicMessage(const QString &topic, const QJsonObject 
             double qw = orientation.value("w").toDouble();
             ekf_heading = quaternionToYawDegrees(qx, qy, qz, qw);
 
-            // trigger to ui update
+           QJsonArray covariance_array = pose.value("covariance").toArray();
+
+            if (covariance_array.isEmpty() || covariance_array.size() != 36) 
+            {
+                qDebug() << "Covariance array is invalid or incomplete.";
+                return; 
+            }
+            
+            xx_cov = covariance_array.at(0).toDouble();
+            xy_cov = covariance_array.at(1).toDouble();
+            yx_cov = covariance_array.at(6).toDouble();
+            yy_cov = covariance_array.at(7).toDouble();
+            yaw_cov = covariance_array.at(35).toDouble();
+
+            Eigen::Matrix2d covariance_xy_matrix;
+            covariance_xy_matrix << xx_cov, xy_cov, yx_cov, yy_cov;
+
+            qDebug() << " EKF Odom Position: " << ekf_position << ", Heading: " << ekf_heading;
+            qDebug() << " Diff Odom Position: " << odom_position << ", Heading: " << odom_heading;
+            qDebug() << " EKF Odom Position Covariance: " << xx_cov << "," << xy_cov << "," << yx_cov << "," << yy_cov << "," << yaw_cov;
+
+           
+            ekf_x = x; ekf_y = y; //ekf_yaw = ekf_heading; ======================== for check
+
+            // xx_cov = position_covariance_obj.value("0").toDouble();
+            // xy_cov = position_covariance_obj.value("1").toDouble();
+            // yx_cov = position_covariance_obj.value("6").toDouble();
+            // yy_cov = position_covariance_obj.value("7").toDouble();
+            // yaw_cov= position_covariance_obj.value("35").toDouble();
+
+            if( ekfPositionCovarianceGraphPtr_ )
+            {
+                ekfPositionCovarianceGraphPtr_->updateGraph(ekf_x, ekf_y, covariance_xy_matrix);
+            }
+            if( ekfHeadingCovarianceGraphPtr_ )
+            {
+                ekfHeadingCovarianceGraphPtr_->updateGraph(ekf_heading, yaw_cov);
+            }
             if( odomDiffOdomImuHeadingGraphPtr_ )
             {
                 odomDiffOdomImuHeadingGraphPtr_->updateGraph(odom_heading, imu_heading, ekf_heading);
@@ -1118,14 +1161,6 @@ void MainWindow::onReceivedTopicMessage(const QString &topic, const QJsonObject 
             {
                 odomDiffOdomPositionGraphPtr_->updateGraph(odom_position, ekf_position);
             }
-            qDebug() << " EKF Odom Position: " << ekf_position << ", Heading: " << ekf_heading;
-            qDebug() << " Diff Odom Position: " << odom_position << ", Heading: " << odom_heading;
-
-            QJsonObject position_covariance_obj = pose.value("covariance").toObject();
-            // You can extract covariance values as needed
-            qDebug() << " EKF Odom Position Covariance: " << position_covariance_obj;
-            ekf_x = x; ekf_y = y; //ekf_yaw = ekf_heading;
-            
         }
         else if( topic == odom_topic_name )
         {

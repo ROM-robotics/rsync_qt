@@ -9,6 +9,7 @@
 #include <QQuickWidget>
 
 #include "design/rom_design.hpp"
+#include "design/covarianceDisplay.hpp"
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -111,10 +112,10 @@ private:
     double wheel_seperation_ = 0.400; // meters
 
     // ekf
-    //OdomPoseChart *diffContOdom_Odom_PosesChart_ = nullptr;
-    //OdomPoseChart *diffContOdom_Imu_Odom_HeadsChart_ = nullptr;
     RomPolarHeadingGraph *odomDiffOdomImuHeadingGraphPtr_ = nullptr;
     RomPositionGraph *odomDiffOdomPositionGraphPtr_ = nullptr;
+    rom_dynamics::ui::qt::RomPositionCovarianceGraph *ekfPositionCovarianceGraphPtr_ = nullptr;
+    rom_dynamics::ui::qt::RomYawCovarianceGraph *ekfHeadingCovarianceGraphPtr_ = nullptr;
 
 };
 #endif // MAINWINDOW_H

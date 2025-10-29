@@ -143,14 +143,10 @@ class RomPositionGraph : public QWidget {
     Q_OBJECT
 
 public:
-    // Define the maximum number of points to display in the sliding window
     const int MAX_POINTS = 20;
-
-    // Constructor (unchanged from your version)
     RomPositionGraph(QWidget *parent = nullptr)
         : QWidget(parent)
     {
-        // ... (Constructor code remains the same as your provided code) ...
         setStyleSheet("background-color: rgba(255,255,255,0);");
         
         chart_ = new QChart();
@@ -166,8 +162,8 @@ public:
 
         chart_->addSeries(odomSeries_);
         chart_->addSeries(odomScatterSeries_); 
-        chart_->addSeries(diffOdomSeries_); // NEW
-        chart_->addSeries(diffOdomScatterSeries_); // NEW
+        chart_->addSeries(diffOdomSeries_); 
+        chart_->addSeries(diffOdomScatterSeries_); 
 
         chart_->addAxis(axisX_, Qt::AlignBottom);
         chart_->addAxis(axisY_, Qt::AlignLeft);

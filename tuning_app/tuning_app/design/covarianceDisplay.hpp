@@ -1,60 +1,70 @@
-#ifndef COVARIANCEDISPLAY_HPP
-#define COVARIANCEDISPLAY_HPP
+#ifndef ROM_COVARIANCE_GRAPHS_HPP
+#define ROM_COVARIANCE_GRAPHS_HPP
+
+#pragma once
 
 #include <QWidget>
-#include <QChartView>
-#include <QChart>
-#include <QScatterSeries>
-#include <QValueAxis>
-#include <QtCharts>
+#include <QtCharts/QChartView>
+#include <QtCharts/QChart>
+#include <QtCharts/QPolarChart> // For Yaw visualization
+#include <QtCharts/QScatterSeries>
+#include <QtCharts/QLineSeries>
+#include <QtCharts/QValueAxis>
+#include <Eigen/Dense> // For Eigen decomposition
 
-//#include "rclcpp/rclcpp.hpp"
-//#include "nav_msgs/msg/odometry.hpp"
-#include <Eigen/Dense>
-
-namespace rom_dynamics {
-
-class CovarianceDisplay : public QWidget
+namespace rom_dynamics::ui::qt {
+class RomPositionCovarianceGraph : public QWidget
 {
     Q_OBJECT
 
 public:
-    explicit CovarianceDisplay(QWidget *parent = nullptr){}
-    ~CovarianceDisplay(){}
+    explicit RomPositionCovarianceGraph(QWidget *parent = nullptr);
+    ~RomPositionCovarianceGraph() override = default;
+
+    void updateGraph(double ekf_pose_x, 
+                     double ekf_pose_y, 
+                     const Eigen::Matrix2d& covariance_xy);
 
 private:
-    // ROS 2 Components
-    //rclcpp::Node::SharedPtr ros_node_;
-    //rclcpp::Subscription<nav_msgs::msg::Odometry>::SharedPtr odom_sub_;
-    //QTimer *ros_timer_; // To process ROS events
-
-    // Qt Chart Components
-    QChartView *chart_view_position_;
-    QChart *chart_position_;
+    QChartView *chart_view_;
+    QChart *chart_;
     QScatterSeries *ellipse_series_;
     QValueAxis *axisX_;
     QValueAxis *axisY_;
-
-    // Visualization Data
+    
     double current_x_ = 0.0;
     double current_y_ = 0.0;
-    double current_yaw_ = 0.0;
-    std::array<double, 36> current_covariance_;
-
-    // Methods
-    //void initializeRosNode();
+    
     void initializeChart();
-    //void odomCallback(const nav_msgs::msg::Odometry::SharedPtr msg);
-    void updateVisualization();
+    void drawPositionEllipse(const Eigen::Matrix2d& covariance_xy);
+};
 
-    // Custom drawing functions
-    void drawPositionEllipse(const Eigen::Matrix2d& covariance_xy) {}
-    void drawYawSector(double yaw, double yaw_variance){}
+class RomYawCovarianceGraph : public QWidget
+{
+    Q_OBJECT
 
-private slots:
-    //void spinRos();
+public:
+    explicit RomYawCovarianceGraph(QWidget *parent = nullptr);
+    ~RomYawCovarianceGraph() override = default;
+
+    void updateGraph(double ekf_pose_yaw, double yaw_variance);
+
+private:
+    QChartView *chart_view_;
+    QPolarChart *chart_;
+    QLineSeries *yaw_arc_series_;
+    
+    double current_yaw_ = 0.0;
+    
+    void initializeChart();
+    void drawYawSector(double yaw, double yaw_variance);
+    
+    qreal radiansToDegrees(double radians) const {
+        qreal degrees = qRadiansToDegrees(radians);
+        return fmod(degrees + 360.0, 360.0); 
+    }
 };
 
 }
 
-#endif // COVARIANCEDISPLAY_HPP
+#endif // ROM_COVARIANCE_GRAPHS_HPP

@@ -3,103 +3,92 @@
 #include "covarianceDisplay.hpp"
 
 using namespace rom_dynamics;
-//using namespace nav_msgs::msg;
 
-// // Helper function to process ROS events
-// void CovarianceDisplay::spinRos()
-// {
-//     if (rclcpp::ok()) {
-//         rclcpp::spin_some(ros_node_);
-//     } else {
-//         ros_timer_->stop();
-//     }
-// }
 
-CovarianceDisplay::CovarianceDisplay(QWidget *parent)
+rom_dynamics::ui::qt::RomCovarianceGraph::RomCovarianceGraph(QWidget *parent)
     : QWidget(parent)
 {
-    // 1. Initialize ROS 2
-    initializeRosNode();
-
-    // 2. Initialize Chart
+    // 1. Initialize Chart
     initializeChart();
 
-    // 3. Setup Layout
+    // 2. Setup Layout
     QVBoxLayout *layout = new QVBoxLayout(this);
     layout->addWidget(chart_view_position_);
     setLayout(layout);
-
-    // 4. Start ROS Timer
-    ros_timer_ = new QTimer(this);
-    connect(ros_timer_, &QTimer::timeout, this, &CovarianceDisplay::spinRos);
-    ros_timer_->start(10); // Spin ROS every 10ms
+    setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 }
 
-CovarianceDisplay::~CovarianceDisplay()
+rom_dynamics::ui::qt::RomCovarianceGraph::~RomCovarianceGraph()
 {
-    ros_timer_->stop();
-    rclcpp::shutdown();
+    // Cleanup if necessary
 }
 
-// void CovarianceDisplay::initializeRosNode()
-// {
-//     ros_node_ = std::make_shared<rclcpp::Node>("qt_localization_subscriber");
-    
-//     // Subscribe to the filtered odometry topic
-//     odom_sub_ = ros_node_->create_subscription<Odometry>(
-//         "/odometry/filtered", 10,
-//         std::bind(&CovarianceDisplay::odomCallback, this, std::placeholders::_1));
-// }
 
-void CovarianceDisplay::initializeChart()
+void rom_dynamics::ui::qt::RomCovarianceGraph::initializeChart()
 {
     // Chart for X-Y Position Ellipse
-    chart_position_ = new QtCharts::QChart();
-    chart_position_->setTitle("EKF Position Covariance (X-Y)");
+    chart_position_ = new QChart();
+    chart_position_->setTitle("EKF Position Covariance x & y");
     
-    ellipse_series_ = new QtCharts::QScatterSeries();
+    ellipse_series_ = new QScatterSeries();
     ellipse_series_->setMarkerSize(3.0);
     ellipse_series_->setColor(QColor(255, 0, 0)); // Red for the ellipse points
     ellipse_series_->setName("95% Confidence Ellipse");
+
+    chart_position_->legend()->hide();
+
     chart_position_->addSeries(ellipse_series_);
 
     // Axis setup (Fixed range for visualization)
-    axisX_ = new QtCharts::QValueAxis();
+    axisX_ = new QValueAxis();
     axisX_->setRange(-1.0, 1.0);
-    axisY_ = new QtCharts::QValueAxis();
+    axisY_ = new QValueAxis();
     axisY_->setRange(-1.0, 1.0);
     chart_position_->addAxis(axisX_, Qt::AlignBottom);
     chart_position_->addAxis(axisY_, Qt::AlignLeft);
     ellipse_series_->attachAxis(axisX_);
     ellipse_series_->attachAxis(axisY_);
+
+    // --- Initialize Yaw Arc Series ---
+    yaw_arc_series_ = new QLineSeries();
+    yaw_arc_series_->setColor(QColor(0, 0, 255)); // Blue for yaw
+    QPen pen = yaw_arc_series_->pen();
+    pen.setWidth(2);
+    yaw_arc_series_->setPen(pen);
+    yaw_arc_series_->setName("Yaw 2σ Uncertainty");
+
+    chart_position_->addSeries(yaw_arc_series_);
+    yaw_arc_series_->attachAxis(axisX_);
+    yaw_arc_series_->attachAxis(axisY_);
+    // --- End Yaw Arc Series Setup ---
     
-    chart_view_position_ = new QtCharts::QChartView(chart_position_);
+    chart_view_position_ = new QChartView(chart_position_);
     chart_view_position_->setRenderHint(QPainter::Antialiasing);
 }
 
-// void CovarianceDisplay::odomCallback(const Odometry::SharedPtr msg)
-// {
-//     current_x_ = msg->pose.pose.position.x;
-//     current_y_ = msg->pose.pose.position.y;
-//     current_covariance_ = msg->pose.covariance;
-    
-//     // Convert Quaternion to Yaw (Simplified for 2D)
-//     // Note: ROS nav_msgs/Odometry uses index 35 for Yaw variance
-//     tf2::Quaternion q(
-//         msg->pose.pose.orientation.x,
-//         msg->pose.pose.orientation.y,
-//         msg->pose.pose.orientation.z,
-//         msg->pose.pose.orientation.w);
-//     tf2::Matrix3x3 m(q);
-//     double roll, pitch, yaw;
-//     m.getRPY(roll, pitch, yaw);
-//     current_yaw_ = yaw;
+void rom_dynamics::ui::qt::RomCovarianceGraph::updateCovarianceGraph(double ekf_pose_x, 
+        double ekf_pose_y, 
+        double ekf_pose_yaw, 
+        double xx_cov, 
+        double xy_cov, 
+        double yx_cov, 
+        double yy_cov, 
+        double yaw_cov)
+{
+    current_x_ = ekf_pose_x;
+    current_y_ = ekf_pose_y;
+    current_yaw_ = ekf_pose_yaw;
 
-//     // Update the chart visualization
-//     updateVisualization();
-// }
+    current_covariance_[0]  = xx_cov;
+    current_covariance_[1]  = xy_cov;
+    current_covariance_[6]  = yx_cov;
+    current_covariance_[7]  = yy_cov;
+    current_covariance_[35] = yaw_cov;
 
-void CovarianceDisplay::updateVisualization()
+    updateVisualization();
+}
+
+void rom_dynamics::ui::qt::RomCovarianceGraph::updateVisualization()
 {
     // --- 1. Position Ellipse (2x2 Covariance) ---
     Eigen::Matrix2d covariance_xy;
@@ -114,7 +103,7 @@ void CovarianceDisplay::updateVisualization()
     drawYawSector(current_yaw_, yaw_variance);
 }
 
-void CovarianceDisplay::drawPositionEllipse(const Eigen::Matrix2d& covariance_xy)
+void rom_dynamics::ui::qt::RomCovarianceGraph::drawPositionEllipse(const Eigen::Matrix2d& covariance_xy)
 {
     // Calculate Eigenvalues and Eigenvectors for the Ellipse
     Eigen::EigenSolver<Eigen::Matrix2d> es(covariance_xy);
@@ -131,7 +120,8 @@ void CovarianceDisplay::drawPositionEllipse(const Eigen::Matrix2d& covariance_xy
     
     // Generate Ellipse points
     const int num_points = 50;
-    for (int i = 0; i <= num_points; ++i) {
+    for (int i = 0; i <= num_points; ++i) 
+    {
         double theta = 2.0 * M_PI * i / num_points;
         double x_rotated = major_axis * std::cos(theta);
         double y_rotated = minor_axis * std::sin(theta);
@@ -149,18 +139,50 @@ void CovarianceDisplay::drawPositionEllipse(const Eigen::Matrix2d& covariance_xy
     axisY_->setRange(current_y_ - range, current_y_ + range);
 }
 
-void CovarianceDisplay::drawYawSector(double yaw, double yaw_variance)
+void rom_dynamics::ui::qt::RomCovarianceGraph::drawYawSector(double yaw, double yaw_variance)
 {
-    // Yaw Uncertainty Visualization (Simulated as a simple title update for this example)
-    
     double sigma_yaw = std::sqrt(yaw_variance);
-    double confidence_95_deg = 2.0 * sigma_yaw * 180.0 / M_PI; // Approx 2 sigma
+    // Use the 95% confidence interval (approx k=2 for normal distribution)
+    double k = 2.0; 
     
-    QString title = QString("EKF Position Covariance (X-Y)\n"
-                            "Yaw Uncertainty (2σ): %1 degrees").arg(confidence_95_deg, 0, 'f', 2);
-    chart_position_->setTitle(title);
+    double yaw_min = yaw - k * sigma_yaw;
+    double yaw_max = yaw + k * sigma_yaw;
 
-    // TODO: For a full implementation, you would use a QLineSeries or QGraphicsItem
-    // to draw a sector/arc centered at (current_x, current_y) covering the yaw range:
-    // [yaw - k*sigma_yaw, yaw + k*sigma_yaw]
+    // Use a fixed visualization radius (e.g., 80% of the current visible range)
+    double range_x = axisX_->max() - axisX_->min();
+    double range_y = axisY_->max() - axisY_->min();
+    double radius = 0.4 * std::min(range_x, range_y);
+    
+    // Safety check for radius
+    if (radius < 0.01) radius = 0.1; 
+
+    // Clear previous arc
+    yaw_arc_series_->clear();
+
+    // Start point of the arc (centered at the current pose)
+    yaw_arc_series_->append(current_x_, current_y_); 
+
+    const int num_segments = 20;
+    double yaw_step = (yaw_max - yaw_min) / num_segments;
+
+    // Generate points for the arc
+    for (int i = 0; i <= num_segments; ++i) 
+    {
+        double current_angle = yaw_min + i * yaw_step;
+        
+        // Calculate the point on the circle
+        double x_point = current_x_ + radius * std::cos(current_angle);
+        double y_point = current_y_ + radius * std::sin(current_angle);
+
+        yaw_arc_series_->append(x_point, y_point);
+    }
+    
+    // End point of the arc (back to the center to close the sector)
+    yaw_arc_series_->append(current_x_, current_y_);
+
+    // Optionally update the title (keeping your original code for clarity)
+    double confidence_95_deg = k * sigma_yaw * 180.0 / M_PI; 
+    QString title = QString("EKF Position Covariance (X-Y)\n"
+                            "Yaw Uncertainty (2σ): ±%1 degrees").arg(confidence_95_deg, 0, 'f', 2);
+    chart_position_->setTitle(title);
 }
