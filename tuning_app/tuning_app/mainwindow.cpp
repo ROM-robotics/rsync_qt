@@ -494,6 +494,56 @@ void MainWindow::on_ekfTuningGuideBtn_clicked()
     ReadmeDialog dlg(this, filePath);
     dlg.exec();
 }
+void MainWindow::on_initialNoiseCovToggleBtn_clicked()
+{
+    bool currentState = ui->initialNoiseXBtn->isVisible();
+
+    //=================================
+    ui->initialNoiseXBtn->setVisible(!currentState);
+    ui->initialNoiseYBtn->setVisible(!currentState);
+    ui->initialNoiseZBtn->setVisible(!currentState);
+
+    ui->initialNoiseRollBtn->setVisible(!currentState);
+    ui->initialNoisePitchBtn->setVisible(!currentState);
+    ui->initialNoiseYawBtn->setVisible(!currentState);
+
+    ui->initialNoiseVXBtn->setVisible(!currentState);
+    ui->initialNoiseVYBtn->setVisible(!currentState);
+    ui->initialNoiseVZBtn->setVisible(!currentState);
+
+    ui->initialNoiseVRollBtn->setVisible(!currentState);
+    ui->initialNoiseVPitchBtn->setVisible(!currentState);
+    ui->initialNoiseVYawBtn->setVisible(!currentState);
+
+    ui->initialNoiseAXBtn->setVisible(!currentState);
+    ui->initialNoiseAYBtn->setVisible(!currentState);
+    ui->initialNoiseAZBtn->setVisible(!currentState);
+}
+
+void MainWindow::on_processNoiseCovToggleBtn_clicked()
+{
+    bool currentState = ui->processNoiseXBtn->isVisible();
+    //=================================
+    ui->processNoiseXBtn->setVisible(!currentState);
+    ui->processNoiseYBtn->setVisible(!currentState);
+    ui->processNoiseZBtn->setVisible(!currentState);
+
+    ui->processNoiseRollBtn->setVisible(!currentState);
+    ui->processNoisePitchBtn->setVisible(!currentState);
+    ui->processNoiseYawBtn->setVisible(!currentState);
+
+    ui->processNoiseVXBtn->setVisible(!currentState);
+    ui->processNoiseVYBtn->setVisible(!currentState);
+    ui->processNoiseVZBtn->setVisible(!currentState);
+
+    ui->processNoiseVRollBtn->setVisible(!currentState);
+    ui->processNoiseVPitchBtn->setVisible(!currentState);
+    ui->processNoiseVYawBtn->setVisible(!currentState);
+
+    ui->processNoiseAXBtn->setVisible(!currentState);
+    ui->processNoiseAYBtn->setVisible(!currentState);
+    ui->processNoiseAZBtn->setVisible(!currentState);
+}
 
 // OUR UI METHODS
 void MainWindow::initRos2ControlTab()
@@ -674,67 +724,111 @@ void MainWindow::initEkfTab()
         grid->setColumnStretch(0, 1);
         grid->setColumnStretch(1, 1);
 
-    odomDiffOdomImuHeadingGraphPtr_ = new RomPolarHeadingGraph(ui->ekf);
-    odomDiffOdomPositionGraphPtr_   = new RomPositionGraph(ui->ekf);
+        odomDiffOdomImuHeadingGraphPtr_ = new RomPolarHeadingGraph(ui->ekf);
+        odomDiffOdomPositionGraphPtr_   = new RomPositionGraph(ui->ekf);
 
-    ekfPositionCovarianceGraphPtr_  = new rom_dynamics::ui::qt::RomPositionCovarianceGraph(ui->ekf);
-    ekfHeadingCovarianceGraphPtr_   = new rom_dynamics::ui::qt::RomYawCovarianceGraph(ui->ekf);
+        ekfPositionCovarianceGraphPtr_  = new rom_dynamics::ui::qt::RomPositionCovarianceGraph(ui->ekf);
+        ekfHeadingCovarianceGraphPtr_   = new rom_dynamics::ui::qt::RomYawCovarianceGraph(ui->ekf);
+
+        
+        grid->addWidget(ekfPositionCovarianceGraphPtr_, 0, 1);
+        grid->addWidget(odomDiffOdomPositionGraphPtr_, 0, 0);
+        grid->addWidget(odomDiffOdomImuHeadingGraphPtr_, 1, 0);
+        grid->addWidget(ekfHeadingCovarianceGraphPtr_, 1, 1);
 
     
-    grid->addWidget(ekfPositionCovarianceGraphPtr_, 0, 1);
-    grid->addWidget(odomDiffOdomPositionGraphPtr_, 0, 0);
-    grid->addWidget(odomDiffOdomImuHeadingGraphPtr_, 1, 0);
-    grid->addWidget(ekfHeadingCovarianceGraphPtr_, 1, 1);
+        // Optionally, add more widgets or adjust grid layout as needed
 
-    
-    // Optionally, add more widgets or adjust grid layout as needed
+        ui->ekf->setLayout(grid);
 
-    ui->ekf->setLayout(grid);
+        //=================================
+        ui->controllerLegendLabel->raise();
+        ui->controllerPoseLegendLabel->raise();
+        ui->ekfLegendLabel->raise();
+        ui->ekfPoseLegendLabel->raise();
+        ui->imuLegendLabel->raise();
 
-    //=================================
-    ui->porocessNoiseXBtn->raise();
-    ui->porocessNoiseYBtn->raise();
-    ui->porocessNoiseZBtn->raise();
+        ui->processNoiseXBtn->raise();
+        ui->processNoiseYBtn->raise();
+        ui->processNoiseZBtn->raise();
 
-    ui->porocessNoiseRollBtn->raise();
-    ui->porocessNoisePitchBtn->raise();
-    ui->porocessNoiseYawBtn->raise();
+        ui->processNoiseRollBtn->raise();
+        ui->processNoisePitchBtn->raise();
+        ui->processNoiseYawBtn->raise();
 
-    ui->porocessNoiseVXBtn->raise();
-    ui->porocessNoiseVYBtn->raise();
-    ui->porocessNoiseVZBtn->raise();
+        ui->processNoiseVXBtn->raise();
+        ui->processNoiseVYBtn->raise();
+        ui->processNoiseVZBtn->raise();
 
-    ui->porocessNoiseVRollBtn->raise();
-    ui->porocessNoiseVPitchBtn->raise();
-    ui->porocessNoiseVYawBtn->raise();
+        ui->processNoiseVRollBtn->raise();
+        ui->processNoiseVPitchBtn->raise();
+        ui->processNoiseVYawBtn->raise();
 
-    ui->porocessNoiseAXBtn->raise();
-    ui->porocessNoiseAYBtn->raise();
-    ui->porocessNoiseAZBtn->raise();
-
-
-
-    ui->initialNoiseXBtn->raise();
-    ui->initialNoiseYBtn->raise();
-    ui->initialNoiseZBtn->raise();
-
-    ui->initialNoiseRollBtn->raise();
-    ui->initialNoisePitchBtn->raise();
-    ui->initialNoiseYawBtn->raise();
-
-    ui->initialNoiseVXBtn->raise();
-    ui->initialNoiseVYBtn->raise();
-    ui->initialNoiseVZBtn->raise();
-
-    ui->initialNoiseVRollBtn->raise();
-    ui->initialNoiseVPitchBtn->raise();
-    ui->initialNoiseVYawBtn->raise();
-
-    ui->initialNoiseAXBtn->raise();
-    ui->initialNoiseAYBtn->raise();
-    ui->initialNoiseAZBtn->raise();
+        ui->processNoiseAXBtn->raise();
+        ui->processNoiseAYBtn->raise();
+        ui->processNoiseAZBtn->raise();
 
 
+
+        ui->initialNoiseXBtn->raise();
+        ui->initialNoiseYBtn->raise();
+        ui->initialNoiseZBtn->raise();
+
+        ui->initialNoiseRollBtn->raise();
+        ui->initialNoisePitchBtn->raise();
+        ui->initialNoiseYawBtn->raise();
+
+        ui->initialNoiseVXBtn->raise();
+        ui->initialNoiseVYBtn->raise();
+        ui->initialNoiseVZBtn->raise();
+
+        ui->initialNoiseVRollBtn->raise();
+        ui->initialNoiseVPitchBtn->raise();
+        ui->initialNoiseVYawBtn->raise();
+
+        ui->initialNoiseAXBtn->raise();
+        ui->initialNoiseAYBtn->raise();
+        ui->initialNoiseAZBtn->raise();
+
+        ui->initialNoiseXBtn->setVisible(false);
+        ui->initialNoiseYBtn->setVisible(false);
+        ui->initialNoiseZBtn->setVisible(false);
+
+        ui->initialNoiseRollBtn->setVisible(false);
+        ui->initialNoisePitchBtn->setVisible(false);
+        ui->initialNoiseYawBtn->setVisible(false);
+
+        ui->initialNoiseVXBtn->setVisible(false);
+        ui->initialNoiseVYBtn->setVisible(false);
+        ui->initialNoiseVZBtn->setVisible(false);
+
+        ui->initialNoiseVRollBtn->setVisible(false);
+        ui->initialNoiseVPitchBtn->setVisible(false);
+        ui->initialNoiseVYawBtn->setVisible(false);
+
+        ui->initialNoiseAXBtn->setVisible(false);
+        ui->initialNoiseAYBtn->setVisible(false);
+        ui->initialNoiseAZBtn->setVisible(false);
+
+        ui->processNoiseXBtn->setVisible(false);
+        ui->processNoiseYBtn->setVisible(false);
+        ui->processNoiseZBtn->setVisible(false);
+
+        ui->processNoiseRollBtn->setVisible(false);
+        ui->processNoisePitchBtn->setVisible(false);
+        ui->processNoiseYawBtn->setVisible(false);
+
+        ui->processNoiseVXBtn->setVisible(false);
+        ui->processNoiseVYBtn->setVisible(false);
+        ui->processNoiseVZBtn->setVisible(false);
+
+        ui->processNoiseVRollBtn->setVisible(false);
+        ui->processNoiseVPitchBtn->setVisible(false);
+        ui->processNoiseVYawBtn->setVisible(false);
+
+        ui->processNoiseAXBtn->setVisible(false);
+        ui->processNoiseAYBtn->setVisible(false);
+        ui->processNoiseAZBtn->setVisible(false);
 
     }
 }
