@@ -20,8 +20,11 @@
 #include <QDir>
 #include "design/readmeviewer.h"
 #include "design/covarianceDisplay.hpp"
+#include "sdk/rom_map_widget.hpp"
 
-using namespace rom_dynamics::ui::qt;
+using rom_dynamics::ui::qt::RomMapWidget;
+using rom_dynamics::ui::qt::RomPolarHeadingGraph;
+using rom_dynamics::ui::qt::RomPositionGraph;
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -864,26 +867,72 @@ void MainWindow::deactivateEkfTab()
 
 void MainWindow::initCartoTab()
 {
+    if (ui->carto)
+    {
+        qDebug() << " Initializing Carto Tab UI components ";
 
+        QLayout *existing = ui->ekf->layout();
+        if (existing) 
+        {
+            delete existing;
+            qDebug() << " Deleted existing layout in EKF Tab ";
+        }
+
+        // ========================================        Create map widget
+        QWidget *mapWidgetPtr = new RomMapWidget(ui->ekf);
+        mapWidgetPtr->setStyleSheet("background:#2a2f36; color:#d3d9e3; border-radius:6px; font-size:20px;");
+        mapWidgetPtr->show();
+
+        // Set initial layout
+        QVBoxLayout* mainPanelLayout = new QVBoxLayout(ui->ekf);
+        mainPanelLayout->setContentsMargins(0,0,0,0);
+        mainPanelLayout->addWidget(mapWidgetPtr);
+
+        ui->ekf->setLayout(mainPanelLayout);
+    }
 }
 void MainWindow::activateCartoTab()
 {
-    //QString example_topic_name = "/diff_controller/cmd_vel_unstamped";
-    //QString example_msg_type   = "geometry_msgs/msg/Twist";
-    
-    //communication_->subscribeTopic(example_topic_name, example_msg_type);
+    if (!communication_) return;
 
-    //qDebug() << "Subscribed to " << example_topic_name;
+    QString map_topic_name = "/map";
+    QString map_msg_type   = "nav_msgs/msg/OccupancyGrid";
+    communication_->subscribeTopic(map_topic_name, map_msg_type);
+
+    QString constraint_list_topic_name = "/constraint_list";
+    QString constraint_list_msg_type   = "visualization_msgs/msg/MarkerArray";
+    communication_->subscribeTopic(constraint_list_topic_name, constraint_list_msg_type);
+
+    QString trajectory_node_list_topic_name = "/trajectory_node_list";
+    QString trajectory_node_list_msg_type   = "visualization_msgs/msg/MarkerArray";
+    communication_->subscribeTopic(trajectory_node_list_topic_name, trajectory_node_list_msg_type);
+
+    QString scan_matched_points_topic_name = "/scan_matched_points2";
+    QString scan_matched_points_msg_type   = "sensor_msgs/msg/PointCloud2";
+    communication_->subscribeTopic(scan_matched_points_topic_name, scan_matched_points_msg_type);
+
+    QString landmark_poses_list_topic_name = "/landmark_poses_list";
+    QString landmark_poses_list_msg_type   = "visualization_msgs/msg/MarkerArray";
+    communication_->subscribeTopic(landmark_poses_list_topic_name, landmark_poses_list_msg_type);
+
+    qDebug() << "Subscribed to " << map_topic_name << "," << constraint_list_topic_name << "," << trajectory_node_list_topic_name;
 
 }
 void MainWindow::deactivateCartoTab()
 {
-    //QString example_topic_name = "/diff_controller/cmd_vel_unstamped";
-    //QString example_msg_type   = "geometry_msgs/msg/Twist";
+    QString map_topic_name = "/map";
+    QString constraint_list_topic_name = "/constraint_list";
+    QString trajectory_node_list_topic_name = "/trajectory_node_list";
+    QString scan_matched_points_topic_name = "/scan_matched_points2";
+    QString landmark_poses_list_topic_name = "/landmark_poses_list";
+  
+    communication_->unsubscribeTopic(map_topic_name);
+    communication_->unsubscribeTopic(constraint_list_topic_name);
+    communication_->unsubscribeTopic(trajectory_node_list_topic_name);
+    communication_->unsubscribeTopic(scan_matched_points_topic_name);
+    communication_->unsubscribeTopic(landmark_poses_list_topic_name);
 
-    //communication_->unsubscribeTopic(example_topic_name, example_msg_type);
-
-    //qDebug() << "Unsubscribed to " << example_topic_name;
+    qDebug() << "Unsubscribed from " << map_topic_name << "," << constraint_list_topic_name << "," << trajectory_node_list_topic_name;
 
 }
 

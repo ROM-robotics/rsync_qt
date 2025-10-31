@@ -10,7 +10,146 @@
 
 #pragma once
 
-namespace rom_dynamics::data_types {
+#include "../sdk/rom_time.hpp"
+
+namespace rom_dynamics::data_types 
+{
+// ------------------------------------------------- STRUCT
+
+struct HackTime {
+    int sec;
+    unsigned int nanosec;
+};
+
+struct RomLaser {
+    QString m_frameId;
+    float m_angleMin;
+    float m_angleMax;
+    float m_angleIncrement;
+    float m_rangeMin;
+    float m_rangeMax;
+    QVector<float> m_ranges;
+    QVector<float> m_intensities;
+    HackTime rom_timestamp;
+};
+
+struct RomPose2D {
+    double x;
+    double y;
+    double theta_deg; // yaw in degrees
+};
+
+struct TransformStamped {
+    QVector3D translation;
+    QQuaternion rotation;
+    HackTime rom_timestamp;
+};
+
+// ------------------------------------------------- ROM MAP CLASS
+class RomMap 
+{
+    public:
+        RomMap();
+        RomMap(int width, 
+            int height, 
+            float resolution, 
+            float origin_x, 
+            float origin_y, 
+            const std::vector<int8_t>& data, 
+            const RomTime& timestamp = RomTime()
+        );
+
+        void setMap(int width, 
+            int height, 
+            float resolution, 
+            float origin_x, 
+            float origin_y, 
+            const std::vector<int8_t>& data, 
+            const RomTime& timestamp = RomTime()
+        );
+            
+        int width() const;
+        int height() const;
+        float resolution() const;
+        float originX() const;
+        float originY() const;
+        const std::vector<int8_t>& data() const;
+
+        // Time getter/setter
+        void setTimestamp(const RomTime& timestamp);
+        const RomTime& timestamp() const;
+
+    private:
+        int width_;
+        int height_;
+        float resolution_;
+        float origin_x_;
+        float origin_y_;
+        std::vector<int8_t> data_;
+        RomTime timestamp_;
+};
+
+inline RomMap::RomMap()
+    : width_(0), height_(0), resolution_(0.0f), origin_x_(0.0f), origin_y_(0.0f), data_(), timestamp_() {}
+
+inline RomMap::RomMap(int width, int height, float resolution, float origin_x, float origin_y, const std::vector<int8_t>& data, const RomTime& timestamp)
+    : width_(width), height_(height), resolution_(resolution), origin_x_(origin_x), origin_y_(origin_y), data_(data), timestamp_(timestamp) {}
+
+inline void RomMap::setMap(int width, int height, float resolution, float origin_x, float origin_y, const std::vector<int8_t>& data, const RomTime& timestamp) {
+    width_ = width;
+    height_ = height;
+    resolution_ = resolution;
+    origin_x_ = origin_x;
+    origin_y_ = origin_y;
+    data_ = data;
+    timestamp_ = timestamp;
+}
+
+inline int RomMap::width() const {
+    return width_;
+}
+
+inline int RomMap::height() const {
+    return height_;
+}
+
+inline float RomMap::resolution() const {
+    return resolution_;
+}
+
+inline float RomMap::originX() const {
+    return origin_x_;
+}
+
+inline float RomMap::originY() const {
+    return origin_y_;
+}
+
+inline const std::vector<int8_t>& RomMap::data() const {
+    return data_;
+}
+
+inline void RomMap::setTimestamp(const RomTime& timestamp) {
+    timestamp_ = timestamp;
+}
+
+inline const RomTime& RomMap::timestamp() const {
+    return timestamp_;
+}
+
+// ------------------------------------------------- ROM TF CLASS
+
+class RomTF {
+public:
+    RomTF() = default;
+
+    //QList<TransformStamped> m_transforms;
+
+    TransformStamped map_odom;
+    TransformStamped odom_base_footprint;
+};
+
+// ------------------------------------------------- COLOR CODES FOR TERMINAL OUTPUT
 
 inline const char* ROM_COLOR_GREEN = "\033[1;32m";  // Bright green
 inline const char* ROM_COLOR_RESET = "\033[0m";     // Reset to default
@@ -43,6 +182,8 @@ enum class Mode {
     topic,
     log
 };
+
+
 inline std::string ModeToString(Mode mode)
 {
     switch (mode) {
@@ -71,6 +212,11 @@ inline std::string ModeToString(Mode mode)
             throw std::runtime_error("Unknown Mode value.");
     }
 }
+
+
+
+
+
 }
 
 #endif 

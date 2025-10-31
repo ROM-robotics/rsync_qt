@@ -11,6 +11,7 @@ qt_add_executable(tuning_app
     mainwindow.cpp
     mainwindow.h
     mainwindow.ui
+    sdk/rom_time.hpp
     design/rom_structures.h
     communication/ros_bridge_client.hpp
     communication/ros_bridge_client.cpp
@@ -19,6 +20,8 @@ qt_add_executable(tuning_app
     design/readmeviewer.cpp
     design/covarianceDisplay.hpp
     design/covarianceDisplay.cpp
+    sdk/rom_map_widget.hpp
+
 
 
 

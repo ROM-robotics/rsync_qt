@@ -11,8 +11,13 @@
 #include "design/rom_design.hpp"
 #include "design/covarianceDisplay.hpp"
 
-using namespace rom_dynamics::communication;
-using namespace rom_dynamics::data_types;
+using rom_dynamics::communication::RosBridgeClient;
+using rom_dynamics::data_types::Mode;
+
+using rom_dynamics::ui::qt::RomPolarHeadingGraph;
+using rom_dynamics::ui::qt::RomPositionGraph;
+using rom_dynamics::ui::qt::RomPositionCovarianceGraph;
+using rom_dynamics::ui::qt::RomYawCovarianceGraph;
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -117,10 +122,10 @@ private:
     double wheel_seperation_ = 0.400; // meters
 
     // ekf
-    rom_dynamics::ui::qt::RomPolarHeadingGraph *odomDiffOdomImuHeadingGraphPtr_ = nullptr;
-    rom_dynamics::ui::qt::RomPositionGraph *odomDiffOdomPositionGraphPtr_ = nullptr;
-    rom_dynamics::ui::qt::RomPositionCovarianceGraph *ekfPositionCovarianceGraphPtr_ = nullptr;
-    rom_dynamics::ui::qt::RomYawCovarianceGraph *ekfHeadingCovarianceGraphPtr_ = nullptr;
+    RomPolarHeadingGraph *odomDiffOdomImuHeadingGraphPtr_ = nullptr;
+    RomPositionGraph *odomDiffOdomPositionGraphPtr_ = nullptr;
+    RomPositionCovarianceGraph *ekfPositionCovarianceGraphPtr_ = nullptr;
+    RomYawCovarianceGraph *ekfHeadingCovarianceGraphPtr_ = nullptr;
 
 };
 #endif // MAINWINDOW_H
