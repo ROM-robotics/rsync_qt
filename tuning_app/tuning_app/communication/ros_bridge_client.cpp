@@ -7,29 +7,49 @@
 #include <QMetaType>
 
 rom_dynamics::communication::RosBridgeClient::RosBridgeClient(const QString &robot_ns, const QString &host, quint16 port, QObject *parent)
-    : QObject(parent), m_robotNamespace(robot_ns), m_host(host), m_port(port) {
-    // Ensure custom types used in signals are registered for queued connections
-    //qRegisterMetaType<RomTF>("RomTF");
-    //qRegisterMetaType<TransformStamped>("TransformStamped");
+    : QObject(parent), m_robotNamespace(robot_ns), m_host(host), m_port(port) 
+{
+    // ⭐ ဤနေရာတွင် မည်သည့် connect မှ မလုပ်ပါနှင့်။
+    // ⭐ Pointers များကို nullptr ပေးထားပါ (သို့မဟုတ် Header တွင် ပေးထားပါ)
 
     #ifdef ROM_DEBUG
         qDebug().noquote() << QString("%1[      RosBridgeClient::RosBridgeClient      ]%2")
                               .arg(ROM_COLOR_GREEN).arg(ROM_COLOR_RESET);
     #endif
-    connect(&m_socket, &QWebSocket::connected, this, &RosBridgeClient::onSocketConnected);
-    connect(&m_socket, &QWebSocket::disconnected, this, &RosBridgeClient::onSocketDisconnected);
-    connect(&m_socket, &QWebSocket::textMessageReceived, this, &RosBridgeClient::onTextMessageReceived);
-    connect(&m_socket, QOverload<QAbstractSocket::SocketError>::of(&QWebSocket::errorOccurred), this, &RosBridgeClient::onSocketError);
 
-    this->connectToServer();
+    // connect(&m_socket, &QWebSocket::connected, this, &RosBridgeClient::onSocketConnected);
+    // connect(&m_socket, &QWebSocket::disconnected, this, &RosBridgeClient::onSocketDisconnected);
+    // connect(&m_socket, &QWebSocket::textMessageReceived, this, &RosBridgeClient::onTextMessageReceived);
+    // connect(&m_socket, QOverload<QAbstractSocket::SocketError>::of(&QWebSocket::errorOccurred), this, &RosBridgeClient::onSocketError);
 
-    m_reconnectTimer.setInterval(3000);
-    m_reconnectTimer.setSingleShot(true);
-    connect(&m_reconnectTimer, &QTimer::timeout, this, &RosBridgeClient::ensureReconnect);
+    // //this->connectToServer();
 
+    // m_reconnectTimer.setInterval(3000);
+    // m_reconnectTimer.setSingleShot(true);
+    // connect(&m_reconnectTimer, &QTimer::timeout, this, &RosBridgeClient::ensureReconnect);
 }
 
 // MAIN API
+// ⭐ QObject-based members များကို ဖန်တီးမည့် slot
+void rom_dynamics::communication::RosBridgeClient::init()
+{
+    // ဤ init() သည် ယခု Worker Thread တွင် run နေပါသည်။
+    
+    // Pointers များကို Worker Thread ထဲတွင် ဖန်တီးခြင်း
+    m_socket = new QWebSocket(QString(), QWebSocketProtocol::VersionLatest, this); // Parent ကို 'this' ပေးခြင်းဖြင့် affinity ရပါသည်
+    m_reconnectTimer = new QTimer(this); // Parent ကို 'this' ပေးခြင်းဖြင့် affinity ရပါသည်
+
+    // Signals/Slots များကို ချိတ်ဆက်ခြင်း
+    connect(m_socket, &QWebSocket::connected, this, &RosBridgeClient::onSocketConnected);
+    connect(m_socket, &QWebSocket::disconnected, this, &RosBridgeClient::onSocketDisconnected);
+    connect(m_socket, &QWebSocket::textMessageReceived, this, &RosBridgeClient::onTextMessageReceived);
+    connect(m_socket, QOverload<QAbstractSocket::SocketError>::of(&QWebSocket::errorOccurred), this, &RosBridgeClient::onSocketError);
+
+    m_reconnectTimer->setInterval(3000);
+    m_reconnectTimer->setSingleShot(true);
+    connect(m_reconnectTimer, &QTimer::timeout, this, &RosBridgeClient::ensureReconnect);
+}
+
 void rom_dynamics::communication::RosBridgeClient::connectToServer() 
 {
     #ifdef ROM_DEBUG
@@ -40,7 +60,7 @@ void rom_dynamics::communication::RosBridgeClient::connectToServer()
     if (isConnected()) return;
 
     const QUrl url(QStringLiteral("ws://%1:%2").arg(m_host).arg(m_port));
-    m_socket.open(url);
+    m_socket->open(url);
 }
 
 void rom_dynamics::communication::RosBridgeClient::disconnectFromServer() 
@@ -50,11 +70,11 @@ void rom_dynamics::communication::RosBridgeClient::disconnectFromServer()
                               .arg(ROM_COLOR_GREEN).arg(ROM_COLOR_RESET);
     #endif
 
-    m_reconnectTimer.stop();
+    m_reconnectTimer->stop();
     
     if (isConnected()) 
     {
-        m_socket.close();
+        m_socket->close();
     }
 }
 
@@ -66,7 +86,7 @@ void rom_dynamics::communication::RosBridgeClient::sendJson(const QJsonObject &o
     #endif
 
     QJsonDocument doc(obj);
-    m_socket.sendTextMessage(QString::fromUtf8(doc.toJson(QJsonDocument::Compact)));
+    m_socket->sendTextMessage(QString::fromUtf8(doc.toJson(QJsonDocument::Compact)));
 }
 
 void rom_dynamics::communication::RosBridgeClient::ensureReconnect() 
@@ -105,7 +125,7 @@ void rom_dynamics::communication::RosBridgeClient::onSocketDisconnected()
 
     if (!isConnected()) 
     {
-        m_reconnectTimer.start();
+        m_reconnectTimer->start();
     }
 }
 
@@ -116,10 +136,10 @@ void rom_dynamics::communication::RosBridgeClient::onSocketError(QAbstractSocket
                               .arg(ROM_COLOR_GREEN).arg(ROM_COLOR_RESET);
     #endif
 
-    emit errorOccurred(m_socket.errorString());
+    emit errorOccurred(m_socket->errorString());
     if (!isConnected()) 
     {
-        m_reconnectTimer.start();
+        m_reconnectTimer->start();
     }
 }
 

@@ -109,7 +109,9 @@ private:
     int previousCmdColorIndex = -1;
 
     Mode currentMode;
+    Mode previousMode;
     RosBridgeClient *communication_ = nullptr;
+    QThread *communicationThread_ = nullptr;
 
     // QRC speed meter
     QVector<QQuickWidget*> ros2ControlQmlView_;

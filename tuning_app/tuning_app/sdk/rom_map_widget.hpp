@@ -32,18 +32,22 @@ static QImage romMapToImage_local(const RomMap& map)
 
 	const auto& data = map.data();
 	const int expected = w * h;
-	if ((int)data.size() < expected) {
+	if ((int)data.size() < expected) 
+    {
 		img.fill(127);
 		return img;
 	}
 
-	for (int y = 0; y < h; ++y) {
+	for (int y = 0; y < h; ++y) 
+    {
 		uchar* line = img.scanLine(h - 1 - y); // flip Y
 		const int rowOff = y * w;
-		for (int x = 0; x < w; ++x) {
+		for (int x = 0; x < w; ++x) 
+        {
 			const int8_t occ = data[rowOff + x];
 			uchar v = 127; // unknown
-			if (occ >= 0) {
+			if (occ >= 0) 
+            {
 				int clamped = occ;
 				if (clamped > 100) clamped = 100;
 				v = static_cast<uchar>(255 - (clamped * 255) / 100);
@@ -118,15 +122,6 @@ inline RomMapWidget::RomMapWidget(QWidget* parent) : QGraphicsView(parent)
         setScene(scene_);
 
         mapItem_ = scene_->addPixmap(QPixmap());
-
-        // Add a small coordinate frame at the GraphicsView origin
-        // if (!viewAxes_) {
-        //     auto* garphic_axes = new GraphicViewCoordinateFrame();
-        //     garphic_axes->setPos(0, 0); // scene origin (current map center)
-        //     scene_->addItem(garphic_axes);
-        //     viewAxes_ = garphic_axes; // keep handle if we want to move/hide later
-        //     viewAxes_->setVisible(axesVisible_);
-        // }
     }
 
 // Update the displayed occupancy grid; cheap if same size.
@@ -155,11 +150,13 @@ inline void RomMapWidget::setMap(const RomMap& map)
         const int w = map.width();
         const int h = map.height();
         const float res = map.resolution();
-        if (w > 0 && h > 0 && res > 0.0f) {
+        if (w > 0 && h > 0 && res > 0.0f) 
+        {
             const double ox = static_cast<double>(map.originX());
             const double oy = static_cast<double>(map.originY());
             const double pixel_x = -ox / res;
             const double pixel_y = (static_cast<double>(h) - 1.0) + oy / res;
+
             const double scene_x = pixel_x - static_cast<double>(w) / 2.0;
             const double scene_y = pixel_y - static_cast<double>(h) / 2.0;
             //mapOriginAxes_->setPos(scene_x, scene_y);

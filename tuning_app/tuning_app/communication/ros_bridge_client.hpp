@@ -12,7 +12,8 @@
 
 namespace rom_dynamics::communication {
     
-class RosBridgeClient : public QObject {
+class RosBridgeClient : public QObject 
+{
     Q_OBJECT
 public:
     explicit RosBridgeClient(const QString &robot_ns="", 
@@ -21,13 +22,7 @@ public:
         QObject *parent = nullptr);
 
     // --------------------------------- MAIN API
-    void connectToServer();
-    void disconnectFromServer();
-    bool isConnected() const { return m_socket.state() == QAbstractSocket::ConnectedState; }
-
-    // --------------------------------- TOPIC SUBSCRIPTIONS
-    void subscribeTopic(const QString &topic_name, const QString &msg_type);
-    void unsubscribeTopic(const QString &topic_name);
+    bool isConnected() const { return m_socket->state() == QAbstractSocket::ConnectedState; }
 
 signals:
     // --------------------------------- MAIN API
@@ -38,6 +33,16 @@ signals:
     // --------------------------------- TOPIC SUBSCRIPTIONS
     void receivedTopicMessage(const QString &topic_name, const QJsonObject &msg);
 
+public slots:
+    // --------------------------------- MAIN API
+    void init();
+    void connectToServer();
+    void disconnectFromServer();
+    
+    // --------------------------------- TOPIC SUBSCRIPTIONS
+    void subscribeTopic(const QString &topic_name, const QString &msg_type);
+    void unsubscribeTopic(const QString &topic_name);
+    
 private slots:
     void onSocketConnected();
     void onSocketDisconnected();
@@ -54,11 +59,17 @@ private:
     void ensureReconnect();
 
     // main api variables
-    QWebSocket m_socket;
+    // QWebSocket m_socket;
+    // ⭐ QWebSocket နှင့် QTimer ကို Pointers များအဖြစ် ပြောင်းပါ။
+    QWebSocket *m_socket = nullptr;
+
     QString m_robotNamespace;
     QString m_host;
     quint16 m_port{9090};
-    QTimer m_reconnectTimer;
+
+    // QTimer m_reconnectTimer;
+    // ⭐ QTimer ကိုလည်း Pointer အဖြစ် ပြောင်းပါ။
+    QTimer *m_reconnectTimer = nullptr; 
 
     
 };

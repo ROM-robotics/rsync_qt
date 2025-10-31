@@ -52,6 +52,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->tabWidget, &QTabWidget::currentChanged, this, &MainWindow::onTabChanged);
 
     currentMode = Mode::ssh;
+    previousMode = Mode::ssh;
     qDebug() << " currentMode = " << ModeToString(currentMode).c_str();
 
     initRos2ControlTab();
@@ -61,6 +62,11 @@ MainWindow::MainWindow(QWidget *parent)
 
 MainWindow::~MainWindow()
 {
+    // Program ပိတ်ရင် Thread ကို စနစ်တကျ ရပ်ဖို့ သေချာပါစေ
+    if (communicationThread_ && communicationThread_->isRunning()) {
+        communicationThread_->quit();
+        communicationThread_->wait(); 
+    }
     delete ui;
 }
 
@@ -69,6 +75,9 @@ MainWindow::~MainWindow()
 void MainWindow::onTabChanged(int index)
 {
     qDebug() << "is connected status: " << this->isConnected_; 
+
+    previousMode = currentMode;
+
     switch (index) 
     {
         case 0:
@@ -121,131 +130,445 @@ void MainWindow::onTabChanged(int index)
     switch (currentMode) 
     {
         case Mode::ssh:
-            deactivateRos2ControlTab();
-            deactivateEkfTab();
-            deactivateCartoTab();
-            deactivateNav2_1Tab();
-            deactivateNav2_2Tab();
-            deactivateNav2_3Tab();
-            deactivateBtTab();
-            deactivateTopicTab();
-            deactivateLogTab();
+
+            // deactivateRos2ControlTab();
+            // deactivateEkfTab();
+            // deactivateCartoTab();
+            // deactivateNav2_1Tab();
+            // deactivateNav2_2Tab();
+            // deactivateNav2_3Tab();
+            // deactivateBtTab();
+            // deactivateTopicTab();
+            // deactivateLogTab();
+            qDebug() << " Deactivate All. ";
+
+            switch(previousMode)
+            {
+                case Mode::ros2_control:
+                    deactivateRos2ControlTab();
+                    break;
+                case Mode::ekf:
+                    deactivateEkfTab();
+                    break;
+                case Mode::carto:
+                    deactivateCartoTab();
+                    break;
+                case Mode::nav2_1:
+                    deactivateNav2_1Tab();
+                    break;
+                case Mode::nav2_2:
+                    deactivateNav2_2Tab();
+                    break;
+                case Mode::nav2_3:
+                    deactivateNav2_3Tab();
+                    break;
+                case Mode::bt:
+                    deactivateBtTab();
+                    break;
+                case Mode::topic:
+                    deactivateTopicTab();
+                    break;
+                case Mode::log:
+                    deactivateLogTab();
+                    break;
+                default:
+                    break;
+            }
             break;
         case Mode::ros2_control:
             activateRos2ControlTab();
 
-            deactivateEkfTab();
-            deactivateCartoTab();
-            deactivateNav2_1Tab();
-            deactivateNav2_2Tab();
-            deactivateNav2_3Tab();
-            deactivateBtTab();
-            deactivateTopicTab();
-            deactivateLogTab();
+            // deactivateEkfTab();
+            // deactivateCartoTab();
+            // deactivateNav2_1Tab();
+            // deactivateNav2_2Tab();
+            // deactivateNav2_3Tab();
+            // deactivateBtTab();
+            // deactivateTopicTab();
+            // deactivateLogTab();
             qDebug() << " activateRos2ControlTab called  ";
+
+            switch(previousMode)
+            {
+                case Mode::ekf:
+                    deactivateEkfTab();
+                    break;
+                case Mode::carto:
+                    deactivateCartoTab();
+                    break;
+                case Mode::nav2_1:
+                    deactivateNav2_1Tab();
+                    break;
+                case Mode::nav2_2:
+                    deactivateNav2_2Tab();
+                    break;
+                case Mode::nav2_3:
+                    deactivateNav2_3Tab();
+                    break;
+                case Mode::bt:
+                    deactivateBtTab();
+                    break;
+                case Mode::topic:
+                    deactivateTopicTab();
+                    break;
+                case Mode::log:
+                    deactivateLogTab();
+                    break;
+                default:
+                    break;
+            }
             break;
         case Mode::ekf:
-            deactivateRos2ControlTab();
-
             activateEkfTab();
 
-            deactivateCartoTab();
-            deactivateNav2_1Tab();
-            deactivateNav2_2Tab();
-            deactivateNav2_3Tab();
-            deactivateBtTab();
-            deactivateTopicTab();
-            deactivateLogTab();
+            // deactivateRos2ControlTab();
+            // deactivateCartoTab();
+            // deactivateNav2_1Tab();
+            // deactivateNav2_2Tab();
+            // deactivateNav2_3Tab();
+            // deactivateBtTab();
+            // deactivateTopicTab();
+            // deactivateLogTab();
+
+            qDebug() << " activateEkfTab called  ";
+
+            switch(previousMode)
+            {
+                case Mode::ros2_control:
+                    deactivateRos2ControlTab();
+                    break;
+                case Mode::carto:
+                    deactivateCartoTab();
+                    break;
+                case Mode::nav2_1:
+                    deactivateNav2_1Tab();
+                    break;
+                case Mode::nav2_2:
+                    deactivateNav2_2Tab();
+                    break;
+                case Mode::nav2_3:
+                    deactivateNav2_3Tab();
+                    break;
+                case Mode::bt:
+                    deactivateBtTab();
+                    break;
+                case Mode::topic:
+                    deactivateTopicTab();
+                    break;
+                case Mode::log:
+                    deactivateLogTab();
+                    break;
+                default:
+                    break;
+            }
             break;
         case Mode::carto:
-            deactivateRos2ControlTab();
-            deactivateEkfTab();
-
             activateCartoTab();
 
-            deactivateNav2_1Tab();
-            deactivateNav2_2Tab();
-            deactivateNav2_3Tab();
-            deactivateBtTab();
-            deactivateTopicTab();
-            deactivateLogTab();
+            // deactivateRos2ControlTab();
+            // deactivateEkfTab();
+            // deactivateNav2_1Tab();
+            // deactivateNav2_2Tab();
+            // deactivateNav2_3Tab();
+            // deactivateBtTab();
+            // deactivateTopicTab();
+            // deactivateLogTab();
+            qDebug() << " activateCartoTab called  ";
+
+            switch(previousMode)
+            {
+                case Mode::ros2_control:
+                    deactivateRos2ControlTab();
+                    break;
+                case Mode::ekf:
+                    deactivateEkfTab();
+                    break;
+                case Mode::nav2_1:
+                    deactivateNav2_1Tab();
+                    break;
+                case Mode::nav2_2:
+                    deactivateNav2_2Tab();
+                    break;
+                case Mode::nav2_3:
+                    deactivateNav2_3Tab();
+                    break;
+                case Mode::bt:
+                    deactivateBtTab();
+                    break;
+                case Mode::topic:
+                    deactivateTopicTab();
+                    break;
+                case Mode::log:
+                    deactivateLogTab();
+                    break;
+                default:
+                    break;
+            }
+
             break;
         case Mode::nav2_1:
-            deactivateRos2ControlTab();
-            deactivateEkfTab();
-            deactivateCartoTab();
-
             activateNav2_1Tab();
 
-            deactivateNav2_2Tab();
-            deactivateNav2_3Tab();
-            deactivateBtTab();
-            deactivateTopicTab();
-            deactivateLogTab();
+            // deactivateRos2ControlTab();
+            // deactivateEkfTab();
+            // deactivateCartoTab();
+            // deactivateNav2_2Tab();
+            // deactivateNav2_3Tab();
+            // deactivateBtTab();
+            // deactivateTopicTab();
+            // deactivateLogTab();
+            qDebug() << " activateNav2_1Tab called  ";
+
+            switch(previousMode)
+            {
+                case Mode::ros2_control:
+                    deactivateRos2ControlTab();
+                    break;
+                case Mode::ekf:
+                    deactivateEkfTab();
+                    break;
+                case Mode::carto:
+                    deactivateCartoTab();
+                    break;
+                case Mode::nav2_2:
+                    deactivateNav2_2Tab();
+                    break;
+                case Mode::nav2_3:
+                    deactivateNav2_3Tab();
+                    break;
+                case Mode::bt:
+                    deactivateBtTab();
+                    break;
+                case Mode::topic:
+                    deactivateTopicTab();
+                    break;
+                case Mode::log:
+                    deactivateLogTab();
+                    break;
+                default:
+                    break;
+            }
+
             break;
         case Mode::nav2_2:
-            deactivateRos2ControlTab();
-            deactivateEkfTab();
-            deactivateCartoTab();
-            deactivateNav2_1Tab();
-
             activateNav2_2Tab();
 
-            deactivateNav2_3Tab();
-            deactivateBtTab();
-            deactivateTopicTab();
-            deactivateLogTab();
+            // deactivateRos2ControlTab();
+            // deactivateEkfTab();
+            // deactivateCartoTab();
+            // deactivateNav2_1Tab();
+            // deactivateNav2_3Tab();
+            // deactivateBtTab();
+            // deactivateTopicTab();
+            // deactivateLogTab();
+            qDebug() << " activateNav2_2Tab called  ";
+
+            switch(previousMode)
+            {
+                case Mode::ros2_control:
+                    deactivateRos2ControlTab();
+                    break;
+                case Mode::ekf:
+                    deactivateEkfTab();
+                    break;
+                case Mode::carto:
+                    deactivateCartoTab();
+                    break;
+                case Mode::nav2_1:
+                    deactivateNav2_1Tab();
+                    break;
+                case Mode::nav2_3:
+                    deactivateNav2_3Tab();
+                    break;
+                case Mode::bt:
+                    deactivateBtTab();
+                    break;
+                case Mode::topic:
+                    deactivateTopicTab();
+                    break;
+                case Mode::log:
+                    deactivateLogTab();
+                    break;
+                default:
+                    break;
+            }
+
             break;
         case Mode::nav2_3:
-            deactivateRos2ControlTab();
-            deactivateEkfTab();
-            deactivateCartoTab();
-            deactivateNav2_1Tab();
-            deactivateNav2_2Tab();
-
             activateNav2_3Tab();
 
-            deactivateBtTab();
-            deactivateTopicTab();
-            deactivateLogTab();
+            // deactivateRos2ControlTab();
+            // deactivateEkfTab();
+            // deactivateCartoTab();
+            // deactivateNav2_1Tab();
+            // deactivateNav2_2Tab();
+            // deactivateBtTab();
+            // deactivateTopicTab();
+            // deactivateLogTab();
+            qDebug() << " activateNav2_3Tab called  ";
+
+            switch(previousMode)
+            {
+                case Mode::ros2_control:
+                    deactivateRos2ControlTab();
+                    break;
+                case Mode::ekf:
+                    deactivateEkfTab();
+                    break;
+                case Mode::carto:
+                    deactivateCartoTab();
+                    break;
+                case Mode::nav2_1:
+                    deactivateNav2_1Tab();
+                    break;
+                case Mode::nav2_2:
+                    deactivateNav2_2Tab();
+                    break;
+                case Mode::bt:
+                    deactivateBtTab();
+                    break;
+                case Mode::topic:
+                    deactivateTopicTab();
+                    break;
+                case Mode::log:
+                    deactivateLogTab();
+                    break;
+                default:
+                    break;
+            }
+
             break;
         case Mode::bt:
-            deactivateRos2ControlTab();
-            deactivateEkfTab();
-            deactivateCartoTab();
-            deactivateNav2_1Tab();
-            deactivateNav2_2Tab();
-            deactivateNav2_3Tab();
-
             activateBtTab();
 
-            deactivateTopicTab();
-            deactivateLogTab();
+            // deactivateRos2ControlTab();
+            // deactivateEkfTab();
+            // deactivateCartoTab();
+            // deactivateNav2_1Tab();
+            // deactivateNav2_2Tab();
+            // deactivateNav2_3Tab();
+            // deactivateTopicTab();
+            // deactivateLogTab();
+            qDebug() << " activateBtTab called  ";
+
+            switch(previousMode)
+            {
+                case Mode::ros2_control:
+                    deactivateRos2ControlTab();
+                    break;
+                case Mode::ekf:
+                    deactivateEkfTab();
+                    break;
+                case Mode::carto:
+                    deactivateCartoTab();
+                    break;
+                case Mode::nav2_1:
+                    deactivateNav2_1Tab();
+                    break;
+                case Mode::nav2_2:
+                    deactivateNav2_2Tab();
+                    break;
+                case Mode::nav2_3:
+                    deactivateNav2_3Tab();
+                    break;
+                case Mode::topic:
+                    deactivateTopicTab();
+                    break;
+                case Mode::log:
+                    deactivateLogTab();
+                    break;
+                default:
+                    break;
+            }
+
             break;
         case Mode::topic:
-            deactivateRos2ControlTab();
-            deactivateEkfTab();
-            deactivateCartoTab();
-            deactivateNav2_1Tab();
-            deactivateNav2_2Tab();
-            deactivateNav2_3Tab();
-            deactivateBtTab();
-
             activateTopicTab();
 
-            deactivateLogTab();
+            // deactivateRos2ControlTab();
+            // deactivateEkfTab();
+            // deactivateCartoTab();
+            // deactivateNav2_1Tab();
+            // deactivateNav2_2Tab();
+            // deactivateNav2_3Tab();
+            // deactivateBtTab();
+            // deactivateLogTab();
+            qDebug() << " activateTopicTab called  ";
+
+            switch(previousMode)
+            {
+                case Mode::ros2_control:
+                    deactivateRos2ControlTab();
+                    break;
+                case Mode::ekf:
+                    deactivateEkfTab();
+                    break;
+                case Mode::carto:
+                    deactivateCartoTab();
+                    break;
+                case Mode::nav2_1:
+                    deactivateNav2_1Tab();
+                    break;
+                case Mode::nav2_2:
+                    deactivateNav2_2Tab();
+                    break;
+                case Mode::nav2_3:
+                    deactivateNav2_3Tab();
+                    break;
+                case Mode::bt:
+                    deactivateBtTab();
+                    break;
+                case Mode::log:
+                    deactivateLogTab();
+                    break;
+                default:
+                    break;
+            }
+
             break;
         case Mode::log:
-            deactivateRos2ControlTab();
-            deactivateEkfTab();
-            deactivateCartoTab();
-            deactivateNav2_1Tab();
-            deactivateNav2_2Tab();
-            deactivateNav2_3Tab();
-            deactivateBtTab();
-            deactivateTopicTab();
-
             activateLogTab();
+
+            // deactivateRos2ControlTab();
+            // deactivateEkfTab();
+            // deactivateCartoTab();
+            // deactivateNav2_1Tab();
+            // deactivateNav2_2Tab();
+            // deactivateNav2_3Tab();
+            // deactivateBtTab();
+            // deactivateTopicTab();
+            qDebug() << " activateBtTab called  ";
+
+            switch(previousMode)
+            {
+                case Mode::ros2_control:
+                    deactivateRos2ControlTab();
+                    break;
+                case Mode::ekf:
+                    deactivateEkfTab();
+                    break;
+                case Mode::carto:
+                    deactivateCartoTab();
+                    break;
+                case Mode::nav2_1:
+                    deactivateNav2_1Tab();
+                    break;
+                case Mode::nav2_2:
+                    deactivateNav2_2Tab();
+                    break;
+                case Mode::nav2_3:
+                    deactivateNav2_3Tab();
+                    break;
+                case Mode::bt:
+                    deactivateBtTab();
+                    break;
+                case Mode::topic:
+                    deactivateTopicTab();
+                    break;
+                default:
+                    break;
+            }
+
             break;
         default:
             // Handle unexpected index
@@ -473,14 +796,59 @@ void MainWindow::createCommunicationClient(const QString &robot_ns, const QStrin
     qDebug() << "Hacked" ;
     this->isConnected_ = true;
 
-    if(communication_)
+    // အရင် thread နဲ့ client ကို ရှင်းလင်းခြင်း
+    if (communicationThread_ && communicationThread_->isRunning()) 
     {
-        communication_->deleteLater();
-        communication_ = nullptr;
+        // Thread ကို ဖြတ်ဖို့ စောင့်ဆိုင်းခြင်း
+        communicationThread_->quit();
+        communicationThread_->wait();
+        
+        // deleteLater ကို ခေါ်ရင် communication_ object ကို thread က delete လုပ်ပေးပါလိမ့်မယ်။
+        // communication_->deleteLater(); // (သို့) QThread::finished မှာ ချိတ်ဆက်ထားရင် ပိုကောင်း)
     }
-    // bridge driver နဲ့ ဆက်သွယ်ဖို့ 
-    communication_ = new RosBridgeClient(robot_ns, host, port, this);
-    connect(communication_, &RosBridgeClient::receivedTopicMessage, this, &MainWindow::onReceivedTopicMessage);
+    delete communicationThread_;
+    communicationThread_ = nullptr;
+    communication_ = nullptr;
+
+    communicationThread_ = new QThread(this);
+    communication_ = new RosBridgeClient(robot_ns, host, port, nullptr); 
+    communication_->moveToThread(communicationThread_);
+
+    connect(communicationThread_, 
+        &QThread::started, 
+        communication_, 
+        &RosBridgeClient::init);
+        
+    // Thread စတင်ပြီးမှသာ connectToServer() ကို ခေါ်သင့်ပါတယ်။
+    connect(communicationThread_, 
+        &QThread::started, 
+        communication_, 
+        &RosBridgeClient::connectToServer, 
+        Qt::QueuedConnection); // worker thread အချင်းချင်းမို့ QueuedConnection မလိုပါဘူး။
+            
+    // Resource ရှင်းလင်းခြင်း Thread ပြီးသွားရင် Worker object ကို အလိုအလျောက် ဖျက်ပေးဖို့
+    connect(communicationThread_, 
+        &QThread::finished, 
+        communication_, 
+        &QObject::deleteLater);
+
+    connect(communication_, 
+        &RosBridgeClient::receivedTopicMessage, 
+        this, 
+        &MainWindow::onReceivedTopicMessage, 
+        Qt::QueuedConnection); 
+            
+    // Worker object က disconnected signal ထုတ်လွှင့်ရင် Thread ကို ရပ်ဖို့
+    // လောလောဆယ်မလိုဘူး။ reconnect လုပ်ချင်တာမို့။
+    // connect(communication_, 
+    //     &RosBridgeClient::disconnected, 
+    //     communicationThread_, 
+    //     &QThread::quit); 
+            
+    // ⭐ 5. Thread ကို စတင်တယ်။ (ဒီအချိန်မှသာ Client ရဲ့ Event Loop စပါလိမ့်မယ်)
+    communicationThread_->start();
+
+    // -------------------------------------------------------------
 }
 void MainWindow::on_ekfTuningGuideBtn_clicked()
 {
@@ -553,6 +921,7 @@ void MainWindow::initRos2ControlTab()
 {
     if (ui->ros2_control)
     {
+        qDebug() << " Initializing ROS 2 Control Tab UI components ";
         // Remove any existing layout
         QLayout *existing = ui->ros2_control->layout();
         if (existing) 
@@ -679,15 +1048,39 @@ void MainWindow::activateRos2ControlTab()
 
     QString cmd_vel_topic_name = "/diff_controller/cmd_vel_unstamped";
     QString cmd_vel_msg_type   = "geometry_msgs/msg/Twist";
-    communication_->subscribeTopic(cmd_vel_topic_name, cmd_vel_msg_type);
+    //communication_->subscribeTopic(cmd_vel_topic_name, cmd_vel_msg_type);
+    // ⭐ Thread-Safe Method: invokeMethod ကို အသုံးပြုခြင်း
+    QMetaObject::invokeMethod(
+        communication_, 
+        "subscribeTopic", 
+        Qt::QueuedConnection,
+        Q_ARG(const QString&, cmd_vel_topic_name),
+        Q_ARG(const QString&, cmd_vel_msg_type)
+    );
 
     QString odom_topic_name = "/diff_controller/odom";
     QString odom_msg_type   = "nav_msgs/msg/Odometry";
-    communication_->subscribeTopic(odom_topic_name, odom_msg_type);
+    // communication_->subscribeTopic(odom_topic_name, odom_msg_type);
+    // ⭐
+    QMetaObject::invokeMethod(
+        communication_, 
+        "subscribeTopic", 
+        Qt::QueuedConnection,
+        Q_ARG(const QString&, odom_topic_name),
+        Q_ARG(const QString&, odom_msg_type)
+    );
 
     QString js_topic_name = "/joint_states";
     QString js_msg_type   = "sensor_msgs/msg/JointState";
-    communication_->subscribeTopic(js_topic_name, js_msg_type);
+    // communication_->subscribeTopic(js_topic_name, js_msg_type);
+    // ⭐
+    QMetaObject::invokeMethod(
+        communication_,
+        "subscribeTopic",
+        Qt::QueuedConnection,
+        Q_ARG(const QString&, js_topic_name),
+        Q_ARG(const QString&, js_msg_type)
+    );
 
     qDebug() << "Subscribed to " << cmd_vel_topic_name << "," << odom_topic_name << "," << js_topic_name;
 }
@@ -698,9 +1091,32 @@ void MainWindow::deactivateRos2ControlTab()
     QString cmd_vel_topic_name = "/diff_controller/cmd_vel_unstamped";
     QString odom_topic_name = "/diff_controller/odom";
     QString js_topic_name = "/joint_states";
-    communication_->unsubscribeTopic(cmd_vel_topic_name);
-    communication_->unsubscribeTopic(odom_topic_name);
-    communication_->unsubscribeTopic(js_topic_name);
+
+    // communication_->unsubscribeTopic(cmd_vel_topic_name);
+    // ⭐
+    QMetaObject::invokeMethod(
+        communication_, 
+        "unsubscribeTopic", 
+        Qt::QueuedConnection,
+        Q_ARG(const QString&, cmd_vel_topic_name)
+    );
+    //communication_->unsubscribeTopic(odom_topic_name);
+    // ⭐
+    QMetaObject::invokeMethod(
+        communication_,
+        "unsubscribeTopic",
+        Qt::QueuedConnection,
+        Q_ARG(const QString&, odom_topic_name)
+    );
+
+    //communication_->unsubscribeTopic(js_topic_name);
+    // ⭐
+    QMetaObject::invokeMethod(
+        communication_,
+        "unsubscribeTopic",
+        Qt::QueuedConnection,
+        Q_ARG(const QString&, js_topic_name)
+    );
 
     qDebug() << "Unsubscribed from " << cmd_vel_topic_name << "," << odom_topic_name << "," << js_topic_name;
 }
@@ -727,15 +1143,14 @@ void MainWindow::initEkfTab()
         grid->setColumnStretch(0, 1);
         grid->setColumnStretch(1, 1);
 
-        odomDiffOdomImuHeadingGraphPtr_ = new RomPolarHeadingGraph(ui->ekf);
         odomDiffOdomPositionGraphPtr_   = new RomPositionGraph(ui->ekf);
+        ekfPositionCovarianceGraphPtr_  = new RomPositionCovarianceGraph(ui->ekf);
 
-        ekfPositionCovarianceGraphPtr_  = new rom_dynamics::ui::qt::RomPositionCovarianceGraph(ui->ekf);
-        ekfHeadingCovarianceGraphPtr_   = new rom_dynamics::ui::qt::RomYawCovarianceGraph(ui->ekf);
+        odomDiffOdomImuHeadingGraphPtr_ = new RomPolarHeadingGraph(ui->ekf);
+        ekfHeadingCovarianceGraphPtr_   = new RomYawCovarianceGraph(ui->ekf);
 
-        
+        grid->addWidget(odomDiffOdomPositionGraphPtr_, 0, 0);        
         grid->addWidget(ekfPositionCovarianceGraphPtr_, 0, 1);
-        grid->addWidget(odomDiffOdomPositionGraphPtr_, 0, 0);
         grid->addWidget(odomDiffOdomImuHeadingGraphPtr_, 1, 0);
         grid->addWidget(ekfHeadingCovarianceGraphPtr_, 1, 1);
 
@@ -743,7 +1158,7 @@ void MainWindow::initEkfTab()
         // Optionally, add more widgets or adjust grid layout as needed
 
         ui->ekf->setLayout(grid);
-
+        
         //=================================
         ui->controllerLegendLabel->raise();
         ui->controllerPoseLegendLabel->raise();
@@ -832,7 +1247,7 @@ void MainWindow::initEkfTab()
         ui->processNoiseAXBtn->setVisible(false);
         ui->processNoiseAYBtn->setVisible(false);
         ui->processNoiseAZBtn->setVisible(false);
-
+        
     }
 }
 void MainWindow::activateEkfTab()
@@ -841,15 +1256,39 @@ void MainWindow::activateEkfTab()
 
     QString odom_topic_name = "/diff_controller/odom";
     QString odom_msg_type   = "nav_msgs/msg/Odometry";
-    communication_->subscribeTopic(odom_topic_name, odom_msg_type);
+    // communication_->subscribeTopic(odom_topic_name, odom_msg_type);
+    // ⭐
+    QMetaObject::invokeMethod(
+        communication_, 
+        "subscribeTopic", 
+        Qt::QueuedConnection,
+        Q_ARG(const QString&, odom_topic_name),
+        Q_ARG(const QString&, odom_msg_type)
+    );
 
     QString ekf_odom_topic_name = "/odom";
-    QString cmd_vel_msg_type   = "geometry_msgs/msg/Twist";
-    communication_->subscribeTopic(ekf_odom_topic_name, odom_msg_type);
+    QString ekf_odom_msg_type   = "nav_msgs/msg/Odometry";
+    // communication_->subscribeTopic(ekf_odom_topic_name, ekf_odom_msg_type);
+    // ⭐
+    QMetaObject::invokeMethod(
+        communication_, 
+        "subscribeTopic", 
+        Qt::QueuedConnection,
+        Q_ARG(const QString&, ekf_odom_topic_name),
+        Q_ARG(const QString&, ekf_odom_msg_type)
+    );
 
     QString imu_topic_name = "/imu/out";
     QString imu_msg_type   = "sensor_msgs/msg/Imu";
-    communication_->subscribeTopic(imu_topic_name, imu_msg_type);
+    // communication_->subscribeTopic(imu_topic_name, imu_msg_type);
+    // ⭐
+    QMetaObject::invokeMethod(
+        communication_,
+        "subscribeTopic",
+        Qt::QueuedConnection,
+        Q_ARG(const QString&, imu_topic_name),
+        Q_ARG(const QString&, imu_msg_type)
+    );
 
     qDebug() << "Subscribed to " << odom_topic_name << "," << ekf_odom_topic_name << "," << imu_topic_name;
 }
@@ -858,9 +1297,30 @@ void MainWindow::deactivateEkfTab()
     QString ekf_odom_topic_name = "/odom";
     QString odom_topic_name = "/diff_controller/odom";
     QString imu_topic_name = "/imu/out";
-    communication_->unsubscribeTopic(ekf_odom_topic_name);
-    communication_->unsubscribeTopic(odom_topic_name);
-    communication_->unsubscribeTopic(imu_topic_name);
+    // communication_->unsubscribeTopic(ekf_odom_topic_name);
+    // ⭐
+    QMetaObject::invokeMethod(
+        communication_,
+        "unsubscribeTopic",
+        Qt::QueuedConnection,
+        Q_ARG(const QString&, ekf_odom_topic_name)
+    );
+    // communication_->unsubscribeTopic(odom_topic_name);
+    // ⭐
+    QMetaObject::invokeMethod(
+        communication_, 
+        "unsubscribeTopic", 
+        Qt::QueuedConnection,
+        Q_ARG(const QString&, odom_topic_name)
+    );
+    // communication_->unsubscribeTopic(imu_topic_name);
+    // ⭐
+    QMetaObject::invokeMethod(
+        communication_,
+        "unsubscribeTopic",
+        Qt::QueuedConnection,
+        Q_ARG(const QString&, imu_topic_name)
+    );
 
     qDebug() << "Unsubscribed from " << odom_topic_name << "," << ekf_odom_topic_name << "," << imu_topic_name;
 }
@@ -897,25 +1357,68 @@ void MainWindow::activateCartoTab()
 
     QString map_topic_name = "/map";
     QString map_msg_type   = "nav_msgs/msg/OccupancyGrid";
-    communication_->subscribeTopic(map_topic_name, map_msg_type);
+    // communication_->subscribeTopic(map_topic_name, map_msg_type);
+    // ⭐
+    QMetaObject::invokeMethod(
+        communication_, 
+        "subscribeTopic", 
+        Qt::QueuedConnection,
+        Q_ARG(const QString&, map_topic_name),
+        Q_ARG(const QString&, map_msg_type)
+    );
 
     QString constraint_list_topic_name = "/constraint_list";
     QString constraint_list_msg_type   = "visualization_msgs/msg/MarkerArray";
-    communication_->subscribeTopic(constraint_list_topic_name, constraint_list_msg_type);
+    // communication_->subscribeTopic(constraint_list_topic_name, constraint_list_msg_type);
+    // ⭐
+    QMetaObject::invokeMethod(
+        communication_,
+        "subscribeTopic",
+        Qt::QueuedConnection,
+        Q_ARG(const QString&, constraint_list_topic_name),
+        Q_ARG(const QString&, constraint_list_msg_type)
+    );
 
     QString trajectory_node_list_topic_name = "/trajectory_node_list";
     QString trajectory_node_list_msg_type   = "visualization_msgs/msg/MarkerArray";
-    communication_->subscribeTopic(trajectory_node_list_topic_name, trajectory_node_list_msg_type);
+    // communication_->subscribeTopic(trajectory_node_list_topic_name, trajectory_node_list_msg_type);
+    // ⭐
+    QMetaObject::invokeMethod(
+        communication_,
+        "subscribeTopic",
+        Qt::QueuedConnection,
+        Q_ARG(const QString&, trajectory_node_list_topic_name),
+        Q_ARG(const QString&, trajectory_node_list_msg_type)
+    );
 
     QString scan_matched_points_topic_name = "/scan_matched_points2";
     QString scan_matched_points_msg_type   = "sensor_msgs/msg/PointCloud2";
-    communication_->subscribeTopic(scan_matched_points_topic_name, scan_matched_points_msg_type);
+    // communication_->subscribeTopic(scan_matched_points_topic_name, scan_matched_points_msg_type);
+    // ⭐
+    QMetaObject::invokeMethod(
+        communication_,
+        "subscribeTopic",
+        Qt::QueuedConnection,
+        Q_ARG(const QString&, scan_matched_points_topic_name),
+        Q_ARG(const QString&, scan_matched_points_msg_type)
+    );
 
     QString landmark_poses_list_topic_name = "/landmark_poses_list";
     QString landmark_poses_list_msg_type   = "visualization_msgs/msg/MarkerArray";
-    communication_->subscribeTopic(landmark_poses_list_topic_name, landmark_poses_list_msg_type);
+    // communication_->subscribeTopic(landmark_poses_list_topic_name, landmark_poses_list_msg_type);
+    // ⭐
+    QMetaObject::invokeMethod(
+        communication_,
+        "subscribeTopic",
+        Qt::QueuedConnection,
+        Q_ARG(const QString&, landmark_poses_list_topic_name),
+        Q_ARG(const QString&, landmark_poses_list_msg_type)
+    );
 
-    qDebug() << "Subscribed to " << map_topic_name << "," << constraint_list_topic_name << "," << trajectory_node_list_topic_name;
+    qDebug() << "Subscribed to " << map_topic_name << "," 
+    << constraint_list_topic_name << "," 
+    << trajectory_node_list_topic_name << "," 
+    << scan_matched_points_topic_name;
 
 }
 void MainWindow::deactivateCartoTab()
@@ -924,13 +1427,43 @@ void MainWindow::deactivateCartoTab()
     QString constraint_list_topic_name = "/constraint_list";
     QString trajectory_node_list_topic_name = "/trajectory_node_list";
     QString scan_matched_points_topic_name = "/scan_matched_points2";
-    QString landmark_poses_list_topic_name = "/landmark_poses_list";
-  
-    communication_->unsubscribeTopic(map_topic_name);
-    communication_->unsubscribeTopic(constraint_list_topic_name);
-    communication_->unsubscribeTopic(trajectory_node_list_topic_name);
-    communication_->unsubscribeTopic(scan_matched_points_topic_name);
-    communication_->unsubscribeTopic(landmark_poses_list_topic_name);
+    //QString landmark_poses_list_topic_name = "/landmark_poses_list";
+    
+    // communication_->unsubscribeTopic(map_topic_name);
+    // ⭐
+    QMetaObject::invokeMethod(
+        communication_, 
+        "unsubscribeTopic", 
+        Qt::QueuedConnection,
+        Q_ARG(const QString&, map_topic_name)
+    );
+    // communication_->unsubscribeTopic(constraint_list_topic_name);
+    // ⭐
+    QMetaObject::invokeMethod(
+        communication_,
+        "unsubscribeTopic",
+        Qt::QueuedConnection,
+        Q_ARG(const QString&, constraint_list_topic_name)
+    );
+    // communication_->unsubscribeTopic(trajectory_node_list_topic_name);
+    // ⭐
+    QMetaObject::invokeMethod(
+        communication_,
+        "unsubscribeTopic",
+        Qt::QueuedConnection,
+        Q_ARG(const QString&, trajectory_node_list_topic_name)
+    );
+    // communication_->unsubscribeTopic(scan_matched_points_topic_name);
+    // ⭐
+    QMetaObject::invokeMethod(
+        communication_,
+        "unsubscribeTopic",
+        Qt::QueuedConnection,
+        Q_ARG(const QString&, scan_matched_points_topic_name)
+    );
+
+    // communication_->unsubscribeTopic(landmark_poses_list_topic_name);
+
 
     qDebug() << "Unsubscribed from " << map_topic_name << "," << constraint_list_topic_name << "," << trajectory_node_list_topic_name;
 
@@ -1380,7 +1913,42 @@ void MainWindow::onReceivedTopicMessage(const QString &topic, const QJsonObject 
     }
 
     /* CARTO TAB */
-    else if( currentMode == Mode::carto ) {}
+    else if( currentMode == Mode::carto )
+    {
+        QString map_topic_name = "/map";
+        QString constraint_list_topic_name = "/constraint_list";
+        QString trajectory_node_list_topic_name = "/trajectory_node_list";
+        QString scan_matched_points_topic_name = "/scan_matched_points2";
+
+        if( topic == map_topic_name )
+        {
+            if( RomMapWidgetPtr_ )
+            {
+                RomMapWidgetPtr_->updateMap(msg);
+            }
+        }
+        else if( topic == constraint_list_topic_name )
+        {
+            if( RomMapWidgetPtr_ )
+            {
+                RomMapWidgetPtr_->updateConstraintList(msg);
+            }
+        }
+        else if( topic == trajectory_node_list_topic_name )
+        {
+            if( RomMapWidgetPtr_ )
+            {
+                RomMapWidgetPtr_->updateTrajectoryNodeList(msg);
+            }
+        }
+        else if( topic == scan_matched_points_topic_name )
+        {
+            if( RomMapWidgetPtr_ )
+            {
+                RomMapWidgetPtr_->updateScanMatchedPoints(msg);
+            }
+        }
+    }
 
     /* NAV2 1 TAB */
     else if( currentMode == Mode::nav2_1 ) {}

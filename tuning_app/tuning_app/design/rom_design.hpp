@@ -488,8 +488,8 @@ public:
 
         angularAxis->setLabelsFont(axisFont);
 
-
-        chart_->addAxis(angularAxis, QPolarChart::PolarOrientationAngular); 
+        chart_->addAxis(angularAxis, QPolarChart::PolarOrientationAngular);
+        chart_->addAxis(radialAxis, QPolarChart::PolarOrientationRadial); 
         
         // --- 2. Dummy Series for Mapping (Unchanged) ---
         QScatterSeries *scatterSeries = new QScatterSeries();
