@@ -1,6 +1,8 @@
 #ifndef ROM_STRUCTURES_H
 #define ROM_STRUCTURES_H
 
+#pragma once
+
 #include <QObject>
 #include <QtWidgets/QApplication>
 #include <QVector3D>

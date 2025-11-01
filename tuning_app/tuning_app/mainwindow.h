@@ -3,13 +3,16 @@
 
 #include <QMainWindow>
 #include <QJsonObject>
-#include "design/rom_structures.h"
-#include "communication/ros_bridge_client.hpp"
 #include <QString>
 #include <QQuickWidget>
 
 #include "design/rom_design.hpp"
 #include "design/covarianceDisplay.hpp"
+#include "design/rom_structures.h"
+#include "communication/ros_bridge_client.hpp"
+
+// Forward declare RomMapWidget (defined in sdk/rom_map_widget.hpp)
+namespace rom_dynamics { namespace ui { namespace qt { class RomMapWidget; } } }
 
 using rom_dynamics::communication::RosBridgeClient;
 using rom_dynamics::data_types::Mode;
@@ -18,6 +21,8 @@ using rom_dynamics::ui::qt::RomPolarHeadingGraph;
 using rom_dynamics::ui::qt::RomPositionGraph;
 using rom_dynamics::ui::qt::RomPositionCovarianceGraph;
 using rom_dynamics::ui::qt::RomYawCovarianceGraph;
+using rom_dynamics::ui::qt::RomMapWidget;
+
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -128,6 +133,8 @@ private:
     RomPositionGraph *odomDiffOdomPositionGraphPtr_ = nullptr;
     RomPositionCovarianceGraph *ekfPositionCovarianceGraphPtr_ = nullptr;
     RomYawCovarianceGraph *ekfHeadingCovarianceGraphPtr_ = nullptr;
+
+    RomMapWidget *mapWidgetPtr_ = nullptr;
 
 };
 #endif // MAINWINDOW_H

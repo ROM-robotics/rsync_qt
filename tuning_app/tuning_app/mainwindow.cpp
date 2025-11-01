@@ -1,5 +1,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include "sdk/rom_map_widget.hpp"
 
 #include <QDebug>
 #include <QLabel>
@@ -19,7 +20,7 @@
 
 #include <QDir>
 #include "design/readmeviewer.h"
-#include "design/covarianceDisplay.hpp"
+//#include "design/covarianceDisplay.hpp"
 #include "sdk/rom_map_widget.hpp"
 
 using rom_dynamics::ui::qt::RomMapWidget;
@@ -1339,14 +1340,14 @@ void MainWindow::initCartoTab()
         }
 
         // ========================================        Create map widget
-        QWidget *mapWidgetPtr = new RomMapWidget(ui->ekf);
-        mapWidgetPtr->setStyleSheet("background:#2a2f36; color:#d3d9e3; border-radius:6px; font-size:20px;");
-        mapWidgetPtr->show();
+        mapWidgetPtr_ = new RomMapWidget(ui->ekf);
+        mapWidgetPtr_->setStyleSheet("background:#2a2f36; color:#d3d9e3; border-radius:6px; font-size:20px;");
+        mapWidgetPtr_->show();
 
         // Set initial layout
         QVBoxLayout* mainPanelLayout = new QVBoxLayout(ui->ekf);
         mainPanelLayout->setContentsMargins(0,0,0,0);
-        mainPanelLayout->addWidget(mapWidgetPtr);
+        mainPanelLayout->addWidget(mapWidgetPtr_);
 
         ui->ekf->setLayout(mainPanelLayout);
     }
@@ -1920,33 +1921,36 @@ void MainWindow::onReceivedTopicMessage(const QString &topic, const QJsonObject 
         QString trajectory_node_list_topic_name = "/trajectory_node_list";
         QString scan_matched_points_topic_name = "/scan_matched_points2";
 
+        qDebug() << " Current mode is CARTO. Received topic: " << topic;
         if( topic == map_topic_name )
         {
-            if( RomMapWidgetPtr_ )
+            qDebug() << " Received map topic message ";
+            if( mapWidgetPtr_ )
             {
-                RomMapWidgetPtr_->updateMap(msg);
+                qDebug() << " Calling updateMap(msg)";
+                mapWidgetPtr_->updateMap(msg);
             }
         }
         else if( topic == constraint_list_topic_name )
         {
-            if( RomMapWidgetPtr_ )
-            {
-                RomMapWidgetPtr_->updateConstraintList(msg);
-            }
+            // if( mapWidgetPtr_ )
+            // {
+            //     mapWidgetPtr_->updateConstraintList(msg);
+            // }
         }
         else if( topic == trajectory_node_list_topic_name )
         {
-            if( RomMapWidgetPtr_ )
-            {
-                RomMapWidgetPtr_->updateTrajectoryNodeList(msg);
-            }
+            // if( mapWidgetPtr_ )
+            // {
+            //     mapWidgetPtr_->updateTrajectoryNodeList(msg);
+            // }
         }
         else if( topic == scan_matched_points_topic_name )
         {
-            if( RomMapWidgetPtr_ )
-            {
-                RomMapWidgetPtr_->updateScanMatchedPoints(msg);
-            }
+            // if( mapWidgetPtr_ )
+            // {
+            //     mapWidgetPtr_->updateScanMatchedPoints(msg);
+            // }
         }
     }
 

@@ -21,6 +21,8 @@ qt_add_executable(tuning_app
     design/covarianceDisplay.hpp
     design/covarianceDisplay.cpp
     sdk/rom_map_widget.hpp
+    sdk/rom_time.cpp
+    sdk/rom_map_widget.cpp
 
 
 
