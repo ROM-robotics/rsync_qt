@@ -72,18 +72,15 @@ class RomMapWidget : public QGraphicsView
     Q_OBJECT
 public:
     RomMapWidget(QWidget* parent);
-
-    // Update the displayed occupancy grid; cheap if same size.
+    
     void setMap(const RomMap& map);
-    // Parse ROS OccupancyGrid JSON (from rosbridge) and update the map view
+    
     void updateMap(const QJsonObject& msg);
     
     void clearMap();
-
-    // Fit the current map pixmap to the view keeping aspect ratio.
+    
     void fitToView();
 
-    // Optional: control whether the view auto-fits when a new map size arrives
     void setAutoFitEnabled(bool enabled);
     bool autoFitEnabled() const;
 
@@ -93,9 +90,26 @@ signals:
 protected:
     void resizeEvent(QResizeEvent* e) override;
     void wheelEvent(QWheelEvent* event) override;
-    void mousePressEvent(QMouseEvent* event) override;
-    void mouseMoveEvent(QMouseEvent* event) override;
-    void mouseReleaseEvent(QMouseEvent* event) override;
+
+    // --- Protected helpers for subclasses ---
+    QGraphicsScene* scenePtr() const { return scene_; }
+    QGraphicsPixmapItem* mapPixmapItem() const { return mapItem_; }
+    int mapWidth() const { return mapWidth_; }
+    int mapHeight() const { return mapHeight_; }
+    double mapResolution() const { return mapResolution_; }
+    double mapOriginX() const { return mapOriginX_; }
+    double mapOriginY() const { return mapOriginY_; }
+    // Convert world (map frame) meters to scene coordinates
+    QPointF worldToScene(double wx, double wy) const {
+        if (mapWidth_ <= 0 || mapHeight_ <= 0 || mapResolution_ <= 0.0)
+            return QPointF();
+        const double px = (wx - mapOriginX_) / mapResolution_;
+        const double py = (wy - mapOriginY_) / mapResolution_;
+        // scene is centered at (0,0) with Y-down; image top-left is (-w/2,-h/2)
+        const double sx = px - static_cast<double>(mapWidth_) / 2.0;
+        const double sy = (static_cast<double>(mapHeight_) - 1.0 - py) - static_cast<double>(mapHeight_) / 2.0;
+        return QPointF(sx, sy);
+    }
 
 private:
     QGraphicsScene* scene_{nullptr};

@@ -130,29 +130,43 @@ void RomMapWidget::setAutoFitEnabled(bool enabled) { autoFit_ = enabled; }
 
 bool RomMapWidget::autoFitEnabled() const { return autoFit_; }
 
-void RomMapWidget::mousePressEvent(QMouseEvent* event)
-{
-
-}
-
-void RomMapWidget::mouseMoveEvent(QMouseEvent* event)
-{
-    
-}
-
-void RomMapWidget::mouseReleaseEvent(QMouseEvent* event)
-{
-    
-}
-
 void RomMapWidget::resizeEvent(QResizeEvent* e)
 {
-    
+    QGraphicsView::resizeEvent(e);
+    if (autoFit_ && !userZoomed_ && mapItem_ && !mapItem_->pixmap().isNull()) {
+        fitInView(mapItem_, Qt::KeepAspectRatio);
+    }
 }
 
 void RomMapWidget::wheelEvent(QWheelEvent* event)
 {
-    
+    if (!mapItem_ || mapItem_->pixmap().isNull()) {
+        QGraphicsView::wheelEvent(event);
+        return;
+    }
+
+    // Typical mouse wheel step: angleDelta.y() is multiples of 120
+    const int delta = event->angleDelta().y();
+    if (delta == 0) { event->ignore(); return; }
+
+    // Smooth zoom factor, clamp to min/max overall scale
+    const double stepFactor = 1.15; // zoom per 120 units
+    double factor = (delta > 0) ? stepFactor : (1.0 / stepFactor);
+
+    // Current uniform scale (assumes no shear)
+    const QTransform t = transform();
+    double currentScale = t.m11();
+    double proposed = currentScale * factor;
+    if (proposed < minScale_) {
+        factor = minScale_ / currentScale;
+    } else if (proposed > maxScale_) {
+        factor = maxScale_ / currentScale;
+    }
+
+    scale(factor, factor);
+    userZoomed_ = true;
+    autoFit_ = false;
+    event->accept();
 }
 
 }

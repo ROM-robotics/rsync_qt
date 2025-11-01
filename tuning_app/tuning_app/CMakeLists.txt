@@ -23,6 +23,8 @@ qt_add_executable(tuning_app
     sdk/rom_map_widget.hpp
     sdk/rom_time.cpp
     sdk/rom_map_widget.cpp
+    sdk/carto_rom_map_widget.hpp
+    sdk/carto_rom_map_widget.cpp
 
 
 

@@ -12,7 +12,7 @@
 #include "communication/ros_bridge_client.hpp"
 
 // Forward declare RomMapWidget (defined in sdk/rom_map_widget.hpp)
-namespace rom_dynamics { namespace ui { namespace qt { class RomMapWidget; } } }
+namespace rom_dynamics { namespace ui { namespace qt { class RomMapWidget; class CartoRomMapWidget; } } }
 
 using rom_dynamics::communication::RosBridgeClient;
 using rom_dynamics::data_types::Mode;
@@ -22,6 +22,7 @@ using rom_dynamics::ui::qt::RomPositionGraph;
 using rom_dynamics::ui::qt::RomPositionCovarianceGraph;
 using rom_dynamics::ui::qt::RomYawCovarianceGraph;
 using rom_dynamics::ui::qt::RomMapWidget;
+using rom_dynamics::ui::qt::CartoRomMapWidget;
 
 
 QT_BEGIN_NAMESPACE
@@ -134,7 +135,7 @@ private:
     RomPositionCovarianceGraph *ekfPositionCovarianceGraphPtr_ = nullptr;
     RomYawCovarianceGraph *ekfHeadingCovarianceGraphPtr_ = nullptr;
 
-    RomMapWidget *mapWidgetPtr_ = nullptr;
+    CartoRomMapWidget *mapWidgetPtr_ = nullptr;
 
 };
 #endif // MAINWINDOW_H

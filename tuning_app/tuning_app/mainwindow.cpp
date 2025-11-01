@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "sdk/rom_map_widget.hpp"
+#include "sdk/carto_rom_map_widget.hpp"
 
 #include <QDebug>
 #include <QLabel>
@@ -24,6 +25,7 @@
 #include "sdk/rom_map_widget.hpp"
 
 using rom_dynamics::ui::qt::RomMapWidget;
+using rom_dynamics::ui::qt::CartoRomMapWidget;
 using rom_dynamics::ui::qt::RomPolarHeadingGraph;
 using rom_dynamics::ui::qt::RomPositionGraph;
 
@@ -58,7 +60,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     initRos2ControlTab();
     initEkfTab();
-    //initCartoTab();
+    initCartoTab();
 }
 
 MainWindow::~MainWindow()
@@ -1332,31 +1334,34 @@ void MainWindow::initCartoTab()
     {
         qDebug() << " Initializing Carto Tab UI components ";
 
-        QLayout *existing = ui->ekf->layout();
+        // Clear any existing layout/content on the carto tab (not EKF)
+        QLayout *existing = ui->carto->layout();
         if (existing) 
         {
             delete existing;
-            qDebug() << " Deleted existing layout in EKF Tab ";
+            qDebug() << " Deleted existing layout in Carto Tab ";
         }
 
-        // ========================================        Create map widget
-        mapWidgetPtr_ = new RomMapWidget(ui->ekf);
+    // ========================================        Create map widget on the carto page
+        mapWidgetPtr_ = new CartoRomMapWidget(ui->carto);
         mapWidgetPtr_->setStyleSheet("background:#2a2f36; color:#d3d9e3; border-radius:6px; font-size:20px;");
         mapWidgetPtr_->show();
 
         // Set initial layout
-        QVBoxLayout* mainPanelLayout = new QVBoxLayout(ui->ekf);
+        QVBoxLayout* mainPanelLayout = new QVBoxLayout(ui->carto);
         mainPanelLayout->setContentsMargins(0,0,0,0);
         mainPanelLayout->addWidget(mapWidgetPtr_);
 
-        ui->ekf->setLayout(mainPanelLayout);
+        ui->carto->setLayout(mainPanelLayout);
     }
 }
 void MainWindow::activateCartoTab()
 {
     if (!communication_) return;
 
-    QString map_topic_name = "/map";
+    auto ns_prefix = robotNamespace_;
+    if (!ns_prefix.isEmpty() && !ns_prefix.startsWith('/')) ns_prefix.prepend('/');
+    QString map_topic_name = ns_prefix + "/map";
     QString map_msg_type   = "nav_msgs/msg/OccupancyGrid";
     // communication_->subscribeTopic(map_topic_name, map_msg_type);
     // ⭐
@@ -1368,7 +1373,7 @@ void MainWindow::activateCartoTab()
         Q_ARG(const QString&, map_msg_type)
     );
 
-    QString constraint_list_topic_name = "/constraint_list";
+    QString constraint_list_topic_name = ns_prefix + "/constraint_list";
     QString constraint_list_msg_type   = "visualization_msgs/msg/MarkerArray";
     // communication_->subscribeTopic(constraint_list_topic_name, constraint_list_msg_type);
     // ⭐
@@ -1380,7 +1385,7 @@ void MainWindow::activateCartoTab()
         Q_ARG(const QString&, constraint_list_msg_type)
     );
 
-    QString trajectory_node_list_topic_name = "/trajectory_node_list";
+    QString trajectory_node_list_topic_name = ns_prefix + "/trajectory_node_list";
     QString trajectory_node_list_msg_type   = "visualization_msgs/msg/MarkerArray";
     // communication_->subscribeTopic(trajectory_node_list_topic_name, trajectory_node_list_msg_type);
     // ⭐
@@ -1391,7 +1396,7 @@ void MainWindow::activateCartoTab()
         Q_ARG(const QString&, trajectory_node_list_topic_name),
         Q_ARG(const QString&, trajectory_node_list_msg_type)
     );
-
+    /*
     QString scan_matched_points_topic_name = "/scan_matched_points2";
     QString scan_matched_points_msg_type   = "sensor_msgs/msg/PointCloud2";
     // communication_->subscribeTopic(scan_matched_points_topic_name, scan_matched_points_msg_type);
@@ -1420,14 +1425,20 @@ void MainWindow::activateCartoTab()
     << constraint_list_topic_name << "," 
     << trajectory_node_list_topic_name << "," 
     << scan_matched_points_topic_name;
+    */
+    qDebug() << "Subscribed to " << map_topic_name << "," 
+    << constraint_list_topic_name << "," 
+    << trajectory_node_list_topic_name;
 
 }
 void MainWindow::deactivateCartoTab()
 {
-    QString map_topic_name = "/map";
-    QString constraint_list_topic_name = "/constraint_list";
-    QString trajectory_node_list_topic_name = "/trajectory_node_list";
-    QString scan_matched_points_topic_name = "/scan_matched_points2";
+    auto ns_prefix = robotNamespace_;
+    if (!ns_prefix.isEmpty() && !ns_prefix.startsWith('/')) ns_prefix.prepend('/');
+    QString map_topic_name = ns_prefix + "/map";
+    QString constraint_list_topic_name = ns_prefix + "/constraint_list";
+    QString trajectory_node_list_topic_name = ns_prefix + "/trajectory_node_list";
+    QString scan_matched_points_topic_name = ns_prefix + "/scan_matched_points2";
     //QString landmark_poses_list_topic_name = "/landmark_poses_list";
     
     // communication_->unsubscribeTopic(map_topic_name);
@@ -1916,12 +1927,14 @@ void MainWindow::onReceivedTopicMessage(const QString &topic, const QJsonObject 
     /* CARTO TAB */
     else if( currentMode == Mode::carto )
     {
-        QString map_topic_name = "/map";
-        QString constraint_list_topic_name = "/constraint_list";
-        QString trajectory_node_list_topic_name = "/trajectory_node_list";
-        QString scan_matched_points_topic_name = "/scan_matched_points2";
+    auto ns_prefix = robotNamespace_;
+    if (!ns_prefix.isEmpty() && !ns_prefix.startsWith('/')) ns_prefix.prepend('/');
+    QString map_topic_name = ns_prefix + "/map";
+    QString constraint_list_topic_name = ns_prefix + "/constraint_list";
+    QString trajectory_node_list_topic_name = ns_prefix + "/trajectory_node_list";
+        //QString scan_matched_points_topic_name = "/scan_matched_points2";
 
-        qDebug() << " Current mode is CARTO. Received topic: " << topic;
+        //qDebug() << " Current mode is CARTO. Received topic: " << topic;
         if( topic == map_topic_name )
         {
             qDebug() << " Received map topic message ";
@@ -1933,25 +1946,21 @@ void MainWindow::onReceivedTopicMessage(const QString &topic, const QJsonObject 
         }
         else if( topic == constraint_list_topic_name )
         {
-            // if( mapWidgetPtr_ )
-            // {
-            //     mapWidgetPtr_->updateConstraintList(msg);
-            // }
+            if( mapWidgetPtr_ )
+            {
+                qDebug() << " Calling updateConstraintList(msg)";
+                mapWidgetPtr_->updateConstraintList(msg);
+            }
         }
         else if( topic == trajectory_node_list_topic_name )
         {
-            // if( mapWidgetPtr_ )
-            // {
-            //     mapWidgetPtr_->updateTrajectoryNodeList(msg);
-            // }
+            if( mapWidgetPtr_ )
+            {
+                qDebug() << " Calling updateTrajectoryNodeList(msg)";
+                mapWidgetPtr_->updateTrajectoryNodeList(msg);
+            }
         }
-        else if( topic == scan_matched_points_topic_name )
-        {
-            // if( mapWidgetPtr_ )
-            // {
-            //     mapWidgetPtr_->updateScanMatchedPoints(msg);
-            // }
-        }
+        // else if( topic == scan_matched_points_topic_name ){}
     }
 
     /* NAV2 1 TAB */
