@@ -33,6 +33,9 @@ signals:
     // --------------------------------- TOPIC SUBSCRIPTIONS
     void receivedTopicMessage(const QString &topic_name, const QJsonObject &msg);
 
+    // ⭐ rosapi related, and all services that we request from mainwindow
+    void receivedServiceResponse(const QString &id, const QString &service_name, const QJsonObject &response_values);
+
 public slots:
     // --------------------------------- MAIN API
     void init();
@@ -42,6 +45,11 @@ public slots:
     // --------------------------------- TOPIC SUBSCRIPTIONS
     void subscribeTopic(const QString &topic_name, const QString &msg_type);
     void unsubscribeTopic(const QString &topic_name);
+
+    // ⭐ rosapi related
+    void getTopicsList(const QString &id);
+    // ⭐ Helper function for rosapi service call
+    void callService(const QString &service_name, const QString &id, const QString &msg_type);
     
 private slots:
     void onSocketConnected();
@@ -60,7 +68,7 @@ private:
 
     // main api variables
     // QWebSocket m_socket;
-    // ⭐ QWebSocket နှင့် QTimer ကို Pointers များအဖြစ် ပြောင်းပါ။
+    // ⭐ QWebSocket နှင့် QTimer ကို Pointers များအဖြစ် သုံးတယ်။
     QWebSocket *m_socket = nullptr;
 
     QString m_robotNamespace;
@@ -68,9 +76,8 @@ private:
     quint16 m_port{9090};
 
     // QTimer m_reconnectTimer;
-    // ⭐ QTimer ကိုလည်း Pointer အဖြစ် ပြောင်းပါ။
+    // ⭐ QTimer ကို Pointer အဖြစ် သုံးတယ်။
     QTimer *m_reconnectTimer = nullptr; 
-
     
 };
 }
