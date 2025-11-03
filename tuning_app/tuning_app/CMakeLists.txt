@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 3.19)
 project(tuning_app LANGUAGES CXX)
 
 find_package(Qt6 6.5 REQUIRED COMPONENTS Core Widgets Gui Charts Network WebSockets Quick QuickWidgets Qml)
+find_package(Eigen3 3.3 REQUIRED NO_MODULE)
 
 qt_standard_project_setup()
 
@@ -36,11 +37,10 @@ target_link_libraries(tuning_app PRIVATE
     Qt${QT_VERSION_MAJOR}::Quick
     Qt${QT_VERSION_MAJOR}::QuickWidgets
     Qt${QT_VERSION_MAJOR}::Qml
-    /usr/include/eigen3
+    Eigen3::Eigen
 )
 
 include(GNUInstallDirs)
-include_directories(/usr/include/eigen3)
 
 qt_add_resources(tuning_app "resources"
     PREFIX "/"
