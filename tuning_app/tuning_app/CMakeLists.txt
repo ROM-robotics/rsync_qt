@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.19)
 project(tuning_app LANGUAGES CXX)
 
 find_package(Qt6 6.5 REQUIRED COMPONENTS Core Widgets Gui Charts Network WebSockets Quick QuickWidgets Qml)
-find_package(Eigen3 3.3 REQUIRED NO_MODULE)
+find_package(Eigen3 3.3 REQUIRED CONFIG)
 
 qt_standard_project_setup()
 
