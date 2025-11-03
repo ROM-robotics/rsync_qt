@@ -35,6 +35,9 @@ jobs:
       - name: 2.5. Install xcb-cursor library
         run: sudo apt-get update && sudo apt-get install -y libxcb-cursor0
 
+      - name: 2.6. Install Eigen
+        run: sudo apt-get update && sudo apt-get install -y libeigen3-dev
+
       - name: 3. Create Build Directory
         run: mkdir -p build
 
