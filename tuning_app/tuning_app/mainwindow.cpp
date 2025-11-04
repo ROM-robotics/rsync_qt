@@ -11,6 +11,7 @@
 #include <QtGui/QMouseEvent>
 #include <QMessageBox>
 #include <QDir>
+#include <QFileInfo>
 #include <QProcess>
 #include <QRandomGenerator>
 #include <QObject>
@@ -657,13 +658,80 @@ void MainWindow::on_rsyncBtn_clicked()
     qDebug() << "password_ : " << this->password_;
     qDebug() << "robotNamespace_ : " << this->robotNamespace_;
 
-    QDir currentDir = QDir::currentPath();
-    qDebug() << "Current Directory: " << currentDir.path();
-    currentDir.cdUp(); currentDir.cdUp();currentDir.cdUp();
-    qDebug() << "Up three directories: " << currentDir.path();
+    // update algo =======================================
+    QString rsync_app = "";
 
-    QString rsync_app = currentDir.path() + "/rsync_qt/apprsync_qt";
+    // If the current Linux user is "mr_robot", prefer the fixed path under /home/mr_robot/data/app
+    const QString user = QString::fromLocal8Bit(qgetenv("USER"));
+    if (user == "mr_robot") 
+    {
+        const QString preferred = "/home/mr_robot/data/app/rsync_qt/apprsync_qt";
+        if (QFileInfo::exists(preferred)) 
+        {
+            rsync_app = preferred;
+        } else 
+        {
+            QDialog dlg(this);
+            dlg.setWindowTitle("rsync app not found");
+            dlg.setFixedSize(400, 100);
+            QLabel *label = new QLabel("check /home/mr_robot/data/app/rsync_qt/apprsync_qt", &dlg);
+            label->setAlignment(Qt::AlignCenter);
+            QPushButton *okBtn = new QPushButton("OK", &dlg);
+            okBtn->setGeometry(150, 150, 100, 30);
 
+            //QObject::connect(okBtn, &QPushButton::clicked, &dlg, &QDialog::accept);
+            QObject::connect(okBtn, &QPushButton::clicked, this, [this, dlgPtr = &dlg]() {
+                dlgPtr->accept();
+                if (ui && ui->ipLineEdit) ui->ipLineEdit->setFocus();
+            });
+
+            QVBoxLayout *layout = new QVBoxLayout;
+            layout->addWidget(label);
+            layout->addWidget(okBtn);
+            dlg.setLayout(layout);
+            // Center dialog over main window
+            QPoint center = this->geometry().center();
+            QPoint globalCenter = this->mapToGlobal(center);
+            int dlgX = globalCenter.x() - dlg.width() / 2;
+            int dlgY = globalCenter.y() - dlg.height() / 2;
+            dlg.move(dlgX, dlgY);
+            dlg.exec();
+            return;
+
+        }
+    }
+    else
+    {
+        QDialog dlg(this);
+        dlg.setWindowTitle("Not Development Platform");
+        dlg.setFixedSize(400, 100);
+        QLabel *label = new QLabel("Development need ubuntu 22.04 with user name mr_robot, and ~/Desktop/Git/rom_robotics.", &dlg);
+        label->setAlignment(Qt::AlignCenter);
+        QPushButton *okBtn = new QPushButton("OK", &dlg);
+        okBtn->setGeometry(150, 150, 100, 30);
+
+        //QObject::connect(okBtn, &QPushButton::clicked, &dlg, &QDialog::accept);
+        QObject::connect(okBtn, &QPushButton::clicked, this, [this, dlgPtr = &dlg]() {
+            dlgPtr->accept();
+            if (ui && ui->ipLineEdit) ui->ipLineEdit->setFocus();
+        });
+
+        QVBoxLayout *layout = new QVBoxLayout;
+        layout->addWidget(label);
+        layout->addWidget(okBtn);
+        dlg.setLayout(layout);
+        // Center dialog over main window
+        QPoint center = this->geometry().center();
+        QPoint globalCenter = this->mapToGlobal(center);
+        int dlgX = globalCenter.x() - dlg.width() / 2;
+        int dlgY = globalCenter.y() - dlg.height() / 2;
+        dlg.move(dlgX, dlgY);
+        dlg.exec();
+        return;
+    }
+
+    qDebug() << "Using rsync app:" << rsync_app;
+    // end update algo ====================================
     QStringList arguments;
     arguments << "--ip" << robotIp_ << "--password" << password;
     
