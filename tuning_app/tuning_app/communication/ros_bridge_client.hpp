@@ -34,7 +34,7 @@ signals:
     void receivedTopicMessage(const QString &topic_name, const QJsonObject &msg);
 
     // ⭐ rosapi related, and all services that we request from mainwindow
-    void receivedServiceResponse(const QString &id, const QString &service_name, const QJsonObject &response_values);
+    void receivedServiceResponse(const QString &service_name, const QString &id, const QJsonObject &response_values);
 
 public slots:
     // --------------------------------- MAIN API

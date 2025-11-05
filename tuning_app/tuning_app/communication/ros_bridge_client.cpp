@@ -179,40 +179,15 @@ void rom_dynamics::communication::RosBridgeClient::onTextMessageReceived(const Q
     // ⭐ Service Response ကို Handle လုပ်ခြင်း
     else if (op == "service_response") 
     {
-        const QString service_name = obj.value("service").toString();
+
+        //const QString service_name = obj.value("service").toString();
         // ⭐ Service ID ကို ထုတ်ယူပါ။
         const QString response_id = obj.value("id").toString(); 
         
-        // if (service_name == "rosapi/topics") 
-        // {
-        //     QJsonObject values = obj.value("values").toObject();
-            
-        //     // "values" object ထဲက topics နဲ့ types array ကို ထုတ်ယူခြင်း
-        //     QJsonArray topics_array = values.value("topics").toArray();
-        //     QJsonArray types_array = values.value("types").toArray();
-            
-        //     QStringList topic_names;
-        //     QStringList topic_types;
-            
-        //     for (const QJsonValue &val : topics_array) {
-        //         topic_names << val.toString();
-        //     }
-            
-        //     for (const QJsonValue &val : types_array) {
-        //         topic_types << val.toString();
-        //     }
-            
-        //     // Signal ကို emit လုပ်ပြီး Main Application ကို အဖြေပေးပို့ခြင်း
-        //     // ⭐ Signal ထဲမှာ response_id ကို ထည့်သွင်းပါ။
-        //     emit receivedRosapiTopics(response_id, topic_names, topic_types);
-            
-        //     #ifdef ROM_DEBUG
-        //         qDebug() << "Received rosapi/topics response. ID:" << response_id << "Topics count:" << topic_names.size();
-        //     #endif
-        // }
-        
         QJsonObject response_values = obj.value("values").toObject(); 
-        emit receivedServiceResponse(response_id, service_name, response_values); 
+
+        qDebug() << response_id << ", " << response_values;   
+        //emit receivedServiceResponse(service_name, response_id, response_values); 
         
         #ifdef ROM_DEBUG
             qDebug() << "Received service response. ID:" << response_id << ", Service:" << service_name;
@@ -279,7 +254,7 @@ void rom_dynamics::communication::RosBridgeClient::callService(const QString &se
         qWarning() << "RosBridgeClient::callService - Not connected to server.";
         return;
     }
-    if ( !id.isEmpty() || !service_name.isEmpty() ||!msg_type.isEmpty() ) 
+    if ( id.isEmpty() || service_name.isEmpty() || msg_type.isEmpty() ) 
     {
         qWarning() << "service name or id or msg_type is empty";
         return;
@@ -294,6 +269,9 @@ void rom_dynamics::communication::RosBridgeClient::callService(const QString &se
     msg["service"] = service_name_with_ns;
     msg["type"] = msg_type;
     msg["id"] = id;
+
+    QJsonObject args;
+    msg["args"] = args;
 
     sendJson(msg);
     

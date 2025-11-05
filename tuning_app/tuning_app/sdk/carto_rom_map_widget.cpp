@@ -26,6 +26,11 @@ void CartoRomMapWidget::ensureLayers()
         trajectoryLayer_->setZValue(11.0);
         sc->addItem(trajectoryLayer_);
     }
+    if (!robotLayer_ && sc) {
+        robotLayer_ = new QGraphicsItemGroup();
+        robotLayer_->setZValue(12.0);
+        sc->addItem(robotLayer_);
+    }
 }
 
 void CartoRomMapWidget::clearOverlays()
@@ -300,4 +305,41 @@ void CartoRomMapWidget::updateTrajectoryNodeList(const QJsonObject& markerArrayM
     }
 }
 
+void CartoRomMapWidget::updateRobotPose(const QJsonObject& pose2dMsg)
+{
+    ensureLayers();
+    if (!robotLayer_) return;
+
+    // Need valid map metadata to correctly convert world coords
+    if (mapResolution() <= 0.0) return;
+
+    // Parse Pose2D: { x, y, theta }
+    const double x = pose2dMsg.value("x").toDouble(0.0);
+    const double y = pose2dMsg.value("y").toDouble(0.0);
+    const double theta = pose2dMsg.value("theta").toDouble(0.0);
+
+    // Represent robot as a circle centered at (x,y) with a configurable radius
+    // Choose radius as half of a typical footprint (meters)
+    const double robot_radius_m = 0.02; // tweak as needed
+    const double radius_px = std::max(1.0, robot_radius_m / mapResolution());
+
+    // Center in scene coordinates
+    const QPointF center_scene = worldToScene(x, y);
+    const QRectF rect(center_scene.x() - radius_px,
+                      center_scene.y() - radius_px,
+                      2.0 * radius_px,
+                      2.0 * radius_px);
+
+    if (!robotItem_) {
+        robotItem_ = new QGraphicsEllipseItem(rect);
+        robotItem_->setBrush(QBrush(QColor(40, 160, 240, 160)));
+        QPen pen(QColor(20, 120, 200));
+        pen.setWidthF(1.0);
+        robotItem_->setPen(pen);
+        robotItem_->setParentItem(robotLayer_);
+    } else {
+        robotItem_->setRect(rect);
+    }
+
+}
 } // namespace rom_dynamics::ui::qt

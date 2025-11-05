@@ -98,6 +98,7 @@ private slots:
 
     // from web socket
     void onReceivedTopicMessage(const QString &topic, const QJsonObject &msg);
+    void onReceivedServiceResponse(const QString &service_name, const QString &id, const QJsonObject &msg);
 
 
 protected:

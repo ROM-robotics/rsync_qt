@@ -9,6 +9,7 @@
 #include <QBrush>
 #include <QJsonObject>
 #include <QJsonArray>
+#include <QGraphicsEllipseItem>
 
 namespace rom_dynamics::ui::qt 
 {
@@ -22,6 +23,7 @@ public:
     // visualization_msgs/MarkerArray messages
     void updateConstraintList(const QJsonObject& markerArrayMsg);
     void updateTrajectoryNodeList(const QJsonObject& markerArrayMsg);
+    void updateRobotPose(const QJsonObject& pose2dMsg);
     void clearOverlays();
 
 private:
@@ -40,6 +42,8 @@ private:
 private:
     QGraphicsItemGroup* constraintsLayer_{nullptr};
     QGraphicsItemGroup* trajectoryLayer_{nullptr};
+    QGraphicsItemGroup* robotLayer_{nullptr};
+    QGraphicsEllipseItem* robotItem_{nullptr};
 };
 
 

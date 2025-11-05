@@ -908,6 +908,12 @@ void MainWindow::createCommunicationClient(const QString &robot_ns, const QStrin
         this, 
         &MainWindow::onReceivedTopicMessage, 
         Qt::QueuedConnection); 
+
+    connect(communication_, 
+        &RosBridgeClient::receivedServiceResponse, 
+        this, 
+        &MainWindow::onReceivedServiceResponse, 
+        Qt::QueuedConnection); 
             
     // Worker object က disconnected signal ထုတ်လွှင့်ရင် Thread ကို ရပ်ဖို့
     // လောလောဆယ်မလိုဘူး။ reconnect လုပ်ချင်တာမို့။
@@ -1464,6 +1470,17 @@ void MainWindow::activateCartoTab()
         Q_ARG(const QString&, trajectory_node_list_topic_name),
         Q_ARG(const QString&, trajectory_node_list_msg_type)
     );
+    QString robot_pose_topic_name = ns_prefix + "/map_bfp_publisher";
+    QString robot_pose_msg_type   = "geometry_msgs/msg/Pose2D";
+    // communication_->subscribeTopic(constraint_list_topic_name, constraint_list_msg_type);
+    // ⭐
+    QMetaObject::invokeMethod(
+        communication_,
+        "subscribeTopic",
+        Qt::QueuedConnection,
+        Q_ARG(const QString&, robot_pose_topic_name),
+        Q_ARG(const QString&, robot_pose_msg_type)
+    );
     /*
     QString scan_matched_points_topic_name = "/scan_matched_points2";
     QString scan_matched_points_msg_type   = "sensor_msgs/msg/PointCloud2";
@@ -1496,7 +1513,7 @@ void MainWindow::activateCartoTab()
     */
     qDebug() << "Subscribed to " << map_topic_name << "," 
     << constraint_list_topic_name << "," 
-    << trajectory_node_list_topic_name;
+    << trajectory_node_list_topic_name << ", " << robot_pose_topic_name;
 
 }
 void MainWindow::deactivateCartoTab()
@@ -1508,6 +1525,7 @@ void MainWindow::deactivateCartoTab()
     QString trajectory_node_list_topic_name = ns_prefix + "/trajectory_node_list";
     QString scan_matched_points_topic_name = ns_prefix + "/scan_matched_points2";
     //QString landmark_poses_list_topic_name = "/landmark_poses_list";
+    QString robot_pose_topic_name = ns_prefix + "/map_bfp_publisher";
     
     // communication_->unsubscribeTopic(map_topic_name);
     // ⭐
@@ -1541,11 +1559,17 @@ void MainWindow::deactivateCartoTab()
         Qt::QueuedConnection,
         Q_ARG(const QString&, scan_matched_points_topic_name)
     );
-
     // communication_->unsubscribeTopic(landmark_poses_list_topic_name);
+    // communication_->unsubscribeTopic(robot_pose_topic_name);
+    QMetaObject::invokeMethod(
+        communication_,
+        "unsubscribeTopic",
+        Qt::QueuedConnection,
+        Q_ARG(const QString&, robot_pose_topic_name)
+    );
 
 
-    qDebug() << "Unsubscribed from " << map_topic_name << "," << constraint_list_topic_name << "," << trajectory_node_list_topic_name;
+    qDebug() << "Unsubscribed from " << map_topic_name << "," << constraint_list_topic_name << "," << trajectory_node_list_topic_name << ", " << robot_pose_topic_name;
 
 }
 
@@ -1655,22 +1679,29 @@ void MainWindow::initTopicTab()
 }
 void MainWindow::activateTopicTab()
 {
-    //QString example_topic_name = "/diff_controller/cmd_vel_unstamped";
-    //QString example_msg_type   = "geometry_msgs/msg/Twist";
-    
-    //communication_->subscribeTopic(example_topic_name, example_msg_type);
+    if (!communication_) return;
 
-    //qDebug() << "Subscribed to " << example_topic_name;
+    auto ns_prefix = robotNamespace_;
+    if (!ns_prefix.isEmpty() && !ns_prefix.startsWith('/')) ns_prefix.prepend('/');
+
+    QString service_name = ns_prefix + "/rosapi/nodes";
+    QString service_type   = "rosapi_msgs/srv/Nodes";
+    //callService(const QString &service_name, const QString &id, const QString &msg_type);
+    // ⭐
+    QMetaObject::invokeMethod(
+        communication_, 
+        "callService", 
+        Qt::QueuedConnection,
+        Q_ARG(const QString&, service_name),
+        Q_ARG(const QString&, "rom123"),
+        Q_ARG(const QString&, service_type)
+    );
+    qDebug() << "Service request to " << service_name;
 
 }
 void MainWindow::deactivateTopicTab()
 {
-    //QString example_topic_name = "/diff_controller/cmd_vel_unstamped";
-    //QString example_msg_type   = "geometry_msgs/msg/Twist";
-
-    //communication_->unsubscribeTopic(example_topic_name, example_msg_type);
-
-    //qDebug() << "Unsubscribed to " << example_topic_name;
+    // all btn to bg color , color: white
 
 }
 
@@ -1996,10 +2027,13 @@ void MainWindow::onReceivedTopicMessage(const QString &topic, const QJsonObject 
     else if( currentMode == Mode::carto )
     {
     auto ns_prefix = robotNamespace_;
+
     if (!ns_prefix.isEmpty() && !ns_prefix.startsWith('/')) ns_prefix.prepend('/');
     QString map_topic_name = ns_prefix + "/map";
     QString constraint_list_topic_name = ns_prefix + "/constraint_list";
     QString trajectory_node_list_topic_name = ns_prefix + "/trajectory_node_list";
+    QString robot_pose_topic_name = ns_prefix + "/map_bfp_publisher";
+
         //QString scan_matched_points_topic_name = "/scan_matched_points2";
 
         //qDebug() << " Current mode is CARTO. Received topic: " << topic;
@@ -2028,6 +2062,14 @@ void MainWindow::onReceivedTopicMessage(const QString &topic, const QJsonObject 
                 mapWidgetPtr_->updateTrajectoryNodeList(msg);
             }
         }
+        else if( topic == robot_pose_topic_name )
+        {
+            if( mapWidgetPtr_ )
+            {
+                qDebug() << " Calling updateRobotPose(msg)";
+                mapWidgetPtr_->updateRobotPose(msg);
+            }
+        }
         // else if( topic == scan_matched_points_topic_name ){}
     }
 
@@ -2043,13 +2085,81 @@ void MainWindow::onReceivedTopicMessage(const QString &topic, const QJsonObject 
     /* BT TAB */
     else if( currentMode == Mode::bt ) {}
 
-    /* TOPIC TAB */
-    else if( currentMode == Mode::topic ) {}
+    // /* TOPIC TAB */
+    // else if( currentMode == Mode::topic ) 
+    // {
+    //     // 
+    // }
 
     /* LOG TAB */
     else if( currentMode == Mode::log ) {}
 }
 
+void MainWindow::onReceivedServiceResponse(const QString &service_name, const QString &id, const QJsonObject &msg)
+{
+    /* TOPIC TAB */
+    if( currentMode == Mode::topic ) 
+    {
+        auto ns_prefix = robotNamespace_;
+        if (!ns_prefix.isEmpty() && !ns_prefix.startsWith('/')) ns_prefix.prepend('/');
+
+        QString rosapi_service_name = ns_prefix + "/rosapi/nodes";
+        if( service_name == rosapi_service_name )
+        {
+            // Parse rosapi_msgs/srv/Nodes response and update any matching UI buttons
+            // Expected msg schema (values object from rosbridge): { "nodes": ["/node_a", "/ns/node_b", ...] }
+
+            QJsonArray nodesArray = msg.value("nodes").toArray();
+            if (nodesArray.isEmpty())
+            {
+                qDebug() << "rosapi/nodes: no nodes in response";
+                return;
+            }
+
+            for (const QJsonValue &val : nodesArray)
+            {
+                const QString rawName = val.toString();
+                if (rawName.isEmpty()) continue;
+
+                // Trim leading '/'; then remove any remaining '/' to form the objectName
+                QString trimmed = rawName;
+                if (trimmed.startsWith('/')) trimmed.remove(0, 1);
+                trimmed.remove('/');
+
+                if ( trimmed == "local_costmap/local_costmap" ) 
+                {
+                    const QString btn_name = "local_costmapBtn";
+                    if (QPushButton *btn = this->findChild<QPushButton*>(btn_name))
+                    {
+                        btn->setStyleSheet("background-color: #32CD32; color: black;");
+                    }
+                    continue;
+                }
+                else if ( trimmed == "global_costmap/global_costmap" )
+                { 
+                    const QString btn_name = "global_costmapBtn";
+                    if (QPushButton *btn = this->findChild<QPushButton*>(btn_name))
+                    {
+                        btn->setStyleSheet("background-color: #32CD32; color: black;");
+                    }
+                    continue;
+                }
+
+                const QString btnObjectName = trimmed + "Btn";
+
+                // Find a QPushButton anywhere under MainWindow with that objectName
+                if (QPushButton *btn = this->findChild<QPushButton*>(btnObjectName))
+                {
+                    //ui->btnObjectName->setStyleSheet
+                    // change button color to green and text color to black
+                    btn->setStyleSheet("background-color: #32CD32; color: black;");
+                }
+            }
+
+        }
+    }
+
+}
 
 void MainWindow::robotVelocityToWheelRpms(double linear_velocity, double angular_velocity, double wheel_radius, double wheel_seperation, int &left_rpm, int &right_rpm)
 {
