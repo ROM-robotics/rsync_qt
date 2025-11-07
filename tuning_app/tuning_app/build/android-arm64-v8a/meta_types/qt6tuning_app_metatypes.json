@@ -1,0 +1,441 @@
+[
+    {
+        "classes": [
+            {
+                "className": "MainWindow",
+                "lineNumber": 34,
+                "object": true,
+                "qualifiedClassName": "MainWindow",
+                "slots": [
+                    {
+                        "access": "private",
+                        "arguments": [
+                            {
+                                "name": "index",
+                                "type": "int"
+                            }
+                        ],
+                        "index": 0,
+                        "name": "onTabChanged",
+                        "returnType": "void"
+                    },
+                    {
+                        "access": "private",
+                        "index": 1,
+                        "name": "on_closeBtn_clicked",
+                        "returnType": "void"
+                    },
+                    {
+                        "access": "private",
+                        "index": 2,
+                        "name": "on_rsyncBtn_clicked",
+                        "returnType": "void"
+                    },
+                    {
+                        "access": "private",
+                        "index": 3,
+                        "name": "on_connectBtn_clicked",
+                        "returnType": "void"
+                    },
+                    {
+                        "access": "private",
+                        "index": 4,
+                        "name": "on_hostTerminalBtn_clicked",
+                        "returnType": "void"
+                    },
+                    {
+                        "access": "private",
+                        "index": 5,
+                        "name": "on_robotTerminalBtn_clicked",
+                        "returnType": "void"
+                    },
+                    {
+                        "access": "private",
+                        "index": 6,
+                        "name": "on_ekfTuningGuideBtn_clicked",
+                        "returnType": "void"
+                    },
+                    {
+                        "access": "private",
+                        "index": 7,
+                        "name": "on_initialNoiseCovToggleBtn_clicked",
+                        "returnType": "void"
+                    },
+                    {
+                        "access": "private",
+                        "index": 8,
+                        "name": "on_processNoiseCovToggleBtn_clicked",
+                        "returnType": "void"
+                    },
+                    {
+                        "access": "private",
+                        "arguments": [
+                            {
+                                "name": "topic",
+                                "type": "QString"
+                            },
+                            {
+                                "name": "msg",
+                                "type": "QJsonObject"
+                            }
+                        ],
+                        "index": 9,
+                        "name": "onReceivedTopicMessage",
+                        "returnType": "void"
+                    },
+                    {
+                        "access": "private",
+                        "arguments": [
+                            {
+                                "name": "service_name",
+                                "type": "QString"
+                            },
+                            {
+                                "name": "id",
+                                "type": "QString"
+                            },
+                            {
+                                "name": "msg",
+                                "type": "QJsonObject"
+                            }
+                        ],
+                        "index": 10,
+                        "name": "onReceivedServiceResponse",
+                        "returnType": "void"
+                    }
+                ],
+                "superClasses": [
+                    {
+                        "access": "public",
+                        "name": "QMainWindow"
+                    }
+                ]
+            }
+        ],
+        "inputFile": "mainwindow.h",
+        "outputRevision": 68
+    },
+    {
+        "classes": [
+            {
+                "className": "RosBridgeClient",
+                "lineNumber": 15,
+                "object": true,
+                "qualifiedClassName": "rom_dynamics::communication::RosBridgeClient",
+                "signals": [
+                    {
+                        "access": "public",
+                        "index": 0,
+                        "name": "connected",
+                        "returnType": "void"
+                    },
+                    {
+                        "access": "public",
+                        "index": 1,
+                        "name": "disconnected",
+                        "returnType": "void"
+                    },
+                    {
+                        "access": "public",
+                        "arguments": [
+                            {
+                                "name": "msg",
+                                "type": "QString"
+                            }
+                        ],
+                        "index": 2,
+                        "name": "errorOccurred",
+                        "returnType": "void"
+                    },
+                    {
+                        "access": "public",
+                        "arguments": [
+                            {
+                                "name": "topic_name",
+                                "type": "QString"
+                            },
+                            {
+                                "name": "msg",
+                                "type": "QJsonObject"
+                            }
+                        ],
+                        "index": 3,
+                        "name": "receivedTopicMessage",
+                        "returnType": "void"
+                    },
+                    {
+                        "access": "public",
+                        "arguments": [
+                            {
+                                "name": "service_name",
+                                "type": "QString"
+                            },
+                            {
+                                "name": "id",
+                                "type": "QString"
+                            },
+                            {
+                                "name": "response_values",
+                                "type": "QJsonObject"
+                            }
+                        ],
+                        "index": 4,
+                        "name": "receivedServiceResponse",
+                        "returnType": "void"
+                    }
+                ],
+                "slots": [
+                    {
+                        "access": "public",
+                        "index": 5,
+                        "name": "init",
+                        "returnType": "void"
+                    },
+                    {
+                        "access": "public",
+                        "index": 6,
+                        "name": "connectToServer",
+                        "returnType": "void"
+                    },
+                    {
+                        "access": "public",
+                        "index": 7,
+                        "name": "disconnectFromServer",
+                        "returnType": "void"
+                    },
+                    {
+                        "access": "public",
+                        "arguments": [
+                            {
+                                "name": "topic_name",
+                                "type": "QString"
+                            },
+                            {
+                                "name": "msg_type",
+                                "type": "QString"
+                            }
+                        ],
+                        "index": 8,
+                        "name": "subscribeTopic",
+                        "returnType": "void"
+                    },
+                    {
+                        "access": "public",
+                        "arguments": [
+                            {
+                                "name": "topic_name",
+                                "type": "QString"
+                            }
+                        ],
+                        "index": 9,
+                        "name": "unsubscribeTopic",
+                        "returnType": "void"
+                    },
+                    {
+                        "access": "public",
+                        "arguments": [
+                            {
+                                "name": "id",
+                                "type": "QString"
+                            }
+                        ],
+                        "index": 10,
+                        "name": "getTopicsList",
+                        "returnType": "void"
+                    },
+                    {
+                        "access": "public",
+                        "arguments": [
+                            {
+                                "name": "service_name",
+                                "type": "QString"
+                            },
+                            {
+                                "name": "id",
+                                "type": "QString"
+                            },
+                            {
+                                "name": "msg_type",
+                                "type": "QString"
+                            }
+                        ],
+                        "index": 11,
+                        "name": "callService",
+                        "returnType": "void"
+                    },
+                    {
+                        "access": "private",
+                        "index": 12,
+                        "name": "onSocketConnected",
+                        "returnType": "void"
+                    },
+                    {
+                        "access": "private",
+                        "index": 13,
+                        "name": "onSocketDisconnected",
+                        "returnType": "void"
+                    },
+                    {
+                        "access": "private",
+                        "arguments": [
+                            {
+                                "name": "err",
+                                "type": "QAbstractSocket::SocketError"
+                            }
+                        ],
+                        "index": 14,
+                        "name": "onSocketError",
+                        "returnType": "void"
+                    },
+                    {
+                        "access": "private",
+                        "arguments": [
+                            {
+                                "name": "msg",
+                                "type": "QString"
+                            }
+                        ],
+                        "index": 15,
+                        "name": "onTextMessageReceived",
+                        "returnType": "void"
+                    }
+                ],
+                "superClasses": [
+                    {
+                        "access": "public",
+                        "name": "QObject"
+                    }
+                ]
+            }
+        ],
+        "inputFile": "ros_bridge_client.hpp",
+        "outputRevision": 68
+    },
+    {
+        "classes": [
+            {
+                "className": "CartoRomMapWidget",
+                "lineNumber": 17,
+                "object": true,
+                "qualifiedClassName": "rom_dynamics::ui::qt::CartoRomMapWidget",
+                "superClasses": [
+                    {
+                        "access": "public",
+                        "fullyQualifiedName": "rom_dynamics::ui::qt::RomMapWidget",
+                        "name": "RomMapWidget"
+                    }
+                ]
+            }
+        ],
+        "inputFile": "carto_rom_map_widget.hpp",
+        "outputRevision": 68
+    },
+    {
+        "classes": [
+            {
+                "className": "RomMapWidget",
+                "lineNumber": 70,
+                "object": true,
+                "qualifiedClassName": "rom_dynamics::ui::qt::RomMapWidget",
+                "superClasses": [
+                    {
+                        "access": "public",
+                        "name": "QGraphicsView"
+                    }
+                ]
+            }
+        ],
+        "inputFile": "rom_map_widget.hpp",
+        "outputRevision": 68
+    },
+    {
+        "classes": [
+            {
+                "className": "RomPositionCovarianceGraph",
+                "lineNumber": 16,
+                "object": true,
+                "qualifiedClassName": "rom_dynamics::ui::qt::RomPositionCovarianceGraph",
+                "superClasses": [
+                    {
+                        "access": "public",
+                        "name": "QWidget"
+                    }
+                ]
+            },
+            {
+                "className": "RomYawCovarianceGraph",
+                "lineNumber": 42,
+                "object": true,
+                "qualifiedClassName": "rom_dynamics::ui::qt::RomYawCovarianceGraph",
+                "superClasses": [
+                    {
+                        "access": "public",
+                        "name": "QWidget"
+                    }
+                ]
+            }
+        ],
+        "inputFile": "covarianceDisplay.hpp",
+        "outputRevision": 68
+    },
+    {
+        "classes": [
+            {
+                "className": "ReadmeDialog",
+                "lineNumber": 9,
+                "object": true,
+                "qualifiedClassName": "ReadmeDialog",
+                "superClasses": [
+                    {
+                        "access": "public",
+                        "name": "QDialog"
+                    }
+                ]
+            }
+        ],
+        "inputFile": "readmeviewer.h",
+        "outputRevision": 68
+    },
+    {
+        "classes": [
+            {
+                "className": "RobotVelocityGraph",
+                "lineNumber": 23,
+                "object": true,
+                "qualifiedClassName": "rom_dynamics::ui::qt::RobotVelocityGraph",
+                "superClasses": [
+                    {
+                        "access": "public",
+                        "name": "QWidget"
+                    }
+                ]
+            },
+            {
+                "className": "RomPositionGraph",
+                "lineNumber": 147,
+                "object": true,
+                "qualifiedClassName": "rom_dynamics::ui::qt::RomPositionGraph",
+                "superClasses": [
+                    {
+                        "access": "public",
+                        "name": "QWidget"
+                    }
+                ]
+            },
+            {
+                "className": "RomPolarHeadingGraph",
+                "lineNumber": 434,
+                "object": true,
+                "qualifiedClassName": "rom_dynamics::ui::qt::RomPolarHeadingGraph",
+                "superClasses": [
+                    {
+                        "access": "public",
+                        "name": "QWidget"
+                    }
+                ]
+            }
+        ],
+        "inputFile": "rom_design.hpp",
+        "outputRevision": 68
+    }
+]

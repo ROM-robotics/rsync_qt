@@ -1,0 +1,18 @@
+<lint-module
+    format="1"
+    dir="/home/mr_robot/Desktop/Git/rsync_qt/tuning_app/tuning_app/build/android-arm64-v8a/android-build"
+    name=":"
+    type="APP"
+    maven=":android-build:unspecified"
+    agpVersion="8.6.0"
+    buildFolder="build"
+    bootClassPath="/home/mr_robot/Android/Sdk/platforms/android-36/android.jar:/home/mr_robot/Android/Sdk/build-tools/36.1.0/core-lambda-stubs.jar"
+    javaSourceLevel="1.8"
+    compileTarget="android-36"
+    neverShrinking="true">
+  <lintOptions
+      absolutePaths="true"
+      checkReleaseBuilds="true"
+      explainIssues="true"/>
+  <variant name="release"/>
+</lint-module>

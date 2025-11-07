@@ -1,0 +1,196 @@
+{
+    "classes": [
+        {
+            "className": "RosBridgeClient",
+            "lineNumber": 15,
+            "object": true,
+            "qualifiedClassName": "rom_dynamics::communication::RosBridgeClient",
+            "signals": [
+                {
+                    "access": "public",
+                    "index": 0,
+                    "name": "connected",
+                    "returnType": "void"
+                },
+                {
+                    "access": "public",
+                    "index": 1,
+                    "name": "disconnected",
+                    "returnType": "void"
+                },
+                {
+                    "access": "public",
+                    "arguments": [
+                        {
+                            "name": "msg",
+                            "type": "QString"
+                        }
+                    ],
+                    "index": 2,
+                    "name": "errorOccurred",
+                    "returnType": "void"
+                },
+                {
+                    "access": "public",
+                    "arguments": [
+                        {
+                            "name": "topic_name",
+                            "type": "QString"
+                        },
+                        {
+                            "name": "msg",
+                            "type": "QJsonObject"
+                        }
+                    ],
+                    "index": 3,
+                    "name": "receivedTopicMessage",
+                    "returnType": "void"
+                },
+                {
+                    "access": "public",
+                    "arguments": [
+                        {
+                            "name": "service_name",
+                            "type": "QString"
+                        },
+                        {
+                            "name": "id",
+                            "type": "QString"
+                        },
+                        {
+                            "name": "response_values",
+                            "type": "QJsonObject"
+                        }
+                    ],
+                    "index": 4,
+                    "name": "receivedServiceResponse",
+                    "returnType": "void"
+                }
+            ],
+            "slots": [
+                {
+                    "access": "public",
+                    "index": 5,
+                    "name": "init",
+                    "returnType": "void"
+                },
+                {
+                    "access": "public",
+                    "index": 6,
+                    "name": "connectToServer",
+                    "returnType": "void"
+                },
+                {
+                    "access": "public",
+                    "index": 7,
+                    "name": "disconnectFromServer",
+                    "returnType": "void"
+                },
+                {
+                    "access": "public",
+                    "arguments": [
+                        {
+                            "name": "topic_name",
+                            "type": "QString"
+                        },
+                        {
+                            "name": "msg_type",
+                            "type": "QString"
+                        }
+                    ],
+                    "index": 8,
+                    "name": "subscribeTopic",
+                    "returnType": "void"
+                },
+                {
+                    "access": "public",
+                    "arguments": [
+                        {
+                            "name": "topic_name",
+                            "type": "QString"
+                        }
+                    ],
+                    "index": 9,
+                    "name": "unsubscribeTopic",
+                    "returnType": "void"
+                },
+                {
+                    "access": "public",
+                    "arguments": [
+                        {
+                            "name": "id",
+                            "type": "QString"
+                        }
+                    ],
+                    "index": 10,
+                    "name": "getTopicsList",
+                    "returnType": "void"
+                },
+                {
+                    "access": "public",
+                    "arguments": [
+                        {
+                            "name": "service_name",
+                            "type": "QString"
+                        },
+                        {
+                            "name": "id",
+                            "type": "QString"
+                        },
+                        {
+                            "name": "msg_type",
+                            "type": "QString"
+                        }
+                    ],
+                    "index": 11,
+                    "name": "callService",
+                    "returnType": "void"
+                },
+                {
+                    "access": "private",
+                    "index": 12,
+                    "name": "onSocketConnected",
+                    "returnType": "void"
+                },
+                {
+                    "access": "private",
+                    "index": 13,
+                    "name": "onSocketDisconnected",
+                    "returnType": "void"
+                },
+                {
+                    "access": "private",
+                    "arguments": [
+                        {
+                            "name": "err",
+                            "type": "QAbstractSocket::SocketError"
+                        }
+                    ],
+                    "index": 14,
+                    "name": "onSocketError",
+                    "returnType": "void"
+                },
+                {
+                    "access": "private",
+                    "arguments": [
+                        {
+                            "name": "msg",
+                            "type": "QString"
+                        }
+                    ],
+                    "index": 15,
+                    "name": "onTextMessageReceived",
+                    "returnType": "void"
+                }
+            ],
+            "superClasses": [
+                {
+                    "access": "public",
+                    "name": "QObject"
+                }
+            ]
+        }
+    ],
+    "inputFile": "ros_bridge_client.hpp",
+    "outputRevision": 68
+}

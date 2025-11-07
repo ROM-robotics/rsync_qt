@@ -3,9 +3,17 @@ project(tuning_app LANGUAGES CXX)
 
 find_package(Qt6 6.5 REQUIRED COMPONENTS Core Widgets Gui Charts Network WebSockets Quick QuickWidgets Qml)
 
+if (ANDROID)
+    message(STATUS "Configuring for Android: ABI(s)=${QT_ANDROID_ABIS} SDK=${ANDROID_SDK_ROOT} NDK=${ANDROID_NDK_ROOT}")
+endif()
+
+# Prefer Eigen via package if available (portable for Android)
+find_package(Eigen3 QUIET)
+
 qt_standard_project_setup()
 
 qt_add_executable(tuning_app
+    MANUAL_FINALIZATION
     WIN32 MACOSX_BUNDLE
     main.cpp
     mainwindow.cpp
@@ -43,11 +51,38 @@ target_link_libraries(tuning_app PRIVATE
     Qt${QT_VERSION_MAJOR}::Quick
     Qt${QT_VERSION_MAJOR}::QuickWidgets
     Qt${QT_VERSION_MAJOR}::Qml
-    /usr/include/eigen3
 )
 
+# Add Eigen includes if found; otherwise fall back to system include path on non-Android
+if (Eigen3_FOUND)
+    target_link_libraries(tuning_app PRIVATE Eigen3::Eigen)
+else()
+    # Fallback: fetch Eigen headers when not found (works for Android too)
+    include(FetchContent)
+    set(EIGEN_VERSION 3.4.0)
+    set(FETCHCONTENT_QUIET OFF)
+    set(BUILD_TESTING OFF CACHE BOOL "" FORCE)
+    set(EIGEN_BUILD_DOC OFF CACHE BOOL "" FORCE)
+    set(EIGEN_BUILD_TESTING OFF CACHE BOOL "" FORCE)
+    FetchContent_Declare(
+        eigen3
+        URL https://gitlab.com/libeigen/eigen/-/archive/${EIGEN_VERSION}/eigen-${EIGEN_VERSION}.tar.gz
+        DOWNLOAD_EXTRACT_TIMESTAMP TRUE
+    )
+    FetchContent_MakeAvailable(eigen3)
+    # Use provided target if available; otherwise create a simple interface
+    if (TARGET Eigen3::Eigen)
+        target_link_libraries(tuning_app PRIVATE Eigen3::Eigen)
+    else()
+        add_library(Eigen3::Eigen INTERFACE IMPORTED)
+        set_target_properties(Eigen3::Eigen PROPERTIES
+            INTERFACE_INCLUDE_DIRECTORIES "${eigen3_SOURCE_DIR}"
+        )
+        target_link_libraries(tuning_app PRIVATE Eigen3::Eigen)
+    endif()
+endif()
+
 include(GNUInstallDirs)
-include_directories(/usr/include/eigen3)
 
 qt_add_resources(tuning_app "resources"
     PREFIX "/"
@@ -62,6 +97,18 @@ qt_add_resources(tuning_app "resources"
 
 
 
+# Android packaging: point to custom android/ dir if present
+if (ANDROID)
+    # Use the Qt-specific property name (Qt 6)
+    set_property(TARGET tuning_app PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR
+        "${CMAKE_CURRENT_SOURCE_DIR}/android")
+endif()
+
+# Finalize target for Qt 6 (sets up bundles, rpaths, etc.)
+qt_finalize_executable(tuning_app)
+
+# Desktop/Linux install and deploy; skip for Android where Gradle handles packaging
+if (NOT ANDROID)
 install(TARGETS tuning_app
     BUNDLE  DESTINATION .
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
@@ -74,5 +121,6 @@ qt_generate_deploy_app_script(
     NO_UNSUPPORTED_PLATFORM_ERROR
 )
 install(SCRIPT ${deploy_script})
+endif()
 
 

@@ -1,0 +1,3 @@
+/home/mr_robot/Desktop/Git/rsync_qt/tuning_app/tuning_app/build/android-arm64-v8a/_deps/eigen3-subbuild/CMakeFiles/eigen3-populate.dir
+/home/mr_robot/Desktop/Git/rsync_qt/tuning_app/tuning_app/build/android-arm64-v8a/_deps/eigen3-subbuild/CMakeFiles/edit_cache.dir
+/home/mr_robot/Desktop/Git/rsync_qt/tuning_app/tuning_app/build/android-arm64-v8a/_deps/eigen3-subbuild/CMakeFiles/rebuild_cache.dir

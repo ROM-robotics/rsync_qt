@@ -1,0 +1,11 @@
+-rootPath
+/home/mr_robot/Desktop/Git/rsync_qt/tuning_app/tuning_app
+-cmake-output
+-output-file
+/home/mr_robot/Desktop/Git/rsync_qt/tuning_app/tuning_app/build/android-arm64-v8a/.qt/qml_imports/tuning_app_conf.cmake
+-importPath
+/home/mr_robot/Desktop/Git/rsync_qt/tuning_app/tuning_app/build/android-arm64-v8a
+-importPath
+/home/mr_robot/Qt/6.8.3/android_arm64_v8a/qml
+-qrcFiles
+/home/mr_robot/Desktop/Git/rsync_qt/tuning_app/tuning_app/build/android-arm64-v8a/.qt/rcc/resources.qrc

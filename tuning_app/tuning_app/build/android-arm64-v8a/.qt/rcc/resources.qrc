@@ -1,0 +1,11 @@
+<RCC>
+  <qresource prefix="/">
+    <file alias="Speed.qml">/home/mr_robot/Desktop/Git/rsync_qt/tuning_app/tuning_app/Speed.qml</file>
+    <file alias="RightSpeed.qml">/home/mr_robot/Desktop/Git/rsync_qt/tuning_app/tuning_app/RightSpeed.qml</file>
+    <file alias="LeftSpeed.qml">/home/mr_robot/Desktop/Git/rsync_qt/tuning_app/tuning_app/LeftSpeed.qml</file>
+    <file alias="ActualSpeed.qml">/home/mr_robot/Desktop/Git/rsync_qt/tuning_app/tuning_app/ActualSpeed.qml</file>
+    <file alias="ActualRightSpeed.qml">/home/mr_robot/Desktop/Git/rsync_qt/tuning_app/tuning_app/ActualRightSpeed.qml</file>
+    <file alias="ActualLeftSpeed.qml">/home/mr_robot/Desktop/Git/rsync_qt/tuning_app/tuning_app/ActualLeftSpeed.qml</file>
+  </qresource>
+</RCC>
+

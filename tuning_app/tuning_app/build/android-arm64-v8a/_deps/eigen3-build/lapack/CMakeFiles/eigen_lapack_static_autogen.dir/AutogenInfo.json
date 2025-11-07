@@ -1,0 +1,102 @@
+{
+	"BUILD_DIR" : "/home/mr_robot/Desktop/Git/rsync_qt/tuning_app/tuning_app/build/android-arm64-v8a/_deps/eigen3-build/lapack/eigen_lapack_static_autogen",
+	"CMAKE_BINARY_DIR" : "/home/mr_robot/Desktop/Git/rsync_qt/tuning_app/tuning_app/build/android-arm64-v8a",
+	"CMAKE_CURRENT_BINARY_DIR" : "/home/mr_robot/Desktop/Git/rsync_qt/tuning_app/tuning_app/build/android-arm64-v8a/_deps/eigen3-build/lapack",
+	"CMAKE_CURRENT_SOURCE_DIR" : "/home/mr_robot/Desktop/Git/rsync_qt/tuning_app/tuning_app/build/android-arm64-v8a/_deps/eigen3-src/lapack",
+	"CMAKE_EXECUTABLE" : "/home/mr_robot/Qt/Tools/CMake/bin/cmake",
+	"CMAKE_LIST_FILES" : 
+	[
+		"/home/mr_robot/Desktop/Git/rsync_qt/tuning_app/tuning_app/build/android-arm64-v8a/_deps/eigen3-src/lapack/CMakeLists.txt",
+		"/home/mr_robot/Qt/Tools/CMake/share/cmake-3.30/Modules/CheckLanguage.cmake"
+	],
+	"CMAKE_SOURCE_DIR" : "/home/mr_robot/Desktop/Git/rsync_qt/tuning_app/tuning_app",
+	"CROSS_CONFIG" : false,
+	"DEP_FILE" : "/home/mr_robot/Desktop/Git/rsync_qt/tuning_app/tuning_app/build/android-arm64-v8a/_deps/eigen3-build/lapack/eigen_lapack_static_autogen/deps",
+	"DEP_FILE_RULE_NAME" : "eigen_lapack_static_autogen/timestamp",
+	"HEADERS" : [],
+	"HEADER_EXTENSIONS" : [ "h", "hh", "h++", "hm", "hpp", "hxx", "in", "txx" ],
+	"INCLUDE_DIR" : "/home/mr_robot/Desktop/Git/rsync_qt/tuning_app/tuning_app/build/android-arm64-v8a/_deps/eigen3-build/lapack/eigen_lapack_static_autogen/include",
+	"MOC_COMPILATION_FILE" : "/home/mr_robot/Desktop/Git/rsync_qt/tuning_app/tuning_app/build/android-arm64-v8a/_deps/eigen3-build/lapack/eigen_lapack_static_autogen/mocs_compilation.cpp",
+	"MOC_DEFINITIONS" : [],
+	"MOC_DEPEND_FILTERS" : 
+	[
+		[
+			"Q_PLUGIN_METADATA",
+			"[\n][ \t]*Q_PLUGIN_METADATA[ \t]*\\([^\\)]*FILE[ \t]*\"([^\"]+)\""
+		]
+	],
+	"MOC_INCLUDES" : 
+	[
+		"/home/mr_robot/Desktop/Git/rsync_qt/tuning_app/tuning_app/build/android-arm64-v8a/_deps/eigen3-src",
+		"/home/mr_robot/Desktop/Git/rsync_qt/tuning_app/tuning_app/build/android-arm64-v8a/_deps/eigen3-src/blas",
+		"/home/mr_robot/Android/Sdk/ndk/29.0.14033849/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/include/c++/v1",
+		"/home/mr_robot/Android/Sdk/ndk/29.0.14033849/toolchains/llvm/prebuilt/linux-x86_64/lib/clang/21/include",
+		"/home/mr_robot/Android/Sdk/ndk/29.0.14033849/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/include/aarch64-linux-android",
+		"/home/mr_robot/Android/Sdk/ndk/29.0.14033849/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/include"
+	],
+	"MOC_MACRO_NAMES" : 
+	[
+		"Q_OBJECT",
+		"Q_GADGET",
+		"Q_NAMESPACE",
+		"Q_NAMESPACE_EXPORT",
+		"Q_GADGET_EXPORT",
+		"Q_ENUM_NS"
+	],
+	"MOC_OPTIONS" : [],
+	"MOC_PATH_PREFIX" : false,
+	"MOC_PREDEFS_CMD" : 
+	[
+		"/home/mr_robot/Android/Sdk/ndk/29.0.14033849/toolchains/llvm/prebuilt/linux-x86_64/bin/clang++",
+		"-dM",
+		"-E",
+		"-c",
+		"/home/mr_robot/Qt/Tools/CMake/share/cmake-3.30/Modules/CMakeCXXCompilerABI.cpp",
+		"--target=aarch64-none-linux-android28"
+	],
+	"MOC_PREDEFS_FILE" : "/home/mr_robot/Desktop/Git/rsync_qt/tuning_app/tuning_app/build/android-arm64-v8a/_deps/eigen3-build/lapack/eigen_lapack_static_autogen/moc_predefs.h",
+	"MOC_RELAXED_MODE" : false,
+	"MOC_SKIP" : [],
+	"MULTI_CONFIG" : false,
+	"PARALLEL" : 8,
+	"PARSE_CACHE_FILE" : "/home/mr_robot/Desktop/Git/rsync_qt/tuning_app/tuning_app/build/android-arm64-v8a/_deps/eigen3-build/lapack/CMakeFiles/eigen_lapack_static_autogen.dir/ParseCache.txt",
+	"QT_MOC_EXECUTABLE" : "/home/mr_robot/Qt/6.8.3/gcc_64/libexec/moc",
+	"QT_UIC_EXECUTABLE" : "/home/mr_robot/Qt/6.8.3/gcc_64/libexec/uic",
+	"QT_VERSION_MAJOR" : 6,
+	"QT_VERSION_MINOR" : 8,
+	"SETTINGS_FILE" : "/home/mr_robot/Desktop/Git/rsync_qt/tuning_app/tuning_app/build/android-arm64-v8a/_deps/eigen3-build/lapack/CMakeFiles/eigen_lapack_static_autogen.dir/AutogenUsed.txt",
+	"SOURCES" : 
+	[
+		[
+			"/home/mr_robot/Desktop/Git/rsync_qt/tuning_app/tuning_app/build/android-arm64-v8a/_deps/eigen3-src/blas/xerbla.cpp",
+			"MU",
+			null
+		],
+		[
+			"/home/mr_robot/Desktop/Git/rsync_qt/tuning_app/tuning_app/build/android-arm64-v8a/_deps/eigen3-src/lapack/complex_double.cpp",
+			"MU",
+			null
+		],
+		[
+			"/home/mr_robot/Desktop/Git/rsync_qt/tuning_app/tuning_app/build/android-arm64-v8a/_deps/eigen3-src/lapack/complex_single.cpp",
+			"MU",
+			null
+		],
+		[
+			"/home/mr_robot/Desktop/Git/rsync_qt/tuning_app/tuning_app/build/android-arm64-v8a/_deps/eigen3-src/lapack/double.cpp",
+			"MU",
+			null
+		],
+		[
+			"/home/mr_robot/Desktop/Git/rsync_qt/tuning_app/tuning_app/build/android-arm64-v8a/_deps/eigen3-src/lapack/single.cpp",
+			"MU",
+			null
+		]
+	],
+	"UIC_OPTIONS" : [],
+	"UIC_SEARCH_PATHS" : [],
+	"UIC_SKIP" : [],
+	"UIC_UI_FILES" : [],
+	"USE_BETTER_GRAPH" : true,
+	"VERBOSITY" : 0
+}

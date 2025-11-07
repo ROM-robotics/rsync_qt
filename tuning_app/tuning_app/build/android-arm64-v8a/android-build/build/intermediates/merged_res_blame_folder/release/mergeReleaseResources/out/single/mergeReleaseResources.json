@@ -1,0 +1,6 @@
+[
+    {
+        "merged": "com.example.tuning_app-release-10:/xml_qtprovider_paths.xml.flat",
+        "source": "com.example.tuning_app-android-build-11:/xml/qtprovider_paths.xml"
+    }
+]

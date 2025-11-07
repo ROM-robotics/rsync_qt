@@ -1,0 +1,8 @@
+#!/bin/sh
+
+/home/mr_robot/Qt/6.8.3/gcc_64/libexec/qt-android-runner.py \
+    --adb "/home/mr_robot/Android/Sdk/platform-tools/adb" \
+    --build-path "/home/mr_robot/Desktop/Git/rsync_qt/tuning_app/tuning_app/build/android-arm64-v8a/android-build" \
+    --apk "/home/mr_robot/Desktop/Git/rsync_qt/tuning_app/tuning_app/build/android-arm64-v8a/android-build/tuning_app.apk" \
+    $@
+

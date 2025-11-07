@@ -1,0 +1,18 @@
+{
+    "classes": [
+        {
+            "className": "ReadmeDialog",
+            "lineNumber": 9,
+            "object": true,
+            "qualifiedClassName": "ReadmeDialog",
+            "superClasses": [
+                {
+                    "access": "public",
+                    "name": "QDialog"
+                }
+            ]
+        }
+    ],
+    "inputFile": "readmeviewer.h",
+    "outputRevision": 68
+}

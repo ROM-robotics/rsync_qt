@@ -1,0 +1,4 @@
+#Fri Nov 07 19:45:46 MMT 2025
+base.0=/home/mr_robot/Desktop/Git/rsync_qt/tuning_app/tuning_app/build/android-arm64-v8a/android-build/build/intermediates/dex/release/mergeDexRelease/classes.dex
+renamed.0=classes.dex
+path.0=classes.dex

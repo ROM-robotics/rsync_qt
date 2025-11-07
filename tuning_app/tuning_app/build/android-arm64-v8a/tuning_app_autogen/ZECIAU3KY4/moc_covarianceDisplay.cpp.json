@@ -1,0 +1,30 @@
+{
+    "classes": [
+        {
+            "className": "RomPositionCovarianceGraph",
+            "lineNumber": 16,
+            "object": true,
+            "qualifiedClassName": "rom_dynamics::ui::qt::RomPositionCovarianceGraph",
+            "superClasses": [
+                {
+                    "access": "public",
+                    "name": "QWidget"
+                }
+            ]
+        },
+        {
+            "className": "RomYawCovarianceGraph",
+            "lineNumber": 42,
+            "object": true,
+            "qualifiedClassName": "rom_dynamics::ui::qt::RomYawCovarianceGraph",
+            "superClasses": [
+                {
+                    "access": "public",
+                    "name": "QWidget"
+                }
+            ]
+        }
+    ],
+    "inputFile": "covarianceDisplay.hpp",
+    "outputRevision": 68
+}

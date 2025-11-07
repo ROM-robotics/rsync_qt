@@ -1,0 +1,19 @@
+{
+    "classes": [
+        {
+            "className": "CartoRomMapWidget",
+            "lineNumber": 17,
+            "object": true,
+            "qualifiedClassName": "rom_dynamics::ui::qt::CartoRomMapWidget",
+            "superClasses": [
+                {
+                    "access": "public",
+                    "fullyQualifiedName": "rom_dynamics::ui::qt::RomMapWidget",
+                    "name": "RomMapWidget"
+                }
+            ]
+        }
+    ],
+    "inputFile": "carto_rom_map_widget.hpp",
+    "outputRevision": 68
+}

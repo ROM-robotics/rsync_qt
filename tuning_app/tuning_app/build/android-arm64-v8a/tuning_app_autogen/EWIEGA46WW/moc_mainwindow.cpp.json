@@ -1,0 +1,116 @@
+{
+    "classes": [
+        {
+            "className": "MainWindow",
+            "lineNumber": 34,
+            "object": true,
+            "qualifiedClassName": "MainWindow",
+            "slots": [
+                {
+                    "access": "private",
+                    "arguments": [
+                        {
+                            "name": "index",
+                            "type": "int"
+                        }
+                    ],
+                    "index": 0,
+                    "name": "onTabChanged",
+                    "returnType": "void"
+                },
+                {
+                    "access": "private",
+                    "index": 1,
+                    "name": "on_closeBtn_clicked",
+                    "returnType": "void"
+                },
+                {
+                    "access": "private",
+                    "index": 2,
+                    "name": "on_rsyncBtn_clicked",
+                    "returnType": "void"
+                },
+                {
+                    "access": "private",
+                    "index": 3,
+                    "name": "on_connectBtn_clicked",
+                    "returnType": "void"
+                },
+                {
+                    "access": "private",
+                    "index": 4,
+                    "name": "on_hostTerminalBtn_clicked",
+                    "returnType": "void"
+                },
+                {
+                    "access": "private",
+                    "index": 5,
+                    "name": "on_robotTerminalBtn_clicked",
+                    "returnType": "void"
+                },
+                {
+                    "access": "private",
+                    "index": 6,
+                    "name": "on_ekfTuningGuideBtn_clicked",
+                    "returnType": "void"
+                },
+                {
+                    "access": "private",
+                    "index": 7,
+                    "name": "on_initialNoiseCovToggleBtn_clicked",
+                    "returnType": "void"
+                },
+                {
+                    "access": "private",
+                    "index": 8,
+                    "name": "on_processNoiseCovToggleBtn_clicked",
+                    "returnType": "void"
+                },
+                {
+                    "access": "private",
+                    "arguments": [
+                        {
+                            "name": "topic",
+                            "type": "QString"
+                        },
+                        {
+                            "name": "msg",
+                            "type": "QJsonObject"
+                        }
+                    ],
+                    "index": 9,
+                    "name": "onReceivedTopicMessage",
+                    "returnType": "void"
+                },
+                {
+                    "access": "private",
+                    "arguments": [
+                        {
+                            "name": "service_name",
+                            "type": "QString"
+                        },
+                        {
+                            "name": "id",
+                            "type": "QString"
+                        },
+                        {
+                            "name": "msg",
+                            "type": "QJsonObject"
+                        }
+                    ],
+                    "index": 10,
+                    "name": "onReceivedServiceResponse",
+                    "returnType": "void"
+                }
+            ],
+            "superClasses": [
+                {
+                    "access": "public",
+                    "name": "QMainWindow"
+                }
+            ]
+        }
+    ],
+    "inputFile": "mainwindow.h",
+    "outputRevision": 68
+}

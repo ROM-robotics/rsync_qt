@@ -1,0 +1,18 @@
+{
+    "classes": [
+        {
+            "className": "RomMapWidget",
+            "lineNumber": 70,
+            "object": true,
+            "qualifiedClassName": "rom_dynamics::ui::qt::RomMapWidget",
+            "superClasses": [
+                {
+                    "access": "public",
+                    "name": "QGraphicsView"
+                }
+            ]
+        }
+    ],
+    "inputFile": "rom_map_widget.hpp",
+    "outputRevision": 68
+}

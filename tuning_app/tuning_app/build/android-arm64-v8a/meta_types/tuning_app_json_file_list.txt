@@ -1,0 +1,7 @@
+/home/mr_robot/Desktop/Git/rsync_qt/tuning_app/tuning_app/build/android-arm64-v8a/tuning_app_autogen/include/../EWIEGA46WW/moc_mainwindow.cpp.json
+/home/mr_robot/Desktop/Git/rsync_qt/tuning_app/tuning_app/build/android-arm64-v8a/tuning_app_autogen/include/../HAGZTRH3L5/moc_ros_bridge_client.cpp.json
+/home/mr_robot/Desktop/Git/rsync_qt/tuning_app/tuning_app/build/android-arm64-v8a/tuning_app_autogen/include/../P22SKXHDOS/moc_carto_rom_map_widget.cpp.json
+/home/mr_robot/Desktop/Git/rsync_qt/tuning_app/tuning_app/build/android-arm64-v8a/tuning_app_autogen/include/../P22SKXHDOS/moc_rom_map_widget.cpp.json
+/home/mr_robot/Desktop/Git/rsync_qt/tuning_app/tuning_app/build/android-arm64-v8a/tuning_app_autogen/include/../ZECIAU3KY4/moc_covarianceDisplay.cpp.json
+/home/mr_robot/Desktop/Git/rsync_qt/tuning_app/tuning_app/build/android-arm64-v8a/tuning_app_autogen/include/../ZECIAU3KY4/moc_readmeviewer.cpp.json
+/home/mr_robot/Desktop/Git/rsync_qt/tuning_app/tuning_app/build/android-arm64-v8a/tuning_app_autogen/include/../ZECIAU3KY4/moc_rom_design.cpp.json
