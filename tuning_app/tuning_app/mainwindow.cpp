@@ -663,9 +663,13 @@ void MainWindow::on_rsyncBtn_clicked()
 
     // If the current Linux user is "mr_robot", prefer the fixed path under /home/mr_robot/data/app
     const QString user = QString::fromLocal8Bit(qgetenv("USER"));
-    if (user == "mr_robot") 
+    if (user == "mr_robot" || user == "jackal" || user == "zyme") 
     {
-        const QString preferred = "/home/mr_robot/data/app/rsync_qt/apprsync_qt";
+        QString preferred = "";
+        if( user == "mr_robot" )    {  preferred = "/home/mr_robot/data/app/rsync_qt/mr_robot/apprsync_qt";   }
+        else if( user == "jackal" ) {  preferred = "/home/jackal/data/app/rsync_qt/jackal/apprsync_qt";   }
+        else if( user == "zyme" )   {  preferred = "/home/zyme/data/app/rsync_qt/zyme/apprsync_qt";   }
+
         if (QFileInfo::exists(preferred)) 
         {
             rsync_app = preferred;
@@ -674,7 +678,7 @@ void MainWindow::on_rsyncBtn_clicked()
             QDialog dlg(this);
             dlg.setWindowTitle("rsync app not found");
             dlg.setFixedSize(400, 100);
-            QLabel *label = new QLabel("check /home/mr_robot/data/app/rsync_qt/apprsync_qt", &dlg);
+            QLabel *label = new QLabel("check /home/mr_robot/data/app/rsync_qt/USER/apprsync_qt", &dlg);
             label->setAlignment(Qt::AlignCenter);
             QPushButton *okBtn = new QPushButton("OK", &dlg);
             okBtn->setGeometry(150, 150, 100, 30);
@@ -705,7 +709,7 @@ void MainWindow::on_rsyncBtn_clicked()
         QDialog dlg(this);
         dlg.setWindowTitle("Not Development Platform");
         dlg.setFixedSize(400, 100);
-        QLabel *label = new QLabel("Development need ubuntu 22.04 with user name mr_robot, and ~/Desktop/Git/rom_robotics.", &dlg);
+        QLabel *label = new QLabel("Development need ubuntu 22.04 with user name mr_robot || zyme || jackal, and ~/Desktop/Git/rom_robotics.", &dlg);
         label->setAlignment(Qt::AlignCenter);
         QPushButton *okBtn = new QPushButton("OK", &dlg);
         okBtn->setGeometry(150, 150, 100, 30);
