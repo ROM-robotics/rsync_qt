@@ -7,7 +7,7 @@ on:
   # Tag အသစ်တစ်ခု (ဥပမာ: v1.0.0) push လုပ်မှသာ အလုပ်လုပ်မည်
   push:
     tags:
-      - 'v[0-9]+.[0-9]+.[0-9]+'
+      - 'linux-v[0-9]+.[0-9]+.[0-9]+'
     # branches:
     #   - arc-humble-release
   # Manual trigger ကို ခွင့်ပြုခြင်း (GitHub UI မှ Run workflow နှိပ်ပြီး run လို့ရမည်)
