@@ -29,14 +29,9 @@ jobs:
         with:
           version: '6.8.2'
           target: 'desktop'
-          modules: 'qtcharts qtwebsockets'
-          # Ubuntu 20.04 (ubuntu-latest) ကို သုံးသောကြောင့် GCC ဖြင့် အလုပ်လုပ်မည်
 
       - name: 2.5. Install xcb-cursor library
         run: sudo apt-get update && sudo apt-get install -y libxcb-cursor0
-
-      - name: 2.6. Install Eigen
-        run: sudo apt-get update && sudo apt-get install -y libeigen3-dev
 
       - name: 3. Create Build Directory
         run: mkdir -p build
@@ -64,17 +59,17 @@ jobs:
 
           # AppDir ဖွဲ့စည်းပုံကို စတင်တည်ဆောက်ခြင်း
           mkdir -p AppDir/usr/bin
-          cp install/bin/rsync_qt AppDir/usr/bin/
+          cp install/bin/apprsync_qt AppDir/usr/bin/
 
           # .desktop file ကို AppDir ထဲမှာ ဖန်တီးခြင်း
           mkdir -p AppDir/usr/share/applications
-          cat > AppDir/usr/share/applications/rsync_qt.desktop << 'EOF'
+          cat > AppDir/usr/share/applications/apprsync_qt.desktop << 'EOF'
           [Desktop Entry]
           Type=Application
           Name=Rsync Qt
           Comment=Lightweight rsync/ssh Qt helper
-          Exec=rsync_qt
-          Icon=rsync_qt
+          Exec=apprsync_qt
+          Icon=apprsync_qt
           Categories=System;Utility;Qt;
           Version=1.0
           EOF
@@ -92,7 +87,7 @@ jobs:
 
           # linuxdeployqt ကို Run ပြီး AppImage ဖန်တီးခြင်း
           # -appimage ဖြင့် AppImage ဖိုင် ထွက်လာမည်
-          ./linuxdeployqt AppDir/usr/share/applications/rsync_qt.desktop -appimage
+          ./linuxdeployqt AppDir/usr/share/applications/apprsync_qt.desktop -appimage
 
       - name: 7. Rename AppImage for Release
         # Tag နာမည် (ဥပမာ v1.0.0) ကို ဖိုင်နာမည်မှာ ထည့်ပြီး ပြင်ဆင်ခြင်း
