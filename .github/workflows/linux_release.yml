@@ -74,15 +74,18 @@ jobs:
           Version=1.0
           EOF
 
-          # Copy optional icon into AppDir so linuxdeployqt can pick it up
-          # Replace 'your_icon.png' with the actual icon filename inside resources/icons
+          # Icon ဖန်တီးခြင်း - linuxdeployqt အတွက် icon မရှိမဖြစ်လိုအပ်သည်
           ICON_SRC="rsync_qt/icon.png"
           if [ -f "$ICON_SRC" ]; then
-            mkdir -p AppDir/usr/share/icons
-            cp "$ICON_SRC" AppDir/usr/share/icons/
-            echo "Copied icon $ICON_SRC to AppDir/usr/share/icons/"
+            cp "$ICON_SRC" AppDir/apprsync_qt.png
+            echo "Copied project icon to AppDir/"
           else
-            echo "Icon $ICON_SRC not found; skipping copy"
+            # Placeholder icon ဖန်တီးခြင်း (256x256 blue square)
+            sudo apt-get install -y imagemagick
+            convert -size 256x256 xc:'#2196F3' -gravity center \
+              -fill white -font DejaVu-Sans-Bold -pointsize 48 \
+              -annotate 0 'rsync\nQt' AppDir/apprsync_qt.png
+            echo "Generated placeholder icon"
           fi
 
           # linuxdeployqt ကို Run ပြီး AppImage ဖန်တီးခြင်း
