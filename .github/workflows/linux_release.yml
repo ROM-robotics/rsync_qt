@@ -44,7 +44,7 @@ jobs:
       - name: 4. Configure CMake
         # Qt 6 ကို CMake ဖြင့် သုံးသောအခါ CMAKE_PREFIX_PATH ကို သတ်မှတ်ပေးရန် လိုအပ်သည်
         run: |
-          cmake -S tuning_app/tuning_app -B build \
+          cmake -S rsync_qt -B build \
             -DCMAKE_BUILD_TYPE=Release \
             -DCMAKE_PREFIX_PATH=${{ env.Qt6_DIR }} \
             -DCMAKE_INSTALL_PREFIX=${{ github.workspace }}/install
@@ -64,24 +64,24 @@ jobs:
 
           # AppDir ဖွဲ့စည်းပုံကို စတင်တည်ဆောက်ခြင်း
           mkdir -p AppDir/usr/bin
-          cp install/bin/tuning_app AppDir/usr/bin/
+          cp install/bin/rsync_qt AppDir/usr/bin/
 
           # .desktop file ကို AppDir ထဲမှာ ဖန်တီးခြင်း
           mkdir -p AppDir/usr/share/applications
-          cat > AppDir/usr/share/applications/tuning_app.desktop << 'EOF'
+          cat > AppDir/usr/share/applications/rsync_qt.desktop << 'EOF'
           [Desktop Entry]
           Type=Application
-          Name=ROM Tuning App
-          Comment=Multi-robot dynamics visualization and control
-          Exec=tuning_app
-          Icon=tuning_app
-          Categories=Development;Qt;
+          Name=Rsync Qt
+          Comment=Lightweight rsync/ssh Qt helper
+          Exec=rsync_qt
+          Icon=rsync_qt
+          Categories=System;Utility;Qt;
           Version=1.0
           EOF
 
           # Copy optional icon into AppDir so linuxdeployqt can pick it up
           # Replace 'your_icon.png' with the actual icon filename inside resources/icons
-          ICON_SRC="tuning_app/tuning_app/APP/AppDir/tuning_app.png"
+          ICON_SRC="rsync_qt/icon.png"
           if [ -f "$ICON_SRC" ]; then
             mkdir -p AppDir/usr/share/icons
             cp "$ICON_SRC" AppDir/usr/share/icons/
@@ -92,7 +92,7 @@ jobs:
 
           # linuxdeployqt ကို Run ပြီး AppImage ဖန်တီးခြင်း
           # -appimage ဖြင့် AppImage ဖိုင် ထွက်လာမည်
-          ./linuxdeployqt AppDir/usr/share/applications/tuning_app.desktop -appimage
+          ./linuxdeployqt AppDir/usr/share/applications/rsync_qt.desktop -appimage
 
       - name: 7. Rename AppImage for Release
         # Tag နာမည် (ဥပမာ v1.0.0) ကို ဖိုင်နာမည်မှာ ထည့်ပြီး ပြင်ဆင်ခြင်း
@@ -112,7 +112,7 @@ jobs:
             exit 1
           fi
           echo "Found AppImage: $APPIMAGE_FILE"
-          FINAL_NAME="tuning_app-linux-${VERSION_NAME}.AppImage"
+          FINAL_NAME="rsync_qt-linux-${VERSION_NAME}.AppImage"
           mv "$APPIMAGE_FILE" "$FINAL_NAME"
           echo "version_name=${VERSION_NAME}" >> $GITHUB_OUTPUT
           echo "appimage_file=${FINAL_NAME}" >> $GITHUB_OUTPUT
